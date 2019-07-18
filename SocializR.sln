@@ -3,7 +3,31 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{33FF7E60-C15C-4798-948F-3BFC06767D62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{501CC769-B6DF-4B03-A792-E25BC62A13AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyUI", "DummyUI\DummyUI.csproj", "{70D2690C-241E-41CC-A850-C01BB6CFB55B}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{33FF7E60-C15C-4798-948F-3BFC06767D62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33FF7E60-C15C-4798-948F-3BFC06767D62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33FF7E60-C15C-4798-948F-3BFC06767D62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33FF7E60-C15C-4798-948F-3BFC06767D62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{501CC769-B6DF-4B03-A792-E25BC62A13AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{501CC769-B6DF-4B03-A792-E25BC62A13AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{501CC769-B6DF-4B03-A792-E25BC62A13AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{501CC769-B6DF-4B03-A792-E25BC62A13AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70D2690C-241E-41CC-A850-C01BB6CFB55B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70D2690C-241E-41CC-A850-C01BB6CFB55B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70D2690C-241E-41CC-A850-C01BB6CFB55B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70D2690C-241E-41CC-A850-C01BB6CFB55B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
