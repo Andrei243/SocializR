@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain
 {
@@ -15,16 +17,22 @@ namespace Domain
             Post = new HashSet<Post>();
             Reaction = new HashSet<Reaction>();
         }
-
         public int Id { get; set; }
+        [Required]
         public string Name { get; set; }
+        [Required]
         public string Surname { get; set; }
+        [Required]
         public string Email { get; set; }
+        [Required]
         public string Password { get; set; }
         public int RoleId { get; set; }
+        [Required]
         public DateTime BirthDay { get; set; }
         public int? LocalityId { get; set; }
+        [Required]
         public string SexualIdentity { get; set; }
+        [Required]
         public string Vizibility { get; set; }
 
         public virtual Locality Locality { get; set; }
