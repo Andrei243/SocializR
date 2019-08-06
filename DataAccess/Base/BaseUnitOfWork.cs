@@ -5,19 +5,19 @@ using Common;
 
 namespace DataAccess.Base
 {
-    class BaseUnitOfWork : IUnitOfWork, IDisposable
+    public class BaseUnitOfWork : IUnitOfWork, IDisposable
     {
         protected readonly SocializRContext DbContext;
         public BaseUnitOfWork(SocializRContext context)
         {
             DbContext = context;
         }
-        void IDisposable.Dispose()
+        public void Dispose()
         {
             DbContext.Dispose();
         }
 
-        int IUnitOfWork.SaveChanges()
+        public int SaveChanges()
         {
             return DbContext.SaveChanges();
         }

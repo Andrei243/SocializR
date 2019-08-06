@@ -7,12 +7,24 @@ using DataAccess.Base;
 
 namespace DataAccess
 {
-    class SocializRUnitOfWork : Base.BaseUnitOfWork
+    public class SocializRUnitOfWork : Base.BaseUnitOfWork
     {
         public SocializRUnitOfWork(SocializRContext context) : base(context)
         {
         }
 
+        public IRepository<Post> Posts
+        {
+            get
+            {
+                return Posts ?? (Posts = new BaseRepository<Post>(DbContext));
+            }
+            private set
+            {
+                Posts = value;
+            }
+
+        }
         public IRepository<Users> Users
         {
             get

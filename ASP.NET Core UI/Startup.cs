@@ -35,8 +35,7 @@ namespace ASP.NET_Core_UI
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddDbContext<DataAccess.SocializRContext>(options=>
-            options.UseSqlServer(Configuration.GetConnectionString("SocializRDatabase")));
+            services.AddDbContext<DataAccess.SocializRContext>();
 
         }
 
