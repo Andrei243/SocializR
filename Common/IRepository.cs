@@ -5,15 +5,19 @@ using System.Linq;
 
 namespace Common
 {
-    public interface IRepository<T> where T:IEntity
+    public interface IRepository<T>:IRepository where T:IEntity
     {
-        T Get(int id);
         void Add(T el);
         void AddRange(IEnumerable<T> elems);
-        IQueryable<T> Query { get; }
-        void Delete(T el);
-        void DeleteRange(IEnumerable<T> elems);
+        IQueryable<T> Query { get;}
+        void Remove(T el);
+        void RemoveRange(IEnumerable<T> elems);
         void Update(T el);
+
+    }
+
+    public interface IRepository
+    {
 
     }
 }
