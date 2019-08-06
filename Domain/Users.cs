@@ -2,10 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Common;
 
 namespace Domain
 {
-    public partial class Users
+    public partial class Users : IEntity
     {
         public Users()
         {
@@ -34,7 +35,9 @@ namespace Domain
         public string SexualIdentity { get; set; }
         [Required]
         public string Vizibility { get; set; }
+        public int? PhotoId { get; set; }
 
+        public virtual Photo Photo { get; set; }
         public virtual Locality Locality { get; set; }
         public virtual Role Role { get; set; }
         public virtual ICollection<Album> Album { get; set; }

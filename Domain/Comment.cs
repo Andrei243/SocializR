@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common;
 
 namespace Domain
 {
-    public partial class Comment
+    public partial class Comment : IEntity
     {
         public int Id { get; set; }
         public int PostId { get; set; }

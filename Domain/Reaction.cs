@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common;
 
-namespace Domain
+namespace Domain 
 {
-    public partial class Reaction
+    public partial class Reaction : IEntity
     {
         public int PostId { get; set; }
         public int UserId { get; set; }

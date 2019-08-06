@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common;
 
 namespace Domain
 {
-    public partial class Friendship
+    public partial class Friendship : IEntity
     {
         public int IdSender { get; set; }
         public int IdReceiver { get; set; }

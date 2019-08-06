@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common;
 
 namespace Domain
 {
-    public partial class County
+    public partial class County : IEntity
     {
         public County()
         {

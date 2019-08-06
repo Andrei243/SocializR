@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common;
 
 namespace Domain
 {
-    public partial class Role
+    public partial class Role : IEntity
     {
         public Role()
         {

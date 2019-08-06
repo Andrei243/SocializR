@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common;
 
 namespace Domain
 {
-    public partial class InterestsUsers
+    public partial class InterestsUsers : IEntity
     {
         public int InterestId { get; set; }
         public int UserId { get; set; }

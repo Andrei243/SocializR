@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common;
 
 namespace Domain
 {
-    public partial class Locality
+    public partial class Locality : IEntity
     {
         public Locality()
         {

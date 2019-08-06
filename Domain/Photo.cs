@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common;
 
 namespace Domain
 {
-    public partial class Photo
+    public partial class Photo : IEntity
     {
         public int Id { get; set; }
         public byte[] Binar { get; set; }
@@ -13,5 +14,6 @@ namespace Domain
 
         public virtual Album Album { get; set; }
         public virtual Post Post { get; set; }
+        public virtual Users Users { get; set; }
     }
 }
