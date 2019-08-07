@@ -16,6 +16,16 @@ namespace Services.Post
             CurrentUser = currentUser;
         }
 
+        public bool AddPost(Domain.Post post)
+        {
+            post.AddingMoment = DateTime.Now;
+            post.UserId = CurrentUser.Id;
+            post.Vizibilitate = post.Vizibilitate ?? "friends";
+            unitOfWork.Posts.Add(post);
+            return unitOfWork.SaveChanges()!=0;
+
+        }
+
         public List<Domain.Post> GetAllPersonalPost()
         {
             return unitOfWork.Posts.Query.Where(e => e.UserId == CurrentUser.Id).OrderBy(e=>e.AddingMoment).ToList();

@@ -15,5 +15,10 @@ namespace Services.County
         {
             return unitOfWork.Counties.Query.ToList();
         }
+
+        public List<Domain.Locality> GetLocalities(int id)
+        {
+            return unitOfWork.Localities.Query.Where(e => e.CountyId == id).ToList();
+        }
     }
 }

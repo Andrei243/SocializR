@@ -8,11 +8,11 @@ namespace Services.Locality
 {
     public class LocalityService : Base.BaseService
     {
-        //private readonly Domain.County County;
+        private readonly Domain.County County;
 
-        public LocalityService(SocializRUnitOfWork unitOfWork) : base(unitOfWork)
+        public LocalityService(SocializRUnitOfWork unitOfWork, Domain.County county) : base(unitOfWork)
         {
-           // County = county;
+            County = county;
         }
 
         public bool AddLocality(string denumire,Domain.County County)
@@ -38,7 +38,7 @@ namespace Services.Locality
 
         public List<Domain.Locality> getAll()
         {
-            return unitOfWork.Localities.Query.ToList();
+            return unitOfWork.Localities.Query.Where(e=>e.CountyId==County.Id).ToList();
         }
 
     }

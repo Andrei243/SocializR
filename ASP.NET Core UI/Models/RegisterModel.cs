@@ -25,6 +25,9 @@ namespace ASP.NET_Core_UI.Models
         public int LocalityId { get; set; }
         public List<SelectListItem> Localities { get; set; }
 
+        public int CountyId { get; set; }
+        public List<SelectListItem> Counties { get; set; }
+
         public IEnumerable<ValidationResult>Validate(ValidationContext validationContext)
         {
             var result = new List<ValidationResult>();

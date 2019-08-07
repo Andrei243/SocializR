@@ -21,7 +21,7 @@ namespace ASP.NET_Core_UI.Controllers
         }
 
         // GET: Users
-        //[Authorize(Policy ="Admin")]
+        [Authorize(Policy ="Admin")]
         public async Task<IActionResult> Index()
         {
             var socializRContext = _context.Users.Include(u => u.Locality).Include(u => u.Role);

@@ -40,29 +40,35 @@ namespace ASP.NET_Core_UI
             });
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddSingleton<IAuthorizationHandler, Authorization.AdminHandler>();
-            services.AddAuthorization(options =>
-            options.AddPolicy("Admin",
-            policy=>policy.Requirements.Add(new Authorization.RoleRequirement("admin")))
-            );
+            
 
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddDbContext<DataAccess.SocializRContext>();
             services.AddScoped<DataAccess.SocializRUnitOfWork>();
             services.AddBusinessLogic();
-            services.AddAutoMapper();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             
 
             services.AddAuthentication("SocializR")
                 .AddCookie("SocializR", options =>
                 {
                     options.LoginPath = new PathString("/Account/Login");
-                    options.AccessDeniedPath = new PathString("/Account/Login");
+                    options.AccessDeniedPath = new PathString("/Home");
+                    
                 });
-            services.AddCurrentUser();
-            //services.AddTransient<AutoMapper.IMapper>();
+            services.AddAuthorization(options =>
+            options.AddPolicy("Admin",
+            policy => policy.Requirements.Add(new Authorization.RoleRequirement("admin")))
+            );
 
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy("Admin", policy => policy.RequireRole("admin"));
+            //});
+            services.AddScoped<IAuthorizationHandler, Authorization.AdminHandler>();
+
+            services.AddCurrentUser();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,6 +88,7 @@ namespace ASP.NET_Core_UI
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

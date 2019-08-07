@@ -15,14 +15,15 @@ namespace ASP.NET_Core_UI.Controllers
     public class AccountController : Code.Base.BaseController
     {
         private readonly Services.User.UserAccountService userAccountService;
+        private readonly Services.County.CountyService countyService;
         private readonly Services.Locality.LocalityService localityService;
 
-        public AccountController(Services.User.UserAccountService userAccountService, Services.Locality.LocalityService localityService,IMapper imapper)
+        public AccountController(Services.County.CountyService countyService, Services.User.UserAccountService userAccountService,IMapper imapper)
             :base(imapper)
         {
-            
+            this.countyService = countyService;
             this.userAccountService = userAccountService;
-            this.localityService = localityService;
+            this.localityService = null;
         }
 
         [HttpGet]
@@ -81,7 +82,7 @@ namespace ASP.NET_Core_UI.Controllers
         {
             var model = new Models.RegisterModel
             {
-                Localities = GetLocalities()
+                Counties=GetCounties()
             };
             return View(model);
         }
@@ -91,7 +92,7 @@ namespace ASP.NET_Core_UI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Localities = GetLocalities();
+                //model.Localities = GetLocalities();
                 return View(model);
             }
             //var entity = mapper.Map<Domain.Users>(model);
@@ -114,12 +115,24 @@ namespace ASP.NET_Core_UI.Controllers
             var emailExists = userAccountService.EmailExists(Email);
             return Ok(!emailExists);
         }
-        public List<SelectListItem> GetLocalities()
+
+        public List<SelectListItem> GetCounties()
         {
-            return localityService.getAll().Select(c => new SelectListItem
+            return countyService.GetAll().Select(c => new SelectListItem
             {
                 Text = c.Name,
                 Value = c.Id.ToString()
+            }).ToList();
+        }
+
+        [HttpGet]
+        public List<SelectListItem> GetLocalities(int CountyId)
+        {
+            return countyService.GetLocalities(CountyId).Select(e=>new SelectListItem
+            {
+                Text=e.Name,
+                Value=e.Id.ToString()
+
             }).ToList();
 
         }
