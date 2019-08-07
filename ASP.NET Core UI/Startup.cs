@@ -11,6 +11,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using ASP.NET_Core_UI.Models;
+using ASP.NET_Core_UI.Code.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
+
 
 namespace ASP.NET_Core_UI
 {
@@ -18,7 +22,9 @@ namespace ASP.NET_Core_UI
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            var configurationBuilder = new ConfigurationBuilder();
+            //configurationBuilder.AddJsonFile("appsetings.json", optional: false, reloadOnChange: true);
+            Configuration = configurationBuilder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -32,10 +38,30 @@ namespace ASP.NET_Core_UI
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+            services.AddSingleton<IAuthorizationHandler, Authorization.AdminHandler>();
+            services.AddAuthorization(options =>
+            options.AddPolicy("Admin",
+            policy=>policy.Requirements.Add(new Authorization.RoleRequirement("admin")))
+            );
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddDbContext<DataAccess.SocializRContext>();
+            services.AddScoped<DataAccess.SocializRUnitOfWork>();
+            services.AddBusinessLogic();
+            services.AddAutoMapper();
+            
+
+            services.AddAuthentication("SocializR")
+                .AddCookie("SocializR", options =>
+                {
+                    options.LoginPath = new PathString("/Account/Login");
+                    options.AccessDeniedPath = new PathString("/Account/Login");
+                });
+            services.AddCurrentUser();
+            //services.AddTransient<AutoMapper.IMapper>();
 
         }
 
@@ -48,7 +74,7 @@ namespace ASP.NET_Core_UI
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Shared/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }

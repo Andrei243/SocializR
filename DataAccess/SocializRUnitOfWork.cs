@@ -11,152 +11,41 @@ namespace DataAccess
     {
         public SocializRUnitOfWork(SocializRContext context) : base(context)
         {
+            Posts = new BaseRepository<Post>(DbContext);
+            Users = new BaseRepository<Users>(DbContext);
+            Albums = new BaseRepository<Album>(DbContext);
+            Comments = new BaseRepository<Comment>(DbContext);
+            Counties = new BaseRepository<County>(DbContext);
+            Friendships = new BaseRepository<Friendship>(DbContext);
+            Interests = new BaseRepository<Interest>(DbContext);
+            InterestsUserss = new BaseRepository<InterestsUsers>(DbContext);
+            Localities = new BaseRepository<Locality>(DbContext);
+            Photos = new BaseRepository<Photo>(DbContext);
+            Reactions = new BaseRepository<Reaction>(DbContext);
+            Roles = new BaseRepository<Role>(DbContext);
         }
 
-        public IRepository<Post> Posts
-        {
-            get
-            {
-                return Posts ?? (Posts = new BaseRepository<Post>(DbContext));
-            }
-            private set
-            {
-                Posts = value;
-            }
+        public IRepository<Post> Posts{ get; }
+        public IRepository<Users> Users{ get; }
 
-        }
-        public IRepository<Users> Users
-        {
-            get
-            {
-                return Users ?? (Users = new BaseRepository<Users>(DbContext));
-            }
-            private set
-            {
-                Users = value;
-            }
+        public IRepository<Album> Albums { get; }
 
-        }
+        public IRepository<Comment> Comments { get; }
 
-        public IRepository<Album> Albums
-        {
-            get
-            {
-                return Albums ?? (Albums = new BaseRepository<Album>(DbContext));
-            }
-            private set
-            {
-                Albums = value;
-            }
-        }
+        public IRepository<County> Counties { get; }
 
-        public IRepository<Comment> Comments
-        {
-            get
-            {
-                return Comments ?? (Comments = new BaseRepository<Comment>(DbContext));
-            }
-            private set
-            {
-                Comments = value;
-            }
+        public IRepository<Friendship> Friendships { get; }
 
-        }
+        public IRepository<Interest> Interests { get; }
 
-        public IRepository<County> Counties
-        {
-            get
-            {
-                return Counties ?? (Counties = new BaseRepository<County>(DbContext));
-            }
-            private set
-            {
-                Counties = value;
-            }
-        }
+        public IRepository<InterestsUsers> InterestsUserss { get; }
+        public IRepository<Locality> Localities { get; }
 
-        public IRepository<Friendship> Friendships
-        {
-            get
-            {
-                return Friendships ?? (Friendships = new BaseRepository<Friendship>(DbContext));
-            }
-            private set
-            {
-                Friendships = value;
-            }
-        }
+        public IRepository<Photo> Photos { get; }
 
-        public IRepository<Interest> Interests
-        {
-            get
-            {
-                return Interests ?? (Interests = new BaseRepository<Interest>(DbContext));
-            }
-            private set
-            {
-                Interests = value;
-            }
-        }
+        public IRepository<Reaction> Reactions { get; }
 
-        public IRepository<InterestsUsers> InterestsUserss
-        {
-            get
-            {
-                return InterestsUserss ?? (InterestsUserss = new BaseRepository<InterestsUsers>(DbContext));
-            }
-            private set
-            {
-                InterestsUserss = value;
-            }
-        }
-        public IRepository<Locality> Localities
-        {
-            get
-            {
-                return Localities ?? (Localities = new BaseRepository<Locality>(DbContext));
-            }
-            private set
-            {
-                Localities = value;
-            }
-        }
-
-        public IRepository<Photo> Photos
-        {
-            get
-            {
-                return Photos ?? (Photos = new BaseRepository<Photo>(DbContext));
-            }
-            private set
-            {
-                Photos = value;
-            }
-        }
-
-        public IRepository<Reaction> Reactions
-        {
-            get
-            {
-                return Reactions ?? (Reactions = new BaseRepository<Reaction>(DbContext));
-            }
-            private set
-            {
-                Reactions = value;
-            }
-        }
-
-        public IRepository<Role> Roles
-        {
-            get
-            {
-                return Roles ?? (Roles = new BaseRepository<Role>(DbContext));
-            }
-            private set
-            {
-                Roles = value;
-            }
-        }
+        public IRepository<Role> Roles { get; }
 
     }
 }

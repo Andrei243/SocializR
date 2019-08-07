@@ -8,14 +8,14 @@ namespace Services.Locality
 {
     public class LocalityService : Base.BaseService
     {
-        private readonly Domain.County County;
+        //private readonly Domain.County County;
 
-        public LocalityService(Domain.County county,SocializRUnitOfWork unitOfWork) : base(unitOfWork)
+        public LocalityService(SocializRUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            County = county;
+           // County = county;
         }
 
-        public bool AddLocality(string denumire)
+        public bool AddLocality(string denumire,Domain.County County)
         {
             if (unitOfWork.Localities.Query.Any(e =>e.Name==denumire && e.CountyId==County.Id)) return false;
             var locality = new Domain.Locality()
@@ -38,7 +38,7 @@ namespace Services.Locality
 
         public List<Domain.Locality> getAll()
         {
-            return unitOfWork.Localities.Query.Where(e => e.CountyId == County.Id).ToList();
+            return unitOfWork.Localities.Query.ToList();
         }
 
     }

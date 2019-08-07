@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataAccess;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ASP.NET_Core_UI.Controllers
 {
@@ -20,6 +21,7 @@ namespace ASP.NET_Core_UI.Controllers
         }
 
         // GET: Users
+        //[Authorize(Policy ="Admin")]
         public async Task<IActionResult> Index()
         {
             var socializRContext = _context.Users.Include(u => u.Locality).Include(u => u.Role);
@@ -27,6 +29,7 @@ namespace ASP.NET_Core_UI.Controllers
         }
 
         // GET: Users/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
