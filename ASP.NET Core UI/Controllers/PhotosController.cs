@@ -56,8 +56,9 @@ namespace ASP.NET_Core_UI.Controllers
             return View();
         }
 
-        public IActionResult Download(int id)
+        public IActionResult Download(int? id)
         {
+            if (!id.HasValue) id = 1;
             var photo = _context.Photo.Find(id);
 
             if (photo == null) return NotFound();
@@ -80,8 +81,10 @@ namespace ASP.NET_Core_UI.Controllers
                 {
                     AlbumId = photoModel.AlbumId,
                     Position = photoModel.Position,
-                    PostId = photoModel.PostId
+                    PostId = photoModel.PostId,
+                    MIMEType = photoModel.Binar.ContentType
                 };
+                
                 using (var memoryStream = new MemoryStream())
                 {
                     photoModel.Binar.CopyTo(memoryStream);

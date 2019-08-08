@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ASP.NET_Core_UI.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Services;
 using System;
@@ -34,13 +35,18 @@ namespace ASP.NET_Core_UI.Code.Extensions
                 var userService = serviceProvider.GetService<Services.User.UserAccountService>();
                 var user = userService.Get(mail);
                 if (user != null)
-                    return new CurrentUser(isAuthenticated: true)
+                    return new CurrentUserModel()
                     {
+                        isAuthenticated= true,
                         Id = user.Id,
                         Email = user.Email,
-                        Name = user.Name
+                        Name = user.Name,
+                        IsAdmin = user.Role.Name=="admin"
                     };
-                else return new CurrentUser(isAuthenticated: false);
+                else return new CurrentUserModel()
+                {
+                    isAuthenticated= false
+                };
 
             });
             return services;

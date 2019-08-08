@@ -16,7 +16,7 @@ namespace Services.User
 
         public Domain.Users Get(string email)
         {
-            return unitOfWork.Users.Query
+            return unitOfWork.Users.Query.Include(e=>e.Role)
                 .FirstOrDefault(e => e.Email == email);
         }
 

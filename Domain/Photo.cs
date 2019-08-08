@@ -8,6 +8,7 @@ namespace Domain
     {
         public int Id { get; set; }
         public byte[] Binar { get; set; }
+        public string MIMEType { get; set; }
         public int? AlbumId { get; set; }
         public int? PostId { get; set; }
         public int? Position { get; set; }

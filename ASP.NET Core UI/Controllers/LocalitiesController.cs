@@ -11,38 +11,24 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ASP.NET_Core_UI.Controllers
 {
-    public class UsersController : Controller
+    [Authorize(Policy ="Admin")]
+    public class LocalitiesController : Controller
     {
         private readonly SocializRContext _context;
 
-        public List<Models.UserDropdownModel> GetUsersByName(string name)
-        {
-            var el= _context.Users
-                .Where(e => (e.Name + e.Surname)
-                .Contains(name))
-                .Select(e => new Models.UserDropdownModel() { Id = e.Id, ProfilePhotoId = e.PhotoId, Name = e.Name+" " + e.Surname })
-                .OrderBy(e => e.Name)
-                .Take(5)
-                .ToList();
-            return el;
-        }
-
-        public UsersController(SocializRContext context)
+        public LocalitiesController(SocializRContext context)
         {
             _context = context;
         }
 
-        // GET: Users
-        //[Authorize(Policy ="Admin")]
-        [Authorize(Roles ="admin")]
+        // GET: Localities
         public async Task<IActionResult> Index()
         {
-            var socializRContext = _context.Users.Include(u => u.Locality).Include(u => u.Role);
+            var socializRContext = _context.Locality.Include(l => l.County);
             return View(await socializRContext.ToListAsync());
         }
 
-        // GET: Users/Details/5
-        [HttpGet]
+        // GET: Localities/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -50,45 +36,42 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            var users = await _context.Users
-                .Include(u => u.Locality)
-                .Include(u => u.Role)
+            var locality = await _context.Locality
+                .Include(l => l.County)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (users == null)
+            if (locality == null)
             {
                 return NotFound();
             }
 
-            return View(users);
+            return View(locality);
         }
 
-        // GET: Users/Create
+        // GET: Localities/Create
         public IActionResult Create()
         {
-            ViewData["LocalityId"] = new SelectList(_context.Locality, "Id", "Name");
-            ViewData["RoleId"] = new SelectList(_context.Role, "Id", "Name");
+            ViewData["CountyId"] = new SelectList(_context.County, "Id", "Name");
             return View();
         }
 
-        // POST: Users/Create
+        // POST: Localities/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Surname,Email,Password,RoleId,BirthDay,LocalityId,SexualIdentity,Vizibility")] Users users)
+        public async Task<IActionResult> Create([Bind("Id,CountyId,Name")] Locality locality)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(users);
+                _context.Add(locality);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocalityId"] = new SelectList(_context.Locality, "Id", "Name", users.LocalityId);
-            ViewData["RoleId"] = new SelectList(_context.Role, "Id", "Name", users.RoleId);
-            return View(users);
+            ViewData["CountyId"] = new SelectList(_context.County, "Id", "Name", locality.CountyId);
+            return View(locality);
         }
 
-        // GET: Users/Edit/5
+        // GET: Localities/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -96,24 +79,23 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            var users = await _context.Users.FindAsync(id);
-            if (users == null)
+            var locality = await _context.Locality.FindAsync(id);
+            if (locality == null)
             {
                 return NotFound();
             }
-            ViewData["LocalityId"] = new SelectList(_context.Locality, "Id", "Name", users.LocalityId);
-            ViewData["RoleId"] = new SelectList(_context.Role, "Id", "Name", users.RoleId);
-            return View(users);
+            ViewData["CountyId"] = new SelectList(_context.County, "Id", "Name", locality.CountyId);
+            return View(locality);
         }
 
-        // POST: Users/Edit/5
+        // POST: Localities/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Surname,Email,Password,RoleId,BirthDay,LocalityId,SexualIdentity,Vizibility")] Users users)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CountyId,Name")] Locality locality)
         {
-            if (id != users.Id)
+            if (id != locality.Id)
             {
                 return NotFound();
             }
@@ -122,12 +104,12 @@ namespace ASP.NET_Core_UI.Controllers
             {
                 try
                 {
-                    _context.Update(users);
+                    _context.Update(locality);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UsersExists(users.Id))
+                    if (!LocalityExists(locality.Id))
                     {
                         return NotFound();
                     }
@@ -138,12 +120,11 @@ namespace ASP.NET_Core_UI.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocalityId"] = new SelectList(_context.Locality, "Id", "Name", users.LocalityId);
-            ViewData["RoleId"] = new SelectList(_context.Role, "Id", "Name", users.RoleId);
-            return View(users);
+            ViewData["CountyId"] = new SelectList(_context.County, "Id", "Name", locality.CountyId);
+            return View(locality);
         }
 
-        // GET: Users/Delete/5
+        // GET: Localities/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -151,32 +132,31 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            var users = await _context.Users
-                .Include(u => u.Locality)
-                .Include(u => u.Role)
+            var locality = await _context.Locality
+                .Include(l => l.County)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (users == null)
+            if (locality == null)
             {
                 return NotFound();
             }
 
-            return View(users);
+            return View(locality);
         }
 
-        // POST: Users/Delete/5
+        // POST: Localities/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var users = await _context.Users.FindAsync(id);
-            _context.Users.Remove(users);
+            var locality = await _context.Locality.FindAsync(id);
+            _context.Locality.Remove(locality);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UsersExists(int id)
+        private bool LocalityExists(int id)
         {
-            return _context.Users.Any(e => e.Id == id);
+            return _context.Locality.Any(e => e.Id == id);
         }
     }
 }

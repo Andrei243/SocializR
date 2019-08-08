@@ -14,7 +14,7 @@ using ASP.NET_Core_UI.Models;
 using ASP.NET_Core_UI.Code.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
-
+using RouteJs;
 
 namespace ASP.NET_Core_UI
 {
@@ -49,6 +49,7 @@ namespace ASP.NET_Core_UI
             services.AddBusinessLogic();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             
+            
 
             services.AddAuthentication("SocializR")
                 .AddCookie("SocializR", options =>
@@ -69,6 +70,8 @@ namespace ASP.NET_Core_UI
             services.AddScoped<IAuthorizationHandler, Authorization.AdminHandler>();
 
             services.AddCurrentUser();
+
+            //services.AddRouteJs();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,7 +92,7 @@ namespace ASP.NET_Core_UI
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();
-
+           
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

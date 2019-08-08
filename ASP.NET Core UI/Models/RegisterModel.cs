@@ -15,6 +15,10 @@ namespace ASP.NET_Core_UI.Models
         [Required(ErrorMessage ="Campul este obligatoriu")]
         public string Email { get; set; }
 
+        [MaxLength(100, ErrorMessage = "Prenumele are cel mult 100 de caractere")]
+        [Required(ErrorMessage = "Campul este obligatoriu")]
+        public string Surname { get; set; }
+
         [MaxLength(100,ErrorMessage ="Numele are cel mult 100 de caractere")]
         [Required(ErrorMessage ="Campul este obligatoriu")]
         public string Name { get; set; }

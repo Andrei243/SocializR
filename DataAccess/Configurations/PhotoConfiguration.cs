@@ -24,6 +24,11 @@ namespace DataAccess.Configurations
                     .WithMany(p => p.Photo)
                     .HasForeignKey(d => d.PostId)
                     .HasConstraintName("PHOTO_POST_FK");
+
+                builder.Property(e => e.MIMEType)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
         }
     }
 }
