@@ -29,7 +29,8 @@ namespace DataAccess.Configurations
                 builder.HasOne(d => d.User)
                     .WithMany(p => p.Comment)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("COMMENT_USER_FK");
+                    .HasConstraintName("COMMENT_USER_FK")
+                    .OnDelete(DeleteBehavior.Restrict);
           
         }
     }

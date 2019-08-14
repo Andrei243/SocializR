@@ -20,10 +20,9 @@ namespace DataAccess.Configurations
                     .HasForeignKey(d => d.AlbumId)
                     .HasConstraintName("PHOTO_ALBUM_FK");
 
-                builder.HasOne(d => d.Post)
-                    .WithMany(p => p.Photo)
-                    .HasForeignKey(d => d.PostId)
-                    .HasConstraintName("PHOTO_POST_FK");
+            builder.HasOne(d => d.Post)
+                .WithOne(p => p.Photo)
+                ;
 
                 builder.Property(e => e.MIMEType)
                     .IsRequired()

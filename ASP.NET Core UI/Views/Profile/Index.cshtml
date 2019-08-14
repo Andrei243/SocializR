@@ -1,0 +1,47 @@
+﻿@inject  Services.CurrentUser currentUser
+@inject  Services.InterestsUsers.InterestsUsersService interestService
+@inject  Services.Album.AlbumService albumService
+@model Domain.Users
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/GeneralLayout.cshtml";
+}
+
+<h1>Index</h1>
+
+<div >
+    <img  src="@Url.Action("Download","Photos",currentUser.ProfilePhoto)" />
+
+</div>
+
+<div>
+    <h2>Contact information</h2>
+
+    <h5>First Name  &nbsp;&nbsp; @Model.Name</h5>
+    <h5>Last Name  &nbsp;&nbsp; @Model.Surname</h5>
+    <h5>Birthday  &nbsp;&nbsp; @Model.BirthDay</h5>
+    <h5>Locality  &nbsp;&nbsp; @Model.Locality.Name</h5>
+    <h5>County  &nbsp;&nbsp; @Model.Locality.County.Name</h5>
+    <h5>Gender  &nbsp;&nbsp; @Model.SexualIdentity</h5>
+</div>
+
+<div>
+    <h2>Likes and interests</h2>
+    @foreach(var interest in interestService.GetAllInterests())
+    {
+        <p>@interest</p>
+    }
+
+</div>
+
+<div>
+    <h2>Albums</h2>
+    @foreach(var album in albumService.getAll())
+    {
+        <div>
+            <h5>@album.Name</h5>
+            <h6>@album.Photo.Count</h6>
+        </div>
+    }
+
+</div>

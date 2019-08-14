@@ -99,9 +99,13 @@ namespace ASP.NET_Core_UI.Controllers
             var entity = new Domain.Users()
             {
                 Name = model.Name,
+                Surname=model.Surname,
                 Password = model.Password,
                 Email = model.Email,
-                LocalityId = model.LocalityId
+                LocalityId = model.LocalityId,
+                SexualIdentity=model.SexualIdentity,
+                Vizibility="friends",
+                RoleId=1
             };
             var result = userAccountService.Register(entity);
             if (!result)

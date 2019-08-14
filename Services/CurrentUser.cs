@@ -11,9 +11,12 @@ namespace Services
             IsAuthenticated = isAuthenticated;
         }
         public int Id { get; set; }
-        public string Name { get; set; }
         public string Email { get; set; }
+        public string Name { get; set; }
+        public int? ProfilePhoto { get; set; }
         public bool IsAuthenticated { get; set; }
+        public bool IsAdmin { get; set; }
+        public bool IsBanned { get; set; }
 
     }
 }

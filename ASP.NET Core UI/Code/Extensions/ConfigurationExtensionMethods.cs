@@ -20,6 +20,15 @@ namespace ASP.NET_Core_UI.Code.Extensions
             services.AddScoped<Services.Locality.LocalityService>();
             services.AddScoped<Services.Album.AlbumService>();
             services.AddScoped<Services.Comment.CommentService>();
+            services.AddScoped<Services.Post.PostService>();
+            services.AddScoped<Services.Album.AlbumService>();
+            services.AddScoped<Services.County.CountyService>();
+            services.AddScoped<Services.FriendShip.FriendRequest>();
+            services.AddScoped<Services.Interest.InterestService>();
+            services.AddScoped<Services.InterestsUsers.InterestsUsersService>();
+            services.AddScoped<Services.Photo.PhotoService>();
+            services.AddScoped<Services.Reaction.ReactionService>();
+            services.AddScoped<Services.Role.RoleService>();
 
 
             return services;
@@ -35,19 +44,18 @@ namespace ASP.NET_Core_UI.Code.Extensions
                 var userService = serviceProvider.GetService<Services.User.UserAccountService>();
                 var user = userService.Get(mail);
                 if (user != null)
-                    return new CurrentUserModel()
+                    return new CurrentUser(isAuthenticated: true)
                     {
-                        isAuthenticated= true,
                         Id = user.Id,
                         Email = user.Email,
                         Name = user.Name,
-                        IsAdmin = user.Role.Name=="admin"
+                        IsAdmin = user.Role.Name == "admin",
+                        IsBanned=user.IsBanned
                     };
-                else return new CurrentUserModel()
+                else
                 {
-                    isAuthenticated= false
-                };
-
+                    return new CurrentUser(isAuthenticated: false);
+                }
             });
             return services;
 

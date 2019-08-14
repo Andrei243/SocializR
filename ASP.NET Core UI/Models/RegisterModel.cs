@@ -29,6 +29,8 @@ namespace ASP.NET_Core_UI.Models
         public int LocalityId { get; set; }
         public List<SelectListItem> Localities { get; set; }
 
+        public string SexualIdentity { get; set; }
+
         public int CountyId { get; set; }
         public List<SelectListItem> Counties { get; set; }
 
@@ -36,6 +38,10 @@ namespace ASP.NET_Core_UI.Models
         {
             var result = new List<ValidationResult>();
             var service = validationContext.GetService(typeof(UserAccountService)) as UserAccountService;
+            if (SexualIdentity != "masculin" && SexualIdentity != "feminin" && SexualIdentity != "nespecificat")
+            {
+                result.Add(new ValidationResult("Poti alege doar una dintre cele posibilitati", new List<string> { nameof(SexualIdentity) }));
+            }
             var emailExists = service.EmailExists(Email);
             if (emailExists)
                 result.Add(new ValidationResult("Email-ul exisa deja", new List<string> { nameof(Email) }));

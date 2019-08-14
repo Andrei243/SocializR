@@ -10,25 +10,23 @@ namespace Services.Comment
 {
     public class CommentService : Base.BaseService
     {
-        private readonly Domain.Post Post;
         private readonly CurrentUser CurrentUser;
-        public CommentService(Domain.Post post,CurrentUser currentUser,SocializRUnitOfWork unitOfWork) : base(unitOfWork)
+        public CommentService(CurrentUser currentUser,SocializRUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            Post = post;
             CurrentUser = currentUser;
         }
 
-        public List<Domain.Comment> GetAll()
+        public List<Domain.Comment> GetAll(int PostId)
         {
-            return unitOfWork.Comments.Query.Include(e=>e.User).Where(e => e.PostId == Post.Id).OrderBy(e => e.AddingMoment).ToList();
+            return unitOfWork.Comments.Query.Include(e=>e.User).Where(e => e.PostId == PostId).OrderBy(e => e.AddingMoment).ToList();
         }
 
-        public bool AddComment(string text)
+        public bool AddComment(string text,int PostId)
         {
             var comment = new Domain.Comment()
             {
                 Content = text,
-                PostId = Post.Id,
+                PostId = PostId,
                 UserId = CurrentUser.Id,
                 AddingMoment=DateTime.Now
             };

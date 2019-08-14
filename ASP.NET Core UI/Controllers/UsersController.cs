@@ -8,18 +8,20 @@ using Microsoft.EntityFrameworkCore;
 using DataAccess;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 
 namespace ASP.NET_Core_UI.Controllers
 {
-    public class UsersController : Controller
+    public class UsersController : Code.Base.BaseController
     {
-        private readonly SocializRContext _context;
+        //private readonly SocializRContext _context;
+        private readonly SocializRUnitOfWork unitOfWork;
 
         public List<Models.UserDropdownModel> GetUsersByName(string name)
         {
-            var el= _context.Users
-                .Where(e => (e.Name + e.Surname)
-                .Contains(name))
+            var el= unitOfWork.Users
+                .Query
+                .Where(e => (e.Name + e.Surname).Contains(name))
                 .Select(e => new Models.UserDropdownModel() { Id = e.Id, ProfilePhotoId = e.PhotoId, Name = e.Name+" " + e.Surname })
                 .OrderBy(e => e.Name)
                 .Take(5)
@@ -27,9 +29,10 @@ namespace ASP.NET_Core_UI.Controllers
             return el;
         }
 
-        public UsersController(SocializRContext context)
+        public UsersController(SocializRContext context,SocializRUnitOfWork unitOfWork,IMapper mapper)
+            :base(mapper)
         {
-            _context = context;
+            this.unitOfWork = unitOfWork;
         }
 
         // GET: Users
@@ -37,7 +40,7 @@ namespace ASP.NET_Core_UI.Controllers
         [Authorize(Roles ="admin")]
         public async Task<IActionResult> Index()
         {
-            var socializRContext = _context.Users.Include(u => u.Locality).Include(u => u.Role);
+            var socializRContext = unitOfWork.Users.Query.Include(u => u.Locality).Include(u => u.Role);
             return View(await socializRContext.ToListAsync());
         }
 
@@ -50,7 +53,8 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            var users = await _context.Users
+            var users = await unitOfWork.Users
+                .Query
                 .Include(u => u.Locality)
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -65,8 +69,8 @@ namespace ASP.NET_Core_UI.Controllers
         // GET: Users/Create
         public IActionResult Create()
         {
-            ViewData["LocalityId"] = new SelectList(_context.Locality, "Id", "Name");
-            ViewData["RoleId"] = new SelectList(_context.Role, "Id", "Name");
+            ViewData["LocalityId"] = new SelectList(unitOfWork.Localities.Query, "Id", "Name");
+            ViewData["RoleId"] = new SelectList(unitOfWork.Roles.Query, "Id", "Name");
             return View();
         }
 
@@ -79,12 +83,12 @@ namespace ASP.NET_Core_UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(users);
-                await _context.SaveChangesAsync();
+                unitOfWork.Users.Add(users);
+                unitOfWork.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocalityId"] = new SelectList(_context.Locality, "Id", "Name", users.LocalityId);
-            ViewData["RoleId"] = new SelectList(_context.Role, "Id", "Name", users.RoleId);
+            ViewData["LocalityId"] = new SelectList(unitOfWork.Localities.Query, "Id", "Name", users.LocalityId);
+            ViewData["RoleId"] = new SelectList(unitOfWork.Roles.Query, "Id", "Name", users.RoleId);
             return View(users);
         }
 
@@ -96,13 +100,13 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            var users = await _context.Users.FindAsync(id);
+            var users = unitOfWork.Users.Query.FirstOrDefault(e=>e.Id==id);
             if (users == null)
             {
                 return NotFound();
             }
-            ViewData["LocalityId"] = new SelectList(_context.Locality, "Id", "Name", users.LocalityId);
-            ViewData["RoleId"] = new SelectList(_context.Role, "Id", "Name", users.RoleId);
+            ViewData["LocalityId"] = new SelectList(unitOfWork.Localities.Query, "Id", "Name", users.LocalityId);
+            ViewData["RoleId"] = new SelectList(unitOfWork.Roles.Query, "Id", "Name", users.RoleId);
             return View(users);
         }
 
@@ -122,8 +126,8 @@ namespace ASP.NET_Core_UI.Controllers
             {
                 try
                 {
-                    _context.Update(users);
-                    await _context.SaveChangesAsync();
+                    unitOfWork.Users.Update(users);
+                    unitOfWork.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -138,8 +142,8 @@ namespace ASP.NET_Core_UI.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocalityId"] = new SelectList(_context.Locality, "Id", "Name", users.LocalityId);
-            ViewData["RoleId"] = new SelectList(_context.Role, "Id", "Name", users.RoleId);
+            ViewData["LocalityId"] = new SelectList(unitOfWork.Localities.Query, "Id", "Name", users.LocalityId);
+            ViewData["RoleId"] = new SelectList(unitOfWork.Roles.Query, "Id", "Name", users.RoleId);
             return View(users);
         }
 
@@ -151,7 +155,8 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            var users = await _context.Users
+            var users = unitOfWork.Users
+                .Query
                 .Include(u => u.Locality)
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -168,15 +173,15 @@ namespace ASP.NET_Core_UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var users = await _context.Users.FindAsync(id);
-            _context.Users.Remove(users);
-            await _context.SaveChangesAsync();
+            var users = unitOfWork.Users.Query.FirstOrDefault(e=>e.Id==id);
+            unitOfWork.Users.Remove(users);
+            unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
         private bool UsersExists(int id)
         {
-            return _context.Users.Any(e => e.Id == id);
+            return unitOfWork.Users.Query.Any(e => e.Id == id);
         }
     }
 }

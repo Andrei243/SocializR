@@ -1,0 +1,34 @@
+﻿@inject  Services.CurrentUser currentUser
+@{ 
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<body>
+    <div width="80%">
+        <div class="col-sm-3">
+            @if (currentUser.IsAuthenticated)
+            {
+                @if (currentUser.ProfilePhoto.HasValue)
+                {<a href=@Url.Action("Index","Profile")>
+                    <img src="@Url.Action("Download", "Photos", new { id = currentUser.ProfilePhoto })" height="100em" style="float:left" />
+                </a>
+                }
+                else
+                {<a href=@Url.Action("Index","Profile")>
+                    <img src="~/images/DefaultProfile.png" height="100em" style="float:left" />
+                </a>
+                }
+                @Html.ActionLink("Edit Profile", "Edit", "Profile");
+            }
+            else
+            {
+                <img src="~/images/DefaultProfile.png" height="100em" style="float:left" />
+            }
+        </div>
+
+        <div class="col-sm-7">
+            @RenderBody()
+        </div>
+    </div>
+</body>
+

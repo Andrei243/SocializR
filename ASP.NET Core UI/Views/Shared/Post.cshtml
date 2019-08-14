@@ -1,0 +1,13 @@
+﻿@model PostModel
+
+<div class="post">
+    <img src="@Url.Action("Download", "Photos", new { id = Model.User.ProfilePhoto })" height="75em"/>
+    <span>@Model.User.Name</span>
+    <p>@Model.Text</p>
+    @foreach(CommentModel comment in Model.Comments )
+    {
+        @Html.Partial("Comment",comment);  
+    }
+
+
+</div>

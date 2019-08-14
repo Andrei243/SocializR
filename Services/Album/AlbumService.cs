@@ -4,6 +4,7 @@ using System.Text;
 using DataAccess;
 using Domain;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services.Album
 {
@@ -18,7 +19,7 @@ namespace Services.Album
 
         public List<Domain.Album> getAll()
         {
-            return unitOfWork.Albums.Query.Where(e => e.UserId == CurrentUser.Id).OrderBy(e => e.Id).ToList();
+            return unitOfWork.Albums.Query.Where(e => e.UserId == CurrentUser.Id).Include(e=>e.Photo).OrderBy(e => e.Id).ToList();
         }
 
         

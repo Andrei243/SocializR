@@ -46,6 +46,7 @@ namespace ASP.NET_Core_UI
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddDbContext<DataAccess.SocializRContext>();
             services.AddScoped<DataAccess.SocializRUnitOfWork>();
+            services.AddCurrentUser();
             services.AddBusinessLogic();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             
@@ -63,13 +64,9 @@ namespace ASP.NET_Core_UI
             policy => policy.Requirements.Add(new Authorization.RoleRequirement("admin")))
             );
 
-            //services.AddAuthorization(options =>
-            //{
-            //    options.AddPolicy("Admin", policy => policy.RequireRole("admin"));
-            //});
             services.AddScoped<IAuthorizationHandler, Authorization.AdminHandler>();
 
-            services.AddCurrentUser();
+            
 
             //services.AddRouteJs();
         }

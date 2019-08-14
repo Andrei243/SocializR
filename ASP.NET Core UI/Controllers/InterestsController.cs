@@ -5,23 +5,27 @@ using Microsoft.EntityFrameworkCore;
 using DataAccess;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 
 namespace ASP.NET_Core_UI.Controllers
 {
     [Authorize(Policy = "Admin")]
-    public class InterestsController : Controller
+    public class InterestsController : Code.Base.BaseController
     {
-        private readonly SocializRContext _context;
+        //private readonly SocializRContext _context;
+        private readonly SocializRUnitOfWork unitOfWork;
 
-        public InterestsController(SocializRContext context)
+        public InterestsController(SocializRContext context,IMapper mapper,SocializRUnitOfWork unitOfWork):
+            base(mapper)
         {
-            _context = context;
+            //_context = context;
+            this.unitOfWork = unitOfWork;
         }
 
         // GET: Interests
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Interest.ToListAsync());
+            return View(await unitOfWork.Interests.Query.ToListAsync());
         }
 
         // GET: Interests/Details/5
@@ -32,7 +36,7 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            var interest = await _context.Interest
+            var interest = await unitOfWork.Interests.Query
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (interest == null)
             {
@@ -53,12 +57,12 @@ namespace ASP.NET_Core_UI.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Interest interest)
+        public IActionResult Create([Bind("Id,Name")] Interest interest)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(interest);
-                await _context.SaveChangesAsync();
+                unitOfWork.Interests.Add(interest);
+                unitOfWork.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             return View(interest);
@@ -72,7 +76,7 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            var interest = await _context.Interest.FindAsync(id);
+            var interest = unitOfWork.Interests.Query.FirstOrDefault(e=>e.Id==id);
             if (interest == null)
             {
                 return NotFound();
@@ -85,7 +89,7 @@ namespace ASP.NET_Core_UI.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Interest interest)
+        public IActionResult Edit(int id, [Bind("Id,Name")] Interest interest)
         {
             if (id != interest.Id)
             {
@@ -96,8 +100,8 @@ namespace ASP.NET_Core_UI.Controllers
             {
                 try
                 {
-                    _context.Update(interest);
-                    await _context.SaveChangesAsync();
+                    unitOfWork.Interests.Update(interest);
+                    unitOfWork.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -116,15 +120,15 @@ namespace ASP.NET_Core_UI.Controllers
         }
 
         // GET: Interests/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var interest = await _context.Interest
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var interest = unitOfWork.Interests.Query
+                .FirstOrDefault(m => m.Id == id);
             if (interest == null)
             {
                 return NotFound();
@@ -136,17 +140,17 @@ namespace ASP.NET_Core_UI.Controllers
         // POST: Interests/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var interest = await _context.Interest.FindAsync(id);
-            _context.Interest.Remove(interest);
-            await _context.SaveChangesAsync();
+            var interest = unitOfWork.Interests.Query.FirstOrDefault(e=>e.Id==id);
+            unitOfWork.Interests.Remove(interest);
+            unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
         private bool InterestExists(int id)
         {
-            return _context.Interest.Any(e => e.Id == id);
+            return unitOfWork.Interests.Query.Any(e => e.Id == id);
         }
     }
 }

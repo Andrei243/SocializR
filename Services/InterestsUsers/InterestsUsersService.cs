@@ -4,6 +4,7 @@ using System.Text;
 using DataAccess;
 using System.Linq;
 using Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services.InterestsUsers
 {
@@ -14,6 +15,12 @@ namespace Services.InterestsUsers
         public InterestsUsersService(CurrentUser currentUser, SocializRUnitOfWork unitOfWork) : base(unitOfWork)
         {
             CurrentUser = currentUser;
+        }
+
+        public List<string> GetAllInterests()
+        {
+            return unitOfWork.InterestsUserss.Query.Include(e => e.Interest).Where(e => e.UserId == CurrentUser.Id).Select(e=>e.Interest.Name).ToList();
+
         }
 
         public bool AddInterest(Domain.Interest interest)

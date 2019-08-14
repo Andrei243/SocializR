@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ASP.NET_Core_UI.Controllers
 {
+    
     [Authorize(Policy = "Admin")]
 
     public class CountiesController : Controller
@@ -36,7 +37,7 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            var county = await _context.County
+            var county = await _context.County.Include(e=>e.Locality)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (county == null)
             {
@@ -69,14 +70,15 @@ namespace ASP.NET_Core_UI.Controllers
         }
 
         // GET: Counties/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public  IActionResult Edit(int? id)
         {
+            
             if (id == null)
             {
                 return NotFound();
             }
 
-            var county = await _context.County.FindAsync(id);
+            var county = _context.County.FirstOrDefault(e => e.Id == id);
             if (county == null)
             {
                 return NotFound();
@@ -101,6 +103,7 @@ namespace ASP.NET_Core_UI.Controllers
                 try
                 {
                     _context.Update(county);
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

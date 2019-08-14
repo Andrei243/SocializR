@@ -1,0 +1,92 @@
+﻿@inject Services.CurrentUser currentUser
+@inject Services.InterestsUsers.InterestsUsersService interestService
+@inject Services.Album.AlbumService albumService
+@inject Services.FriendShip.FriendRequest friendshipService
+@model Domain.Users
+@{
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/GeneralLayout.cshtml";
+}
+
+<div>
+    <img src="@Url.Action("Download","Photos",currentUser.ProfilePhoto)" />
+
+    @if (!friendshipService.isFriendWith(Model.Id))
+    {
+        @if (friendshipService.isFriendRequested(Model.Id))
+        {
+            @Html.ActionLink(
+           linkText:"Accept",
+           actionName:"Accept",
+           controllerName:"Profile",
+           routeValues:
+           new { id=Model.Id },
+           htmlAttributes:null);
+
+            @Html.ActionLink(
+           linkText:"Refuse",
+           actionName:"Refuse",
+           controllerName:"Profile",
+           routeValues:
+           new { id = Model.Id },
+           htmlAttributes: null);
+        }
+        @if (friendshipService.isRefused(Model.Id))
+        {
+
+        }
+        else if(!friendshipService.isAlreadySent(Model.Id))
+        {
+        @Html.ActionLink(
+       linkText:"Send Friend Request",
+       actionName:"Send",
+       controllerName:"Profile",
+       routeValues:
+       new { id = Model.Id },
+       htmlAttributes: null);
+        }
+        else
+        {
+            <p>Send Friend Request</p>
+        }
+    }
+
+</div>
+
+@if (friendshipService.isFriendWith(Model.Id)||Model.Vizibility=="public")
+{
+
+
+
+<div>
+    <h2>Contact information</h2>
+
+    <h5>First Name  &nbsp;&nbsp; @Model.Name</h5>
+    <h5>Last Name  &nbsp;&nbsp; @Model.Surname</h5>
+    <h5>Birthday  &nbsp;&nbsp; @Model.BirthDay.Date</h5>
+    <h5>Locality  &nbsp;&nbsp; @Model.Locality.Name</h5>
+    <h5>County  &nbsp;&nbsp; @Model.Locality.County.Name</h5>
+    <h5>Gender  &nbsp;&nbsp; @Model.SexualIdentity</h5>
+</div>
+
+<div>
+    <h2>Likes and interests</h2>
+    @foreach (var interest in interestService.GetAllInterests())
+    {
+        <p>@interest</p>
+    }
+
+</div>
+
+<div>
+    <h2>Albums</h2>
+    @foreach (var album in albumService.getAll())
+    {
+        <div>
+            <h5>@album.Name</h5>
+            <h6>@album.Photo.Count</h6>
+        </div>
+    }
+
+</div>
+}

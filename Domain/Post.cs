@@ -9,7 +9,6 @@ namespace Domain
         public Post()
         {
             Comment = new HashSet<Comment>();
-            Photo = new HashSet<Photo>();
             Reaction = new HashSet<Reaction>();
         }
 
@@ -17,10 +16,11 @@ namespace Domain
         public int UserId { get; set; }
         public string Vizibilitate { get; set; }
         public DateTime AddingMoment { get; set; }
+        public string Text { get; set; }
 
         public virtual Users User { get; set; }
         public virtual ICollection<Comment> Comment { get; set; }
-        public virtual ICollection<Photo> Photo { get; set; }
+        public virtual Photo Photo { get; set; }
         public virtual ICollection<Reaction> Reaction { get; set; }
     }
 }

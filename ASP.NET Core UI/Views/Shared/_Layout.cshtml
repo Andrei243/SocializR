@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -21,13 +20,34 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" align="center">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" style="background-color:aqua" align="center">
+            <a href="/"><img src="~/images/Titlu.png" height="40em" /></a>
             <div align="center">
                 <input type="text" id="selection" />
-                <div class="dropdown" id="users">
-                </div>
+
+
+
+                @if (!currentUser.IsAuthenticated)
+                {
+                    @Html.ActionLink("Login", "Login", "Account");
+                    @Html.ActionLink("Register", "Register", "Account");
+                }
+                else
+                {
+                    @Html.ActionLink("Logout", "Logout", "Account");
+                }
+
+                @if (currentUser.IsAdmin)
+                {
+                    @Html.ActionLink("Interests", "Index", "Interests");
+                    @Html.ActionLink("Counties", "Index", "Counties");
+                    @Html.ActionLink("Localities", "Index", "Localities");
+                }
             </div>
+
         </nav>
+        <div class="dropdown" id="users">
+        </div>
     </header>
     <div class="container">
         <partial name="_CookieConsentPartial" />
@@ -80,7 +100,7 @@
                     $("#users").empty();
                     for (let i = 0; i < response.length; i++) {
                         
-                        var redirect = '@Url.Action("Details","Users")' + "/" + response[i].id;
+                        var redirect = '@Url.Action("Profile","Profile")' + "/" + response[i].id;
                             var photoURL ='@Url.Action("Download","Photos")' +"/" + response[i].profilePhotoId;
                             $('#users').append(`<a href=${redirect}><div class="item"><img src=${photoURL} height="100em" /> <p>${response[i].name}</p>  </div></a>`)
                         

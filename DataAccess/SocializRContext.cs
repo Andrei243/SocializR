@@ -10,6 +10,7 @@ namespace DataAccess
     {
         public SocializRContext()
         {
+            
         }
 
         public SocializRContext(DbContextOptions<SocializRContext> options)
@@ -36,7 +37,7 @@ namespace DataAccess
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=ANITU;Database=SocializR;Trusted_Connection=true");
+                optionsBuilder.UseSqlServer("Server=ANITU;Database=SocializR;Trusted_Connection=true;Connection Timeout=3600");
                 
             }
         }

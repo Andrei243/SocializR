@@ -4,14 +4,16 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(SocializRContext))]
-    partial class SocializRContextModelSnapshot : ModelSnapshot
+    [Migration("20190813103609_Comments are made only by members and posts have a single photo and text")]
+    partial class Commentsaremadeonlybymembersandpostshaveasinglephotoandtext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -292,8 +294,6 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .IsUnicode(false);
-
-                    b.Property<bool>("IsBanned");
 
                     b.Property<int?>("LocalityId");
 

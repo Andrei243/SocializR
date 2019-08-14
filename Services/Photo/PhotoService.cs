@@ -8,46 +8,45 @@ namespace Services.Photo
 {
     public class PhotoService : Base.BaseService
     {
-        private readonly Domain.Post Post;
-        private readonly Domain.Album Album;
 
-        public PhotoService(Domain.Post post,Domain.Album album,SocializRUnitOfWork unitOfWork) : base(unitOfWork)
+
+        public PhotoService(SocializRUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            Post = post;
-            Album = album;
         }
 
-        public List<Domain.Photo> getPhotos()
+        public List<Domain.Photo> getPhotos(int? postId,int? albumId)
         {
             IQueryable<Domain.Photo> listaPoze ;
-            if(Post!= null)
+            if(postId!= null)
             {
-                listaPoze = unitOfWork.Photos.Query.Where(e => e.PostId == Post.Id);
+                listaPoze = unitOfWork.Photos.Query.Where(e => e.PostId == postId);
             }
             else
             {
-                listaPoze = unitOfWork.Photos.Query.Where(e => e.AlbumId == Album.Id);
+                listaPoze = unitOfWork.Photos.Query.Where(e => e.AlbumId == albumId);
             }
             return listaPoze.OrderBy(e => e.Position).ToList();
         }
 
-        public bool RemovePhoto(Domain.Photo photo)
+        public bool RemovePhoto(int photoId,int? postId,int? albumId)
         {
+            postId = unitOfWork.Photos.Query.Where(e => e.Id == photoId).Select(e => e.PostId).FirstOrDefault();
+            albumId= unitOfWork.Photos.Query.Where(e => e.Id == photoId).Select(e => e.AlbumId).FirstOrDefault();
             IQueryable<Domain.Photo> listaPoze;
-            if (Post != null)
+            if (postId != null)
             {
-                listaPoze = unitOfWork.Photos.Query.Where(e => e.PostId == photo.PostId);
+                listaPoze = unitOfWork.Photos.Query.Where(e => e.PostId == postId);
             }
             else
             {
-                listaPoze = unitOfWork.Photos.Query.Where(e => e.AlbumId == photo.AlbumId);
+                listaPoze = unitOfWork.Photos.Query.Where(e => e.AlbumId == albumId);
             }
             var poze = listaPoze.OrderBy(e => e.Position).ToList();
 
             foreach(var poza in poze)
             {
-                if (poza.Id == photo.Id) unitOfWork.Photos.Remove(poza);
-                else if(poza.Position > photo.Id)
+                if (poza.Id == photoId) unitOfWork.Photos.Remove(poza);
+                else if(poza.Position > photoId)
                 {
                     poza.Position -= 1;
                     unitOfWork.Photos.Update(poza);

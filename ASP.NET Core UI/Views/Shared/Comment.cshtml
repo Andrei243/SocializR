@@ -1,0 +1,6 @@
+﻿@model CommentModel
+<div class="comment">
+    <img src="@Url.Action("Download", "Photos", new { id = Model.User.ProfilePhoto })" height="50em" style="float:left"/>
+    <p>@Model.Text</p>
+
+</div>

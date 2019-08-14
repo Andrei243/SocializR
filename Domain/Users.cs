@@ -36,6 +36,7 @@ namespace Domain
         [Required]
         public string Vizibility { get; set; }
         public int? PhotoId { get; set; }
+        public bool IsBanned { get; set; }
 
         public virtual Photo Photo { get; set; }
         public virtual Locality Locality { get; set; }

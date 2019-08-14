@@ -1,8 +1,37 @@
-﻿@{
+﻿@inject  Services.Post.PostService postService
+@inject  Services.Comment.CommentService commentService
+@model Domain.Post
+@{
     ViewData["Title"] = "Home Page";
+    Layout = "GeneralLayout";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (currentUser.IsAuthenticated)
+{
+    <form enctype="multipart/form-data" asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Photo.Binar" class="control-label"></label>
+            <input type="file" asp-for="Photo.Binar" class="form-control" />
+            <span asp-validation-for="Photo.Binar" class="text-danger"></span>
+        </div>
+        
+        
+        <div class="form-group">
+            <label asp-for="Text" class="control-label"></label>
+            <input type="text" asp-for="Text" class="form-control" />
+            <span asp-validation-for="Text" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </form>
+}
+
+@if (currentUser.IsAuthenticated)
+{
+    foreach(var post in postService.GetNewsfeed())
+    {
+        @Html.Partial("Post",new PostModel { User=new PostUserModel() {Id=post.UserId,Name=post.User.Name+' '+post.User.Surname,ProfilePhoto=post.User.PhotoId },Comments=post.Comment.Select(e=>new CommentModel() { Text=e.Content,User=new PostUserModel() {Id=e.UserId,Name=e.User.Name+' '+e.User.Surname,ProfilePhoto=post.User.PhotoId }}).ToList()})
+    }
+}

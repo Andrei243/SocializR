@@ -7,6 +7,14 @@
   <ItemGroup>
     <Compile Remove="Migrations\20190806054201_Poza de profil.cs" />
     <Compile Remove="Migrations\20190806054201_Poza de profil.Designer.cs" />
+    <Compile Remove="Migrations\20190813094648_Comments are made only by members and posts have a single photo and text.cs" />
+    <Compile Remove="Migrations\20190813094648_Comments are made only by members and posts have a single photo and text.Designer.cs" />
+    <Compile Remove="Migrations\20190813094816_Comments are made only by members and posts have a single photo and text.cs" />
+    <Compile Remove="Migrations\20190813094816_Comments are made only by members and posts have a single photo and text.Designer.cs" />
+    <Compile Remove="Migrations\20190813101839_Comments are made only by members and posts have a single photo and text.cs" />
+    <Compile Remove="Migrations\20190813101839_Comments are made only by members and posts have a single photo and text.Designer.cs" />
+    <Compile Remove="Migrations\20190813102809_Comments are made only by members and posts have a single photo and text.cs" />
+    <Compile Remove="Migrations\20190813102809_Comments are made only by members and posts have a single photo and text.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

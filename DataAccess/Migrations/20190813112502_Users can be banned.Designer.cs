@@ -4,14 +4,16 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(SocializRContext))]
-    partial class SocializRContextModelSnapshot : ModelSnapshot
+    [Migration("20190813112502_Users can be banned")]
+    partial class Userscanbebanned
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -293,8 +295,6 @@ namespace DataAccess.Migrations
                         .HasMaxLength(100)
                         .IsUnicode(false);
 
-                    b.Property<bool>("IsBanned");
-
                     b.Property<int?>("LocalityId");
 
                     b.Property<string>("Name")
@@ -325,6 +325,8 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .IsUnicode(false);
+
+                    b.Property<bool>("isBanned");
 
                     b.HasKey("Id");
 

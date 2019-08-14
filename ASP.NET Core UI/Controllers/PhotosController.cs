@@ -75,8 +75,6 @@ namespace ASP.NET_Core_UI.Controllers
         {
             if (ModelState.IsValid)
             {
-
-                //_context.Add(photo);
                 Photo photo = new Photo()
                 {
                     AlbumId = photoModel.AlbumId,
@@ -92,11 +90,7 @@ namespace ASP.NET_Core_UI.Controllers
                 }
                 _context.Add(photo);
                     await _context.SaveChangesAsync();
-                //using (var memoryStream = new MemoryStream())
-                //{
-                //    await model.AvatarImage.CopyToAsync(memoryStream);
-                //    user.AvatarImage = memoryStream.ToArray();
-                //}
+              
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AlbumId"] = new SelectList(_context.Album, "Id", "Name", photoModel.AlbumId);
