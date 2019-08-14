@@ -4,6 +4,7 @@ using System.Text;
 using Domain;
 using DataAccess;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services.Interest
 {
@@ -26,6 +27,11 @@ namespace Services.Interest
             unitOfWork.InterestsUserss.RemoveRange(unitOfWork.InterestsUserss.Query.Where(e => e.InterestId == interest.Id).ToList());
             unitOfWork.Interests.Remove(interest);
             return unitOfWork.SaveChanges() != 0;
+        }
+
+        public List<Domain.Interest> getAll()
+        {
+            return unitOfWork.Interests.Query.AsNoTracking().ToList();
         }
     }
 }

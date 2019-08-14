@@ -17,18 +17,18 @@ namespace Services.InterestsUsers
             CurrentUser = currentUser;
         }
 
-        public List<string> GetAllInterests(int idUser)
+        public List<Domain.Interest> GetAllInterests(int idUser)
         {
-            return unitOfWork.InterestsUserss.Query.AsNoTracking().Include(e => e.Interest).AsNoTracking().Where(e => e.UserId == idUser).Select(e=>e.Interest.Name).ToList();
+            return unitOfWork.InterestsUserss.Query.AsNoTracking().Include(e => e.Interest).AsNoTracking().Where(e => e.UserId == idUser).Select(e=>e.Interest).ToList();
 
         }
 
-        public bool AddInterest(Domain.Interest interest)
+        public bool AddInterest(int interestId)
         {
-            if (unitOfWork.InterestsUserss.Query.Any(e => e.InterestId == interest.Id && e.UserId == CurrentUser.Id)) return false;
+            if (unitOfWork.InterestsUserss.Query.Any(e => e.InterestId == interestId && e.UserId == CurrentUser.Id)) return false;
             var legatura = new Domain.InterestsUsers()
             {
-                InterestId = interest.Id,
+                InterestId = interestId,
                 UserId = CurrentUser.Id
             };
             unitOfWork.InterestsUserss.Add(legatura);
@@ -36,15 +36,11 @@ namespace Services.InterestsUsers
 
         }
 
-        public bool RemoveInterest(Domain.Interest interest)
+        public bool RemoveInterest(int interestId)
         {
-            if (!unitOfWork.InterestsUserss.Query.Any(e => e.InterestId == interest.Id && e.UserId == CurrentUser.Id)) return false;
-            var legatura = new Domain.InterestsUsers()
-            {
-                InterestId = interest.Id,
-                UserId = CurrentUser.Id
-            };
-            unitOfWork.InterestsUserss.Remove(legatura);
+            if (!unitOfWork.InterestsUserss.Query.Any(e => e.InterestId == interestId && e.UserId == CurrentUser.Id)) return false;
+            
+            unitOfWork.InterestsUserss.Remove(unitOfWork.InterestsUserss.Query.First(e => e.InterestId == interestId && e.UserId == CurrentUser.Id));
             return unitOfWork.SaveChanges() != 0;
 
         }

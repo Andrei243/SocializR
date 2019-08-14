@@ -65,6 +65,12 @@ namespace Services.FriendShip
             return unitOfWork.SaveChanges() != 0;
         }
 
+        public List<Domain.Users> getAllFriends()
+        {
+            return unitOfWork.Friendships.Query.AsNoTracking().Include(e => e.IdReceiverNavigation).Where(e => e.IdSender == currentUser.Id && (e.Accepted ?? false)).Select(e => e.IdReceiverNavigation).ToList();
+
+        }
+
         public bool isFriendRequested(int by)
         {
             return unitOfWork.Friendships.Query.AsNoTracking().Any(e => e.IdSender == by && e.IdReceiver == currentUser.Id && !e.Accepted.HasValue);

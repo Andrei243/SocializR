@@ -19,7 +19,7 @@
 
     <h5>First Name  &nbsp;&nbsp; @currentUser.Name</h5>
     <h5>Last Name  &nbsp;&nbsp; @currentUser.Surname</h5>
-    <h5>Birthday  &nbsp;&nbsp; @currentUser.BirthDay</h5>
+    <h5>Birthday  &nbsp;&nbsp; @currentUser.BirthDay.Year . @currentUser.BirthDay.Month . @currentUser.BirthDay.Day</h5>
     @if (currentUser.Locality != null)
     {
     <h5>Locality  &nbsp;&nbsp; @currentUser.Locality.Name</h5>
@@ -32,7 +32,7 @@
     <h2>Likes and interests</h2>
     @foreach(var interest in interestService.GetAllInterests(currentUser.Id))
     {
-        <p>@interest</p>
+        <p>@interest.Name</p>
     }
 
 </div>

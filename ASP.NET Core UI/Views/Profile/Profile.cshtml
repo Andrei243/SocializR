@@ -63,7 +63,7 @@
 
     <h5>First Name  &nbsp;&nbsp; @Model.Name</h5>
     <h5>Last Name  &nbsp;&nbsp; @Model.Surname</h5>
-    <h5>Birthday  &nbsp;&nbsp; @Model.BirthDay.Date</h5>
+    <h5>Birthday  &nbsp;&nbsp; @Model.BirthDay.Year .@Model.BirthDay.Month . @Model.BirthDay.Day</h5>
     <h5>Locality  &nbsp;&nbsp; @Model.Locality.Name</h5>
     <h5>County  &nbsp;&nbsp; @Model.Locality.County.Name</h5>
     <h5>Gender  &nbsp;&nbsp; @Model.SexualIdentity</h5>
@@ -73,7 +73,7 @@
     <h2>Likes and interests</h2>
     @foreach (var interest in interestService.GetAllInterests(Model.Id))
     {
-        <p>@interest</p>
+        <p>@interest.Name</p>
     }
 
 </div>

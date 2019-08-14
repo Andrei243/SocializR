@@ -12,6 +12,8 @@ namespace ASP.NET_Core_UI.Models
         public EditUserModel()
         {
             Counties = new List<SelectListItem>();
+            InterestsId = new List<int>();
+            Interests = new List<SelectListItem>();
         }
 
         public int Id { get; set; }
@@ -22,6 +24,9 @@ namespace ASP.NET_Core_UI.Models
         public string SexualIdentity { get; set; }
         public string Visibility { get; set; }
         public int? PhotoId { get; set; }
+        public List<int> InterestsId { get; set; }
         public List<SelectListItem> Counties { get; set; }
+        public List<SelectListItem> Interests { get; set; }
+        
     }
 }
