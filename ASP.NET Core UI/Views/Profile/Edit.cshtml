@@ -1,4 +1,4 @@
-﻿@model Domain.Users
+﻿@model EditUserModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -25,22 +25,12 @@
                 <span asp-validation-for="Surname" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="BirthDay" class="control-label"></label>
                 <input type="date" asp-for="BirthDay" class="form-control" />
                 <span asp-validation-for="BirthDay" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <select id="CountyId" class="form-control" asp-items="ViewBag.Counties"></select>
+                <select id="CountyId" class="form-control" asp-items="Model.Counties"></select>
             </div>
 
             <div class="form-group">
@@ -58,13 +48,13 @@
                 <span asp-validation-for="SexualIdentity" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Vizibility" class="control-label"></label>
-                <select asp-for="Vizibility" class="form-control" >
+                <label asp-for="Visibility" class="control-label"></label>
+                <select asp-for="Visibility" class="form-control" >
                     <option value="public">Public</option>
                     <option value="friends">Friends Only</option>
                     <option value="private">Private</option>
                 </select>
-                <span asp-validation-for="Vizibility" class="text-danger"></span>
+                <span asp-validation-for="Visibility" class="text-danger"></span>
             </div>
             @*<div class="form-group">
                 <label asp-for="PhotoId" class="control-label"></label>

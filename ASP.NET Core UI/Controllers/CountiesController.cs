@@ -16,17 +16,18 @@ namespace ASP.NET_Core_UI.Controllers
 
     public class CountiesController : Controller
     {
-        private readonly SocializRContext _context;
+        //private readonly SocializRContext _context;
+        private readonly Services.County.CountyService countyService;
 
-        public CountiesController(SocializRContext context)
+        public CountiesController(Services.County.CountyService countyService)
         {
-            _context = context;
+            this.countyService = countyService;
         }
 
         // GET: Counties
         public async Task<IActionResult> Index()
         {
-            return View(await _context.County.ToListAsync());
+            return View(countyService.GetAll());
         }
 
         // GET: Counties/Details/5
@@ -37,8 +38,7 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            var county = await _context.County.Include(e=>e.Locality)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var county = countyService.GetCountyById(id);
             if (county == null)
             {
                 return NotFound();
@@ -62,8 +62,7 @@ namespace ASP.NET_Core_UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(county);
-                await _context.SaveChangesAsync();
+                countyService.Add(county);
                 return RedirectToAction(nameof(Index));
             }
             return View(county);
@@ -78,7 +77,7 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            var county = _context.County.FirstOrDefault(e => e.Id == id);
+            var county = countyService.GetCountyById(id);
             if (county == null)
             {
                 return NotFound();
@@ -102,9 +101,7 @@ namespace ASP.NET_Core_UI.Controllers
             {
                 try
                 {
-                    _context.Update(county);
-
-                    await _context.SaveChangesAsync();
+                    countyService.Update(county);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -130,8 +127,7 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            var county = await _context.County
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var county = countyService.GetCountyById(id);
             if (county == null)
             {
                 return NotFound();
@@ -145,15 +141,14 @@ namespace ASP.NET_Core_UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var county = await _context.County.FindAsync(id);
-            _context.County.Remove(county);
-            await _context.SaveChangesAsync();
+            var county = countyService.GetCountyById(id);
+            countyService.Remove(county);
             return RedirectToAction(nameof(Index));
         }
 
         private bool CountyExists(int id)
         {
-            return _context.County.Any(e => e.Id == id);
+            return countyService.GetCountyById(id)!=null;
         }
     }
 }

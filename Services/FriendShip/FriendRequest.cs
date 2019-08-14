@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Domain;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services.FriendShip
 {
@@ -19,7 +20,7 @@ namespace Services.FriendShip
 
         public bool isFriendWith(int with)
         {
-            return unitOfWork.Friendships.Query.Any(e => e.IdSender == currentUser.Id && e.IdReceiver == with && (e.Accepted??false));
+            return unitOfWork.Friendships.Query.AsNoTracking().Any(e => e.IdSender == currentUser.Id && e.IdReceiver == with && (e.Accepted??false));
         }
         public bool SendFriendRequest(int to)
         {
@@ -66,17 +67,17 @@ namespace Services.FriendShip
 
         public bool isFriendRequested(int by)
         {
-            return unitOfWork.Friendships.Query.Any(e => e.IdSender == by && e.IdReceiver == currentUser.Id && !e.Accepted.HasValue);
+            return unitOfWork.Friendships.Query.AsNoTracking().Any(e => e.IdSender == by && e.IdReceiver == currentUser.Id && !e.Accepted.HasValue);
         }
 
         public bool isRefused(int by)
         {
-            return unitOfWork.Friendships.Query.Any(e => e.IdSender == currentUser.Id && e.IdReceiver == by && e.Accepted.Value == false);
+            return unitOfWork.Friendships.Query.AsNoTracking().Any(e => e.IdSender == currentUser.Id && e.IdReceiver == by && e.Accepted.Value == false);
         }
 
         public bool isAlreadySent(int to)
         {
-            return unitOfWork.Friendships.Query.Any(e => e.IdSender == currentUser.Id && e.IdReceiver == to && !e.Accepted.HasValue);
+            return unitOfWork.Friendships.Query.AsNoTracking().Any(e => e.IdSender == currentUser.Id && e.IdReceiver == to && !e.Accepted.HasValue);
         }
 
     }

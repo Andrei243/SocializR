@@ -92,11 +92,10 @@ namespace ASP.NET_Core_UI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                //model.Localities = GetLocalities();
                 return View(model);
             }
-            //var entity = mapper.Map<Domain.Users>(model);
-            var entity = new Domain.Users()
+            var entity = mapper.Map<Domain.Users>(model);
+            /*var entity = new Domain.Users()
             {
                 Name = model.Name,
                 Surname=model.Surname,
@@ -106,7 +105,7 @@ namespace ASP.NET_Core_UI.Controllers
                 SexualIdentity=model.SexualIdentity,
                 Vizibility="friends",
                 RoleId=1
-            };
+            };*/
             var result = userAccountService.Register(entity);
             if (!result)
                 return InternalServerErrorView();

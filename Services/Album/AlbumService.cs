@@ -17,9 +17,9 @@ namespace Services.Album
             this.CurrentUser = currentUser;
         }
 
-        public List<Domain.Album> getAll()
+        public List<Domain.Album> getAll(int idUser)
         {
-            return unitOfWork.Albums.Query.Where(e => e.UserId == CurrentUser.Id).Include(e=>e.Photo).OrderBy(e => e.Id).ToList();
+            return unitOfWork.Albums.Query.Where(e => e.UserId == idUser).AsNoTracking().Include(e=>e.Photo).AsNoTracking().OrderBy(e => e.Id).ToList();
         }
 
         

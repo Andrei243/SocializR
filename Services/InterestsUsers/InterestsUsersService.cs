@@ -17,9 +17,9 @@ namespace Services.InterestsUsers
             CurrentUser = currentUser;
         }
 
-        public List<string> GetAllInterests()
+        public List<string> GetAllInterests(int idUser)
         {
-            return unitOfWork.InterestsUserss.Query.Include(e => e.Interest).Where(e => e.UserId == CurrentUser.Id).Select(e=>e.Interest.Name).ToList();
+            return unitOfWork.InterestsUserss.Query.AsNoTracking().Include(e => e.Interest).AsNoTracking().Where(e => e.UserId == idUser).Select(e=>e.Interest.Name).ToList();
 
         }
 

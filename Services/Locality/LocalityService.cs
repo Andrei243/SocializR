@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using DataAccess;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services.Locality
 {
@@ -36,7 +37,7 @@ namespace Services.Locality
 
         public List<Domain.Locality> getAll(int countyId)
         {
-            return unitOfWork.Localities.Query.Where(e=>e.CountyId==countyId).ToList();
+            return unitOfWork.Localities.Query.AsNoTracking().Where(e=>e.CountyId==countyId).ToList();
         }
 
     }

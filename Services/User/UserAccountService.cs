@@ -16,7 +16,9 @@ namespace Services.User
 
         public Domain.Users Get(string email)
         {
-            return unitOfWork.Users.Query.Include(e=>e.Role)
+            return unitOfWork.Users.Query.AsNoTracking().Include(e=>e.Role).AsNoTracking()
+                .Include(e=>e.Locality).AsNoTracking()
+                .Include(e=>e.Locality).ThenInclude(e=>e.County).AsNoTracking()
                 .FirstOrDefault(e => e.Email == email);
         }
 
@@ -36,7 +38,7 @@ namespace Services.User
 
         public bool EmailExists(string email)
         {
-            return unitOfWork.Users.Query.Any(e => e.Email == email);
+            return unitOfWork.Users.Query.AsNoTracking().Any(e => e.Email == email);
         }
 
     }

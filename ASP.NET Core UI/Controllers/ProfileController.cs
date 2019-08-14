@@ -5,68 +5,91 @@ using AutoMapper;
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ASP.NET_Core_UI.Models;
 
 namespace ASP.NET_Core_UI.Controllers
 {
     public class ProfileController : Code.Base.BaseController
     {
-        private readonly SocializRUnitOfWork unitOfWork;
-        //private readonly SocializRContext _context;
+        //private readonly SocializRUnitOfWork unitOfWork;
+        private readonly Services.County.CountyService countyService;
+        private readonly Services.User.UserService userService;
         private readonly CurrentUser currentUser;
         private readonly Services.FriendShip.FriendRequest friendService;
 
 
-        public ProfileController(IMapper mapper,CurrentUser currentUser,SocializRContext context, Services.FriendShip.FriendRequest friendRequest,SocializRUnitOfWork unitOfWork)
+        public ProfileController(IMapper mapper,CurrentUser currentUser, Services.FriendShip.FriendRequest friendRequest,Services.User.UserService userService,Services.County.CountyService countyService)
             : base(mapper)
         {
-            this.unitOfWork = unitOfWork;
+            this.userService = userService;
+            this.countyService = countyService;
             this.currentUser = currentUser;
             this.friendService = friendRequest;
-            //_context = context;
         }
 
 
         public IActionResult Index()
         {
-            var user = unitOfWork.Users.Query.Include(e=>e.Locality).ThenInclude(e=>e.County).Include(e=>e.InterestsUsers).FirstOrDefault(e=>e.Id==currentUser.Id);
-            return View(user);
+            //var user = userService.getUserById(currentUser.Id);
+            return View();
         }
 
         [HttpGet]
         public IActionResult Edit()
         {
-            var user = unitOfWork.Users.Query.FirstOrDefault(e=>e.Id==currentUser.Id);
-            ViewData["Counties"] = new SelectList(unitOfWork.Counties.Query, "Id", "Name");
-            return View(user);
+
+            var user = userService.getCurrentUser();
+            var model = mapper.Map<EditUserModel>(user);
+
+            var counties = countyService.GetAll();
+
+            model.Counties = counties.Select(c => mapper.Map<SelectListItem>(c)).ToList();
+            return View(model);
 
         }
 
         [HttpPost]
-        public IActionResult Edit(Domain.Users user)
+        public IActionResult Edit(EditUserModel user)
         {
 
             if (ModelState.IsValid)
             {
-                unitOfWork.Users.Update(user);
+                Domain.Users updateUser = new Domain.Users
+                {
+                    BirthDay = user.BirthDay,
+                    Email = currentUser.Email,
+                    Id = user.Id,
+                    IsBanned = currentUser.IsBanned,
+                    LocalityId = user.LocalityId,
+                    Name = user.Name,
+                    Password = currentUser.Password,
+                    PhotoId = currentUser.ProfilePhoto,
+                    RoleId = currentUser.IsAdmin ? 1 : 2,
+                    SexualIdentity = user.SexualIdentity,
+                    Surname = user.Surname,
+                    Vizibility = user.Visibility
+                };
+                userService.Update(updateUser);
+
                 return RedirectToAction("Index");
             }
             return View(user);
 
         }
 
-        public IActionResult Profile(int? id)
+        public IActionResult Profile(int? userId)
         {
-            if(!id.HasValue || id == 0 || !unitOfWork.Users.Query.Any(e=>e.Id==id))
+            if(!userId.HasValue || userId == 0 || userService.getUserById(userId) ==null)
             {
                 return NotFoundView();
             }
             else
             {
-                if (id == currentUser.Id)
+                if (userId == currentUser.Id)
                 {
                     return RedirectToAction("Index", "Profile", null);
                 }
-                var user = unitOfWork.Users.Query.Include(e => e.Locality).ThenInclude(e => e.County).Include(e => e.InterestsUsers).FirstOrDefault(e => e.Id == id);
+                var user = userService.getUserById(userId);
                 return View(user);
             }
 
@@ -75,7 +98,7 @@ namespace ASP.NET_Core_UI.Controllers
         public IActionResult Accept(int id)
         {
             friendService.AcceptFriendRequest(id);
-            return RedirectToAction("Profile", "Profile", new { id = id });
+            return RedirectToAction("Profile", "Profile", new { userId = id });
         }
 
         public IActionResult Refuse(int id)
@@ -87,7 +110,7 @@ namespace ASP.NET_Core_UI.Controllers
         public IActionResult Send(int id)
         {
             friendService.SendFriendRequest(id);
-            return RedirectToAction("Profile", "Profile", new {id=id });
+            return RedirectToAction("Profile", "Profile", new {userId=id });
         }
 
 

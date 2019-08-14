@@ -10,12 +10,12 @@ namespace DataAccess
     {
         public SocializRContext()
         {
-            
         }
 
         public SocializRContext(DbContextOptions<SocializRContext> options)
             : base(options)
         {
+            this.ChangeTracker.LazyLoadingEnabled = false;
         }
 
         public virtual DbSet<Album> Album { get; set; }

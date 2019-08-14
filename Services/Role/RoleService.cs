@@ -18,7 +18,7 @@ namespace Services.Role
 
         protected bool IsAdmin()
         {
-            return unitOfWork.Roles.Query.Include(e => e.Users).Any(e => e.Name == "admin" && e.Users.Select(f => f.Id).Contains(CurrentUser.Id));
+            return unitOfWork.Roles.Query.AsNoTracking().Include(e => e.Users).AsNoTracking().Any(e => e.Name == "admin" && e.Users.Select(f => f.Id).Contains(CurrentUser.Id));
         }
 
     }

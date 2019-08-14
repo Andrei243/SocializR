@@ -9,43 +9,43 @@ namespace DataAccess
 {
     public class SocializRUnitOfWork : Base.BaseUnitOfWork
     {
+
+
         public SocializRUnitOfWork(SocializRContext context) : base(context)
         {
-            Posts = new BaseRepository<Post>(DbContext);
-            Users = new BaseRepository<Users>(DbContext);
-            Albums = new BaseRepository<Album>(DbContext);
-            Comments = new BaseRepository<Comment>(DbContext);
-            Counties = new BaseRepository<County>(DbContext);
-            Friendships = new BaseRepository<Friendship>(DbContext);
-            Interests = new BaseRepository<Interest>(DbContext);
-            InterestsUserss = new BaseRepository<InterestsUsers>(DbContext);
-            Localities = new BaseRepository<Locality>(DbContext);
-            Photos = new BaseRepository<Photo>(DbContext);
-            Reactions = new BaseRepository<Reaction>(DbContext);
-            Roles = new BaseRepository<Role>(DbContext);
         }
 
-        public IRepository<Post> Posts{ get; }
-        public IRepository<Users> Users{ get; }
+        private IRepository<Post> posts;
+        public IRepository<Post> Posts => posts ?? (posts = new BaseRepository<Post>(DbContext));
 
-        public IRepository<Album> Albums { get; }
+        private IRepository<Users> users;
+        public IRepository<Users> Users => users ?? (users = new BaseRepository<Users>(DbContext));
 
-        public IRepository<Comment> Comments { get; }
+        private IRepository<Album> albums;
+        public IRepository<Album> Albums => albums ?? (albums = new BaseRepository<Album>(DbContext));
 
-        public IRepository<County> Counties { get; }
+        private IRepository<Comment> comments;
+        public IRepository<Comment> Comments => comments ?? (comments = new BaseRepository<Comment>(DbContext));
 
-        public IRepository<Friendship> Friendships { get; }
+        private IRepository<County> counties;
+        public IRepository<County> Counties => counties ?? (counties = new BaseRepository<County>(DbContext));
 
-        public IRepository<Interest> Interests { get; }
+        private IRepository<Friendship> friendships;
+        public IRepository<Friendship> Friendships => friendships ?? (friendships = new BaseRepository<Friendship>(DbContext));
 
-        public IRepository<InterestsUsers> InterestsUserss { get; }
-        public IRepository<Locality> Localities { get; }
+        private IRepository<Interest> interests;
+        public IRepository<Interest> Interests => interests ?? (interests = new BaseRepository<Interest>(DbContext));
 
-        public IRepository<Photo> Photos { get; }
-
-        public IRepository<Reaction> Reactions { get; }
-
-        public IRepository<Role> Roles { get; }
+        private IRepository<InterestsUsers> interestsUserss;
+        public IRepository<InterestsUsers> InterestsUserss => interestsUserss ?? (interestsUserss = new BaseRepository<InterestsUsers>(DbContext));
+        private IRepository<Locality> localities;
+        public IRepository<Locality> Localities => localities ?? (localities = new BaseRepository<Locality>(DbContext));
+        private IRepository<Photo> photos;
+        public IRepository<Photo> Photos => photos ?? (photos = new BaseRepository<Photo>(DbContext));
+        private IRepository<Reaction> reactions;
+        public IRepository<Reaction> Reactions => reactions ?? (reactions = new BaseRepository<Reaction>(DbContext));
+        private IRepository<Role> roles;
+        public IRepository<Role> Roles => roles ?? (roles = new BaseRepository<Role>(DbContext));
 
     }
 }

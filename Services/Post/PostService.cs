@@ -28,21 +28,60 @@ namespace Services.Post
 
         public List<Domain.Post> GetAllPersonalPost()
         {
-            return unitOfWork.Posts.Query.Include(e=>e.Comment).Include(e=>e.Photo).Include(e=>e.Reaction).Where(e => e.UserId == CurrentUser.Id).OrderBy(e=>e.AddingMoment).ToList();
+            return unitOfWork
+                .Posts
+                .Query
+                .AsNoTracking()
+                .Include(e=>e.Comment)
+                .AsNoTracking()
+                .Include(e=>e.Photo)
+                .AsNoTracking()
+                .Include(e=>e.Reaction)
+                .AsNoTracking()
+                .Where(e => e.UserId == CurrentUser.Id)
+                .OrderBy(e=>e.AddingMoment)
+                .ToList();
         }
 
         public List<Domain.Post> GetPublicNewsfeed()
         {
-            return unitOfWork.Posts.Query.Where(e => e.Vizibilitate == "public").ToList();
+            return unitOfWork
+                .Posts
+                .Query
+                .AsNoTracking()
+                .Where(e => e.Vizibilitate == "public")
+                .ToList();
         }
 
         public List<Domain.Post> GetNewsfeed()
         {
-            var friends = unitOfWork.Friendships.Query.Where(e => e.IdReceiver == CurrentUser.Id && (e.Accepted??false)).Select(e=>e.IdSender).ToList();
+            var friends = unitOfWork.Friendships.Query.AsNoTracking().Where(e => e.IdReceiver == CurrentUser.Id && (e.Accepted??false)).Select(e=>e.IdSender).ToList();
 
-            var posts1 = unitOfWork.Posts.Query.Include(e => e.User).Include(e => e.Comment).Include(e => e.Photo).Include(e => e.Reaction).Where(e => friends.Contains(e.Id) && e.Vizibilitate=="friends").ToList();
+            var posts1 = unitOfWork
+                .Posts
+                .Query
+                .AsNoTracking()
+                .Include(e => e.User)
+                .AsNoTracking()
+                .Include(e => e.Comment)
+                .AsNoTracking()
+                .Include(e => e.Photo)
+                .AsNoTracking()
+                .Include(e => e.Reaction)
+                .Where(e => friends.Contains(e.Id) && e.Vizibilitate=="friends")
+                .ToList();
             var posts2 = GetAllPersonalPost();
-            var posts3 = unitOfWork.Posts.Query.Include(e => e.Comment).Include(e => e.Photo).Include(e => e.Reaction).Where(e => e.Vizibilitate == "public");
+            var posts3 = unitOfWork
+                .Posts
+                .Query
+                .AsNoTracking()
+                .Include(e => e.Comment)
+                .AsNoTracking()
+                .Include(e => e.Photo)
+                .AsNoTracking()
+                .Include(e => e.Reaction)
+                .AsNoTracking()
+                .Where(e => e.Vizibilitate == "public");
             posts1.AddRange(posts2);
             posts1.AddRange(posts3);
             return posts1.Distinct().OrderBy(e => e.AddingMoment).ToList();

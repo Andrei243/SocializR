@@ -71,7 +71,7 @@
 
 <div>
     <h2>Likes and interests</h2>
-    @foreach (var interest in interestService.GetAllInterests())
+    @foreach (var interest in interestService.GetAllInterests(Model.Id))
     {
         <p>@interest</p>
     }
@@ -80,7 +80,7 @@
 
 <div>
     <h2>Albums</h2>
-    @foreach (var album in albumService.getAll())
+    @foreach (var album in albumService.getAll(Model.Id))
     {
         <div>
             <h5>@album.Name</h5>

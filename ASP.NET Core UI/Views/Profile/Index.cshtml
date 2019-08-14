@@ -1,7 +1,7 @@
 ﻿@inject  Services.CurrentUser currentUser
 @inject  Services.InterestsUsers.InterestsUsersService interestService
 @inject  Services.Album.AlbumService albumService
-@model Domain.Users
+@*@model Domain.Users*@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/GeneralLayout.cshtml";
@@ -17,17 +17,20 @@
 <div>
     <h2>Contact information</h2>
 
-    <h5>First Name  &nbsp;&nbsp; @Model.Name</h5>
-    <h5>Last Name  &nbsp;&nbsp; @Model.Surname</h5>
-    <h5>Birthday  &nbsp;&nbsp; @Model.BirthDay</h5>
-    <h5>Locality  &nbsp;&nbsp; @Model.Locality.Name</h5>
-    <h5>County  &nbsp;&nbsp; @Model.Locality.County.Name</h5>
-    <h5>Gender  &nbsp;&nbsp; @Model.SexualIdentity</h5>
+    <h5>First Name  &nbsp;&nbsp; @currentUser.Name</h5>
+    <h5>Last Name  &nbsp;&nbsp; @currentUser.Surname</h5>
+    <h5>Birthday  &nbsp;&nbsp; @currentUser.BirthDay</h5>
+    @if (currentUser.Locality != null)
+    {
+    <h5>Locality  &nbsp;&nbsp; @currentUser.Locality.Name</h5>
+    <h5>County  &nbsp;&nbsp; @currentUser.Locality.County.Name</h5>
+    }
+    <h5>Gender  &nbsp;&nbsp; @currentUser.SexualIdentity</h5>
 </div>
 
 <div>
     <h2>Likes and interests</h2>
-    @foreach(var interest in interestService.GetAllInterests())
+    @foreach(var interest in interestService.GetAllInterests(currentUser.Id))
     {
         <p>@interest</p>
     }
@@ -36,7 +39,7 @@
 
 <div>
     <h2>Albums</h2>
-    @foreach(var album in albumService.getAll())
+    @foreach(var album in albumService.getAll(currentUser.Id))
     {
         <div>
             <h5>@album.Name</h5>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using DataAccess;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services.Photo
 {
@@ -19,19 +20,19 @@ namespace Services.Photo
             IQueryable<Domain.Photo> listaPoze ;
             if(postId!= null)
             {
-                listaPoze = unitOfWork.Photos.Query.Where(e => e.PostId == postId);
+                listaPoze = unitOfWork.Photos.Query.AsNoTracking().Where(e => e.PostId == postId);
             }
             else
             {
-                listaPoze = unitOfWork.Photos.Query.Where(e => e.AlbumId == albumId);
+                listaPoze = unitOfWork.Photos.Query.AsNoTracking().Where(e => e.AlbumId == albumId);
             }
             return listaPoze.OrderBy(e => e.Position).ToList();
         }
 
         public bool RemovePhoto(int photoId,int? postId,int? albumId)
         {
-            postId = unitOfWork.Photos.Query.Where(e => e.Id == photoId).Select(e => e.PostId).FirstOrDefault();
-            albumId= unitOfWork.Photos.Query.Where(e => e.Id == photoId).Select(e => e.AlbumId).FirstOrDefault();
+            postId = unitOfWork.Photos.Query.AsNoTracking().Where(e => e.Id == photoId).Select(e => e.PostId).FirstOrDefault();
+            albumId= unitOfWork.Photos.Query.AsNoTracking().Where(e => e.Id == photoId).Select(e => e.AlbumId).FirstOrDefault();
             IQueryable<Domain.Photo> listaPoze;
             if (postId != null)
             {

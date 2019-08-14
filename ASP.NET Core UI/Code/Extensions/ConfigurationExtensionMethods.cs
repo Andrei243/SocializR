@@ -29,6 +29,7 @@ namespace ASP.NET_Core_UI.Code.Extensions
             services.AddScoped<Services.Photo.PhotoService>();
             services.AddScoped<Services.Reaction.ReactionService>();
             services.AddScoped<Services.Role.RoleService>();
+            services.AddScoped<Services.User.UserService>();
 
 
             return services;
@@ -50,7 +51,16 @@ namespace ASP.NET_Core_UI.Code.Extensions
                         Email = user.Email,
                         Name = user.Name,
                         IsAdmin = user.Role.Name == "admin",
-                        IsBanned=user.IsBanned
+                        IsBanned=user.IsBanned,
+                        BirthDay=user.BirthDay,
+                        LocalityId=user.LocalityId,
+                        ProfilePhoto=user.PhotoId,
+                        SexualIdentity=user.SexualIdentity,
+                        Surname=user.Surname,
+                        Vizibility=user.Vizibility,
+                        Locality=user.Locality,
+                        Password=user.Password
+                        
                     };
                 else
                 {

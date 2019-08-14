@@ -18,7 +18,7 @@ namespace Services.Comment
 
         public List<Domain.Comment> GetAll(int PostId)
         {
-            return unitOfWork.Comments.Query.Include(e=>e.User).Where(e => e.PostId == PostId).OrderBy(e => e.AddingMoment).ToList();
+            return unitOfWork.Comments.Query.AsNoTracking().Include(e=>e.User).AsNoTracking().Where(e => e.PostId == PostId).OrderBy(e => e.AddingMoment).ToList();
         }
 
         public bool AddComment(string text,int PostId)

@@ -14,14 +14,13 @@ namespace ASP.NET_Core_UI.Controllers
 {
     public class UsersController : Code.Base.BaseController
     {
-        //private readonly SocializRContext _context;
+        private readonly Services.User.UserService userService;
         private readonly SocializRUnitOfWork unitOfWork;
 
         public List<Models.UserDropdownModel> GetUsersByName(string name)
         {
-            var el= unitOfWork.Users
-                .Query
-                .Where(e => (e.Name + e.Surname).Contains(name))
+            var el= userService
+                .GetUsersByName(name)
                 .Select(e => new Models.UserDropdownModel() { Id = e.Id, ProfilePhotoId = e.PhotoId, Name = e.Name+" " + e.Surname })
                 .OrderBy(e => e.Name)
                 .Take(5)
@@ -29,10 +28,11 @@ namespace ASP.NET_Core_UI.Controllers
             return el;
         }
 
-        public UsersController(SocializRContext context,SocializRUnitOfWork unitOfWork,IMapper mapper)
+        public UsersController(SocializRUnitOfWork unitOfWork,IMapper mapper,Services.User.UserService userService)
             :base(mapper)
         {
             this.unitOfWork = unitOfWork;
+            this.userService = userService;
         }
 
         // GET: Users
@@ -40,8 +40,8 @@ namespace ASP.NET_Core_UI.Controllers
         [Authorize(Roles ="admin")]
         public async Task<IActionResult> Index()
         {
-            var socializRContext = unitOfWork.Users.Query.Include(u => u.Locality).Include(u => u.Role);
-            return View(await socializRContext.ToListAsync());
+            var socializRContext = userService.getAll();
+            return View(socializRContext.ToList());
         }
 
         // GET: Users/Details/5
@@ -53,11 +53,7 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            var users = await unitOfWork.Users
-                .Query
-                .Include(u => u.Locality)
-                .Include(u => u.Role)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var users = userService.getUserById(id);
             if (users == null)
             {
                 return NotFound();
@@ -100,7 +96,7 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            var users = unitOfWork.Users.Query.FirstOrDefault(e=>e.Id==id);
+            var users = userService.getUserById(id);
             if (users == null)
             {
                 return NotFound();
@@ -155,11 +151,7 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            var users = unitOfWork.Users
-                .Query
-                .Include(u => u.Locality)
-                .Include(u => u.Role)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var users = userService.getUserById(id);
             if (users == null)
             {
                 return NotFound();
@@ -173,7 +165,7 @@ namespace ASP.NET_Core_UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var users = unitOfWork.Users.Query.FirstOrDefault(e=>e.Id==id);
+            var users = userService.getUserById(id);
             unitOfWork.Users.Remove(users);
             unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
@@ -181,7 +173,7 @@ namespace ASP.NET_Core_UI.Controllers
 
         private bool UsersExists(int id)
         {
-            return unitOfWork.Users.Query.Any(e => e.Id == id);
+            return userService.getUserById(id)!=null;
         }
     }
 }
