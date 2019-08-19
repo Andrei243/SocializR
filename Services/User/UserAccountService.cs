@@ -4,6 +4,7 @@ using System.Text;
 using DataAccess;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Domain;
 
 namespace Services.User
 {
@@ -14,15 +15,16 @@ namespace Services.User
             base(unitOfWork)
         { }
 
-        public Domain.Users Get(string email)
+        public Users Get(string email)
         {
+
             return unitOfWork.Users.Query.AsNoTracking().Include(e=>e.Role).AsNoTracking()
                 .Include(e=>e.Locality).AsNoTracking()
                 .Include(e=>e.Locality).ThenInclude(e=>e.County).AsNoTracking()
                 .FirstOrDefault(e => e.Email == email);
         }
 
-        public Domain.Users Login(string email, string password)
+        public Users Login(string email, string password)
         {
             return unitOfWork.Users.Query.Include(e=>e.Role)
                 .FirstOrDefault(e => e.Email == email && e.Password == password);

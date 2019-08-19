@@ -14,12 +14,12 @@ namespace ASP.NET_Core_UI.Controllers
         private readonly Services.County.CountyService countyService;
         private readonly Services.User.UserService userService;
         private readonly CurrentUser currentUser;
-        private readonly Services.FriendShip.FriendRequest friendService;
+        private readonly Services.FriendShip.FriendshipService friendService;
         private readonly Services.Interest.InterestService interestService;
         private readonly Services.InterestsUsers.InterestsUsersService interestsUsersService;
 
 
-        public ProfileController(IMapper mapper,CurrentUser currentUser, Services.FriendShip.FriendRequest friendRequest,Services.User.UserService userService,Services.County.CountyService countyService,
+        public ProfileController(IMapper mapper,CurrentUser currentUser, Services.FriendShip.FriendshipService friendRequest,Services.User.UserService userService,Services.County.CountyService countyService,
             Services.Interest.InterestService interestService,Services.InterestsUsers.InterestsUsersService interestsUsersService
             )
             : base(mapper)
@@ -35,8 +35,10 @@ namespace ASP.NET_Core_UI.Controllers
 
         public IActionResult Index()
         {
-            //var user = userService.getUserById(currentUser.Id);
-            return View();
+            var domainUser = userService.getUserById(currentUser.Id);
+            ProfileViewerModel user = mapper.Map<ProfileViewerModel>(domainUser);
+            user.Interests = interestsUsersService.GetAllInterests(domainUser.Id).Select(e => e.Name).ToList();
+            return View(user);
         }
 
         [HttpGet]
@@ -86,14 +88,9 @@ namespace ASP.NET_Core_UI.Controllers
                 Domain.Users updateUser = new Domain.Users
                 {
                     BirthDay = user.BirthDay,
-                    Email = currentUser.Email,
                     Id = user.Id,
-                    IsBanned = currentUser.IsBanned,
                     LocalityId = user.LocalityId,
                     Name = user.Name,
-                    Password = currentUser.Password,
-                    PhotoId = currentUser.ProfilePhoto,
-                    RoleId = currentUser.IsAdmin ? 1 : 2,
                     SexualIdentity = user.SexualIdentity,
                     Surname = user.Surname,
                     Vizibility = user.Visibility
@@ -118,7 +115,14 @@ namespace ASP.NET_Core_UI.Controllers
                 {
                     return RedirectToAction("Index", "Profile", null);
                 }
-                var user = userService.getUserById(userId);
+
+                var domainUser = userService.getUserById(userId);
+                ProfileViewerModel user = mapper.Map<ProfileViewerModel>(domainUser);
+                user.CanSee = friendService.canSee(userId.Value);
+                user.CanSendRequest = friendService.canSendRequest(userId.Value);
+                user.IsRequested = friendService.isFriendRequested(userId.Value);
+                user.Interests = interestsUsersService.GetAllInterests(domainUser.Id).Select(e => e.Name).ToList();
+
                 return View(user);
             }
 

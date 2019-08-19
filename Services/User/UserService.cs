@@ -42,6 +42,8 @@ namespace Services.User
                 .AsNoTracking()
                 .Include(e=>e.Role)
                 .AsNoTracking()
+                .Include(e=>e.InterestsUsers)
+                .AsNoTracking()
                 .FirstOrDefault(e => e.Id == id);
         }
         public IEnumerable<Users> getAll()
@@ -57,10 +59,19 @@ namespace Services.User
                 .AsNoTracking()
                 .Where(e => (e.Name + e.Surname).Contains(name));
         }
+       
 
         public void Update(Users user)
         {
-            unitOfWork.Users.Update(user);
+            Users oldUser = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == user.Id);
+            oldUser.LocalityId = user.LocalityId ?? oldUser.LocalityId;
+            oldUser.Vizibility = user.Vizibility ?? oldUser.Vizibility;
+            oldUser.BirthDay = user.BirthDay;
+            oldUser.Name = user.Name;
+            oldUser.Surname = user.Surname;
+            oldUser.SexualIdentity = user.SexualIdentity;
+
+            unitOfWork.Users.Update(oldUser);
             unitOfWork.SaveChanges();
         }
     }

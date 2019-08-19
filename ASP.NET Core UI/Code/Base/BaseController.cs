@@ -30,5 +30,7 @@ namespace ASP.NET_Core_UI.Code.Base
             return View("Forbid");
         }
 
+        public int PageSize = 5;
+
     }
 }

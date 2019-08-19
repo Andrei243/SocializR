@@ -15,7 +15,7 @@ namespace ASP.NET_Core_UI.Code.Mappers
 
         public static void Run()
         {
-            AutoMapper.Mapper.Initialize(
+            Mapper.Initialize(
                 a =>
                 {
                     a.AddProfile<WebMapper>();
@@ -42,6 +42,17 @@ namespace ASP.NET_Core_UI.Code.Mappers
             CreateMap<Interest, SelectListItem>()
                 .ForMember(dest => dest.Value, s => s.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Text, s => s.MapFrom(src => src.Name));
+            CreateMap<Users, ProfileViewerModel>()
+                .ForMember(dest => dest.Album, s => s.MapFrom(src => new List<Models.Domain_Entities.Album>(src.Album.Select(e => new Models.Domain_Entities.Album()
+                {
+                    Id = e.Id,
+                    Count = e.Photo.Count,
+                    Name = e.Name,
+                }))))
+                .ForMember(dest => dest.Interests, s => s.MapFrom(src => new List<string>(src.InterestsUsers.Select(e => e.Interest.Name).ToList())))
+                .ForMember(dest=>dest.Locality,s=>s.MapFrom(src=>src.Locality.Name))
+                .ForMember(dest=>dest.County,s=>s.MapFrom(src=>src.Locality.County.Name))
+                ;
         }
 
     }

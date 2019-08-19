@@ -23,7 +23,7 @@ namespace ASP.NET_Core_UI.Code.Extensions
             services.AddScoped<Services.Post.PostService>();
             services.AddScoped<Services.Album.AlbumService>();
             services.AddScoped<Services.County.CountyService>();
-            services.AddScoped<Services.FriendShip.FriendRequest>();
+            services.AddScoped<Services.FriendShip.FriendshipService>();
             services.AddScoped<Services.Interest.InterestService>();
             services.AddScoped<Services.InterestsUsers.InterestsUsersService>();
             services.AddScoped<Services.Photo.PhotoService>();

@@ -9,6 +9,7 @@ namespace ASP.NET_Core_UI.Models
     {
         public List<PostModel> Posts { get; set; }
         public PostAddModel PostAdd { get; set; }
+        public int CurrentPage { get; set; }
 
     }
 }

@@ -20,6 +20,7 @@ namespace ASP.NET_Core_UI.Controllers
         private readonly CurrentUser currentUser;
         private readonly Services.Photo.PhotoService photoService;
         private readonly Services.Reaction.ReactionService reactionService;
+        private int NumberOfPages{ get; set; }
         public HomeController(IMapper mapper,
             Services.Post.PostService postService,
             Services.Comment.CommentService commentService,
@@ -36,14 +37,15 @@ namespace ASP.NET_Core_UI.Controllers
 
         
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int? page)
         {
             FeedModel feedModel = new FeedModel();
+            feedModel.CurrentPage = page ?? 0;
             if (currentUser.IsAuthenticated)
             {
                 feedModel.Posts =
-                    postService.GetNewsfeed()
-                    .Select(e => new PostModel
+                    postService.GetNewsfeed(feedModel.CurrentPage)
+                    .Select(e => new PostModel()
                     {   Id=e.Id,
                         Text = e.Text,
                         User = new PostUserModel { Id = e.User.Id, Name = e.User.Name, ProfilePhoto = e.User.PhotoId },
@@ -57,8 +59,8 @@ namespace ASP.NET_Core_UI.Controllers
             else
             {
                 feedModel.Posts =
-                   postService.GetPublicNewsfeed()
-                   .Select(e => new PostModel
+                   postService.GetPublicNewsfeed(feedModel.CurrentPage)
+                   .Select(e => new PostModel()
                    {   Id=e.Id,
                        Text = e.Text,
                        User = new PostUserModel { Id = e.User.Id, Name = e.User.Name, ProfilePhoto = e.User.PhotoId },
@@ -75,11 +77,10 @@ namespace ASP.NET_Core_UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(FeedModel model)
+        public IActionResult AddPost(PostAddModel post)
         {
             if (ModelState.IsValid)
             {
-                PostAddModel post = model.PostAdd;
                 Domain.Post newPost = new Domain.Post
                 {
                     Text = post.Text,
@@ -92,7 +93,7 @@ namespace ASP.NET_Core_UI.Controllers
                     Domain.Photo photo = new Domain.Photo()
                     {
                         Position = 1,
-                        PostId=newPost.Id,
+                        PostId = newPost.Id,
                         MIMEType = post.Binar.ContentType
                     };
 
@@ -103,6 +104,17 @@ namespace ASP.NET_Core_UI.Controllers
                     }
                     photoService.AddPhoto(photo);
                 }
+                return RedirectToAction("Index");
+            }
+            return PartialView("PartialPostAdd", post);
+        }
+
+        [HttpPost]
+        public IActionResult Index(FeedModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                
 
             }
             return View(model);

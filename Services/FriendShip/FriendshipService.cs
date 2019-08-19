@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Services.FriendShip
 {
-    public class FriendRequest : Base.BaseService
+    public class FriendshipService : Base.BaseService
     {
         private readonly CurrentUser currentUser;
 
-        public FriendRequest(CurrentUser currentUser, SocializRUnitOfWork unitOfWork)
+        public FriendshipService(CurrentUser currentUser, SocializRUnitOfWork unitOfWork)
             :base(unitOfWork)
         {
             this.currentUser = currentUser;
@@ -65,17 +65,33 @@ namespace Services.FriendShip
             return unitOfWork.SaveChanges() != 0;
         }
 
-        public List<Domain.Users> getAllFriends()
+        public List<Users> getAllFriends()
         {
             return unitOfWork.Friendships.Query.AsNoTracking().Include(e => e.IdReceiverNavigation).Where(e => e.IdSender == currentUser.Id && (e.Accepted ?? false)).Select(e => e.IdReceiverNavigation).ToList();
 
+        }
+
+        public List<Users> getRequesters()
+        {
+            return unitOfWork.Friendships.Query.Where(e => e.IdReceiver == currentUser.Id).Include(e=>e.IdSenderNavigation).Select(e => e.IdSenderNavigation).AsNoTracking().ToList();
         }
 
         public bool isFriendRequested(int by)
         {
             return unitOfWork.Friendships.Query.AsNoTracking().Any(e => e.IdSender == by && e.IdReceiver == currentUser.Id && !e.Accepted.HasValue);
         }
+        public bool canSee(int receiver)
+        {
+            return unitOfWork.Friendships.Query.Include(e => e.IdReceiverNavigation).Any(
+                e => (e.IdSender == currentUser.Id && e.IdReceiver == receiver&&(e.Accepted??false) && !e.IdReceiverNavigation.IsBanned))
+                ||unitOfWork.Users.Query.Any(e=>e.Id==receiver&&e.Vizibility=="public"&&!e.IsBanned)
+                ;
+        }
 
+        public bool canSendRequest(int receiver)
+        {
+            return !isRefused(receiver) && !isAlreadySent(receiver) && !isFriendWith(receiver)&&currentUser.IsAuthenticated;
+        }
         public bool isRefused(int by)
         {
             return unitOfWork.Friendships.Query.AsNoTracking().Any(e => e.IdSender == currentUser.Id && e.IdReceiver == by && e.Accepted.Value == false);

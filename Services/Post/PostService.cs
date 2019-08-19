@@ -4,18 +4,33 @@ using System.Text;
 using System.Linq;
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Domain;
 
 namespace Services.Post
 {
+    internal class PostComparer : IEqualityComparer<Domain.Post>
+    {
+        bool IEqualityComparer<Domain.Post>.Equals(Domain.Post x, Domain.Post y)
+        {
+            return x.Id == y.Id;
+        }
+
+        int IEqualityComparer<Domain.Post>.GetHashCode(Domain.Post obj)
+        {
+            return obj.Id;
+        }
+    }
     public class PostService : Base.BaseService
     {
         private readonly CurrentUser CurrentUser;
+        
 
         public PostService(CurrentUser currentUser,SocializRUnitOfWork unitOfWork) : base(unitOfWork)
         {
             CurrentUser = currentUser;
         }
 
+        
         public bool AddPost(Domain.Post post)
         {
             post.AddingMoment = DateTime.Now;
@@ -41,21 +56,31 @@ namespace Services.Post
                 .Include(e=>e.Reaction)
                 .AsNoTracking()
                 .Where(e => e.UserId == CurrentUser.Id)
-                .OrderBy(e=>e.AddingMoment)
                 .ToList();
         }
 
-        public List<Domain.Post> GetPublicNewsfeed()
+        public List<Domain.Post> GetPublicNewsfeed(int currentPage)
         {
             return unitOfWork
                 .Posts
                 .Query
                 .AsNoTracking()
-                .Where(e => e.Vizibilitate == "public")
+                .Include(e => e.User)
+                .AsNoTracking()
+                .Include(e => e.Comment)
+                .ThenInclude(e => e.User)
+                .AsNoTracking()
+                .Include(e => e.Photo)
+                .AsNoTracking()
+                .Include(e => e.Reaction)
+                .Where(e=>e.Vizibilitate == "public")
+                .OrderByDescending(e => e.AddingMoment)
+                .Skip(currentPage*Base.GlobalConstants.PAGESIZE)
+                .Take(Base.GlobalConstants.PAGESIZE)
                 .ToList();
         }
 
-        public List<Domain.Post> GetNewsfeed()
+        public List<Domain.Post> GetNewsfeed(int currentPage)
         {
             var friends = unitOfWork.Friendships.Query.AsNoTracking().Where(e => e.IdReceiver == CurrentUser.Id && (e.Accepted??false)).Select(e=>e.IdSender).ToList();
 
@@ -77,6 +102,7 @@ namespace Services.Post
             var posts3 = unitOfWork
                 .Posts
                 .Query
+                .Include(e=>e.User)
                 .AsNoTracking()
                 .Include(e => e.Comment)
                 .ThenInclude(e=>e.User)
@@ -88,8 +114,12 @@ namespace Services.Post
                 .Where(e => e.Vizibilitate == "public");
             posts1.AddRange(posts2);
             posts1.AddRange(posts3);
-            return posts1.Distinct().OrderBy(e => e.AddingMoment).ToList();
-
+            return posts1
+                .Distinct(new PostComparer())
+                .OrderByDescending(e => e.AddingMoment)
+                .Skip(currentPage * Base.GlobalConstants.PAGESIZE)
+                .Take(Base.GlobalConstants.PAGESIZE)
+                .ToList();
         }
 
     }
