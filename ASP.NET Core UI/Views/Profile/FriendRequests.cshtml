@@ -1,0 +1,39 @@
+﻿@model FriendListModel
+@{
+    ViewData["Title"] = "FriendRequests";
+    Layout = "~/Views/Shared/GeneralLayout.cshtml";
+}
+
+<h1>FriendRequests</h1>
+@foreach (var friend in Model.friends)
+{
+<div style="background-color:black">
+    <p>@friend.Name</p>
+
+    <a href="@Url.Action("Profile","Profile",new {userId=friend.Id })">
+        @if (friend.ProfilePhotoId != null)
+        {
+            <img src="@Url.Action("Download", "Photo", new { id = friend.ProfilePhotoId })" height="100em" />
+        }
+        else
+        {
+            <img src="~/images/DefaultProfile.png" height="100em" />
+        }
+    </a>
+    @Html.ActionLink(
+      linkText: "Accept",
+      actionName: "Accept",
+      controllerName: "Profile",
+      routeValues:
+      new { id = friend.Id },
+      htmlAttributes: null);
+
+    @Html.ActionLink(
+  linkText: "Refuse",
+  actionName: "Refuse",
+  controllerName: "Profile",
+  routeValues:
+  new { id = friend.Id },
+  htmlAttributes: null);
+</div>
+}

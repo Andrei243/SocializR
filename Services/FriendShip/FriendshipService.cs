@@ -73,7 +73,7 @@ namespace Services.FriendShip
 
         public List<Users> getRequesters()
         {
-            return unitOfWork.Friendships.Query.Where(e => e.IdReceiver == currentUser.Id).Include(e=>e.IdSenderNavigation).Select(e => e.IdSenderNavigation).AsNoTracking().ToList();
+            return unitOfWork.Friendships.Query.Where(e => e.IdReceiver == currentUser.Id && !e.Accepted.HasValue).Include(e=>e.IdSenderNavigation).Select(e => e.IdSenderNavigation).AsNoTracking().ToList();
         }
 
         public bool isFriendRequested(int by)

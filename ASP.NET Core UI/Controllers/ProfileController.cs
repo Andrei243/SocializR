@@ -128,6 +128,13 @@ namespace ASP.NET_Core_UI.Controllers
 
         } 
 
+        public IActionResult FriendRequests()
+        {
+            FriendListModel friendListModel = new FriendListModel();
+            friendListModel.friends = friendService.getRequesters().Select(e => new UserFriendModel { Id = e.Id, Name = e.Name + " " + e.Surname, ProfilePhotoId = e.PhotoId }).ToList();
+            return View(friendListModel);
+        }
+
         public IActionResult FriendList()
         {
             FriendListModel friendListModel=new FriendListModel();
