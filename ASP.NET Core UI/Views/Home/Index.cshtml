@@ -1,6 +1,6 @@
 ﻿@inject  Services.Post.PostService postService
 @inject  Services.Comment.CommentService commentService
-@model Domain.Post
+@model FeedModel
 @{
     ViewData["Title"] = "Home Page";
     Layout = "GeneralLayout";
@@ -11,16 +11,26 @@
     <form enctype="multipart/form-data" asp-action="Create">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
-            <label asp-for="Photo.Binar" class="control-label"></label>
-            <input type="file" asp-for="Photo.Binar" class="form-control" />
-            <span asp-validation-for="Photo.Binar" class="text-danger"></span>
+            <label asp-for="PostAdd.Binar" class="control-label"></label>
+            <input type="file" asp-for="PostAdd.Binar" class="form-control" />
+            <span asp-validation-for="PostAdd.Binar" class="text-danger"></span>
         </div>
         
         
         <div class="form-group">
-            <label asp-for="Text" class="control-label"></label>
-            <input type="text" asp-for="Text" class="form-control" />
-            <span asp-validation-for="Text" class="text-danger"></span>
+            <label asp-for="PostAdd.Text" class="control-label"></label>
+            <input type="text" asp-for="PostAdd.Text" class="form-control" />
+            <span asp-validation-for="PostAdd.Text" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PostAdd.Visibility" class="control-label"></label>
+            <select  asp-for="PostAdd.Visibility" class="form-control" >
+                <option value="friends" >Friends Only</option>
+                <option value="public">Public</option>
+                <option value="private">Private</option>
+            </select>
+            <span asp-validation-for="PostAdd.Visibility" class="text-danger"></span>
         </div>
         <div class="form-group">
             <input type="submit" value="Create" class="btn btn-primary" />
@@ -28,10 +38,58 @@
     </form>
 }
 
-@if (currentUser.IsAuthenticated)
-{
-    foreach(var post in postService.GetNewsfeed())
+
+    @foreach(var post in Model.Posts)
     {
-        @Html.Partial("Post",new PostModel { User=new PostUserModel() {Id=post.UserId,Name=post.User.Name+' '+post.User.Surname,ProfilePhoto=post.User.PhotoId },Comments=post.Comment.Select(e=>new CommentModel() { Text=e.Content,User=new PostUserModel() {Id=e.UserId,Name=e.User.Name+' '+e.User.Surname,ProfilePhoto=post.User.PhotoId }}).ToList()})
+        @Html.Partial("Post", post);
     }
-}
+
+<script>
+    $(".like").click(function (e) {
+        console.log(e.currentTarget)
+        console.log(e.currentTarget.dataset.post)
+        $.ajax({
+            type: 'GET',
+            url: '/Home/Reaction',
+            data: {
+                postId: e.currentTarget.dataset.post
+            },
+            success: function (response) {
+                console.log(response);
+                if (response) {
+                    e.currentTarget.querySelector("img").src = "images/Liked.png";
+                    e.currentTarget.parentNode.querySelector(".reactionCounter").innerText = parseInt(e.currentTarget.parentNode.querySelector(".reactionCounter").innerText) + 1;
+                }
+                else {
+                    e.currentTarget.querySelector("img").src = "images/notLiked.png";
+                    e.currentTarget.parentNode.querySelector(".reactionCounter").innerText = parseInt(e.currentTarget.parentNode.querySelector(".reactionCounter").innerText) - 1;
+                }
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        }
+
+        )
+
+    });
+
+    $(".buttonComment").click(function (e){
+
+        $.ajax({
+            type: "GET",
+            url: '/Home/Comment',
+            data: {
+                postId: e.currentTarget.dataset.post,
+                comentariu: e.currentTarget.parentNode.querySelector("input").value
+            },
+            success: function (response) {
+                location.reload(true);
+            }
+
+
+        })
+
+    })
+
+</script>

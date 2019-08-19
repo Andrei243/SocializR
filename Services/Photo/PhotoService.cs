@@ -15,6 +15,18 @@ namespace Services.Photo
         {
         }
 
+        public void AddPhoto(Domain.Photo photo)
+        {
+            unitOfWork.Photos.Add(photo);
+            if (photo.PostId.HasValue)
+            {
+                var post = unitOfWork.Posts.Query.FirstOrDefault(e => e.Id == photo.PostId);
+                post.Photo = photo;
+                unitOfWork.Posts.Update(post);
+            }
+            unitOfWork.SaveChanges();
+        }
+
         public List<Domain.Photo> getPhotos(int? postId,int? albumId)
         {
             IQueryable<Domain.Photo> listaPoze ;

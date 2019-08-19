@@ -32,7 +32,9 @@ namespace Services.Post
                 .Posts
                 .Query
                 .AsNoTracking()
+                .Include(e=>e.User)
                 .Include(e=>e.Comment)
+                .ThenInclude(e=>e.User)
                 .AsNoTracking()
                 .Include(e=>e.Photo)
                 .AsNoTracking()
@@ -64,6 +66,7 @@ namespace Services.Post
                 .Include(e => e.User)
                 .AsNoTracking()
                 .Include(e => e.Comment)
+                .ThenInclude(e=>e.User)
                 .AsNoTracking()
                 .Include(e => e.Photo)
                 .AsNoTracking()
@@ -76,6 +79,7 @@ namespace Services.Post
                 .Query
                 .AsNoTracking()
                 .Include(e => e.Comment)
+                .ThenInclude(e=>e.User)
                 .AsNoTracking()
                 .Include(e => e.Photo)
                 .AsNoTracking()

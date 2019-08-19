@@ -11,7 +11,6 @@ namespace ASP.NET_Core_UI.Controllers
 {
     public class ProfileController : Code.Base.BaseController
     {
-        //private readonly SocializRUnitOfWork unitOfWork;
         private readonly Services.County.CountyService countyService;
         private readonly Services.User.UserService userService;
         private readonly CurrentUser currentUser;
@@ -63,6 +62,7 @@ namespace ASP.NET_Core_UI.Controllers
         {
             if (ModelState.IsValid)
             {
+                user.InterestsId= interestsUsersService.GetAllInterests(currentUser.Id).Select(e => e.Id).ToList();
                 Microsoft.Extensions.Primitives.StringValues raspunsuri;
                 Request.Form.TryGetValue("Interests",
                                          out raspunsuri);
@@ -79,6 +79,7 @@ namespace ASP.NET_Core_UI.Controllers
                 {
                     if (!interese.Contains(x))
                     {
+
                         interestsUsersService.RemoveInterest(x);
                     }
                 }     

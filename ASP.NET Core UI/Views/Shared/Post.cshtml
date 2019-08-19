@@ -1,13 +1,32 @@
 ﻿@model PostModel
 
 <div class="post">
-    <img src="@Url.Action("Download", "Photos", new { id = Model.User.ProfilePhoto })" height="75em"/>
+    <a href="@Url.Action("Profile","Profile",new {userId=Model.User.Id })">
+        <img src="@Url.Action("Download", "Photos", new { id = Model.User.ProfilePhoto })" height="75em" />
+    </a>
     <span>@Model.User.Name</span>
     <p>@Model.Text</p>
+    @foreach(var image in Model.PhotoId)
+    {
+        <img src="@Url.Action("Download","Photos",new {id=image })" height="50em" />
+    }
     @foreach(CommentModel comment in Model.Comments )
     {
         @Html.Partial("Comment",comment);  
     }
+    <button class="like" data-post="@Model.Id">
+        @if (Model.Reactions.Contains(currentUser.Id ))
+        {
+            <img src="~/images/Liked.png" height="10em" />
+        }
+        else
+        {
+            <img src="~/images/notLiked.png" height="10em" />
+        }
+    </button>
 
+    <p class="reactionCounter">@Model.Reactions.Count</p>
+    <input type="text" class="addComment"/>
+    <button class="buttonComment" data-post="@Model.Id">Adauga Comentariu</button>
 
 </div>
