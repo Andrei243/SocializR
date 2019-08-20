@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ASP.NET_Core_UI.Models.DomainEntities
+namespace ASP.NET_Core_UI.Models.DomainModels
 {
-    public class County
+    public class Locality
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public int CountyId { get; set; }
+        public County County { get; set; }
 
-        public List<Locality> Localities { get; set; }
     }
 }

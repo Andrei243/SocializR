@@ -9,6 +9,7 @@ using DataAccess;
 using Domain;
 using ASP.NET_Core_UI.Models;
 using System.IO;
+using ASP.NET_Core_UI.Models.ProfileModels;
 
 namespace ASP.NET_Core_UI.Controllers
 {

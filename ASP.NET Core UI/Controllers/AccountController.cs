@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication;
 using Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using AutoMapper;
+using ASP.NET_Core_UI.Models.GeneralModels;
 
 namespace ASP.NET_Core_UI.Controllers
 {
@@ -16,25 +17,23 @@ namespace ASP.NET_Core_UI.Controllers
     {
         private readonly Services.User.UserAccountService userAccountService;
         private readonly Services.County.CountyService countyService;
-        private readonly Services.Locality.LocalityService localityService;
 
         public AccountController(Services.County.CountyService countyService, Services.User.UserAccountService userAccountService,IMapper imapper)
             :base(imapper)
         {
             this.countyService = countyService;
             this.userAccountService = userAccountService;
-            this.localityService = null;
         }
 
         [HttpGet]
         public IActionResult Login()
         {
-            var model = new Models.LoginModel();
+            var model = new LoginModel();
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(Models.LoginModel loginModel)
+        public async Task<IActionResult> Login(LoginModel loginModel)
         {
             if (!ModelState.IsValid)
             {
@@ -80,7 +79,7 @@ namespace ASP.NET_Core_UI.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            var model = new Models.RegisterModel
+            var model = new RegisterModel
             {
                 Counties=GetCounties()
             };
@@ -88,7 +87,7 @@ namespace ASP.NET_Core_UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(Models.RegisterModel model)
+        public IActionResult Register(RegisterModel model)
         {
             if (!ModelState.IsValid)
             {

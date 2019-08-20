@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ASP.NET_Core_UI.Models
+namespace ASP.NET_Core_UI.Models.ProfileModels
 {
-    public class PostUserModel
+    public class AddAlbumModel
     {
-        public int Id { get; set; }
         public string Name { get; set; }
-        public int? ProfilePhoto { get; set; }
     }
 }

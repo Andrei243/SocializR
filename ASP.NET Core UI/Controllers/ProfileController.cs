@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ASP.NET_Core_UI.Models;
 using System.IO;
+using ASP.NET_Core_UI.Models.ProfileModels;
+using ASP.NET_Core_UI.Models.DomainModels;
+using ASP.NET_Core_UI.Models.GeneralModels;
 
 namespace ASP.NET_Core_UI.Controllers
 {
@@ -52,7 +55,7 @@ namespace ASP.NET_Core_UI.Controllers
             ProfileViewerModel user = mapper.Map<ProfileViewerModel>(domainUser);
             user.Interests = interestsUsersService.GetAllInterests(domainUser.Id).Select(e => e.Name).ToList();
             user.Album = albumService.GetAll(currentUser.Id).Select(
-                e => new Models.Domain_Entities.Album
+                e => new Album
                 {
                     Name = e.Name,
                     Id = e.Id,
@@ -213,14 +216,14 @@ namespace ASP.NET_Core_UI.Controllers
         public IActionResult FriendRequests()
         {
             FriendListModel friendListModel = new FriendListModel();
-            friendListModel.friends = friendService.getRequesters().Select(e => new UserFriendModel { Id = e.Id, Name = e.Name + " " + e.Surname, ProfilePhotoId = e.PhotoId }).ToList();
+            friendListModel.friends = friendService.getRequesters().Select(e => new UserDropdownModel { Id = e.Id, Name = e.Name + " " + e.Surname, ProfilePhotoId = e.PhotoId }).ToList();
             return View(friendListModel);
         }
 
         public IActionResult FriendList()
         {
             FriendListModel friendListModel=new FriendListModel();
-            friendListModel.friends = friendService.getAllFriends().Select(e => new UserFriendModel { Id = e.Id, Name = e.Name + " " + e.Surname, ProfilePhotoId = e.PhotoId }).ToList();
+            friendListModel.friends = friendService.getAllFriends().Select(e => new UserDropdownModel { Id = e.Id, Name = e.Name + " " + e.Surname, ProfilePhotoId = e.PhotoId }).ToList();
             return View(friendListModel);
         }
 

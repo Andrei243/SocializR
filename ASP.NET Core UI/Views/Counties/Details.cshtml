@@ -1,4 +1,4 @@
-﻿@model Domain.County
+﻿@model ASP.NET_Core_UI.Models.AdminModels.DetailsCountyModel
 
 @{
     ViewData["Title"] = "Details";
@@ -17,17 +17,16 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model=>model.Locality)
+            @Html.DisplayNameFor(model=>model.Localities)
         </dt>
         <dd class="col-sm-10">
-            @foreach(Domain.Locality oras in Model.Locality)
+            @foreach(string oras in Model.Localities)
             {
-                <p>@oras.Name</p>
+                <p>@oras</p>
             }
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

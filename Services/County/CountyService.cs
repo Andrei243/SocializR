@@ -22,22 +22,37 @@ namespace Services.County
             return unitOfWork.Counties.Query.AsNoTracking().FirstOrDefault(e => e.Id == id);
         }
 
-        public void Add(Domain.County county)
+        public void Add(string name)
         {
+            Domain.County county = new Domain.County()
+            {
+                Name = name
+            };
             unitOfWork.Counties.Add(county);
             unitOfWork.SaveChanges();
         }
 
-        public void Update(Domain.County county)
+        public void Update(int id, string name)
         {
+            var county = unitOfWork.Counties.Query.FirstOrDefault(e => e.Id == id);
+            if (county == null) return;
+            county.Name = name;
             unitOfWork.Counties.Update(county);
             unitOfWork.SaveChanges();
         }
 
-        public void Remove(Domain.County county)
+        public void Remove(int countyId)
         {
-            unitOfWork.Counties.Remove(county);
-            unitOfWork.Localities.RemoveRange(unitOfWork.Localities.Query.Where(e => e.CountyId == county.Id));
+            unitOfWork.Counties.Remove(unitOfWork.Counties.Query.FirstOrDefault(e=>e.Id==countyId));
+            var localitiesIds = unitOfWork.Localities.Query.Where(e => e.CountyId == countyId).Select(e => e.Id).ToList();
+
+            unitOfWork.Localities.RemoveRange(unitOfWork.Localities.Query.Where(e => e.CountyId == countyId));
+            var users = unitOfWork.Users.Query.Where(e => localitiesIds.Contains(e.Id));
+            foreach(var user in users)
+            {
+                user.LocalityId = null;
+                unitOfWork.Users.Update(user);
+            }
             unitOfWork.SaveChanges();
         }
 

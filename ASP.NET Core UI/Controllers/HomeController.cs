@@ -10,6 +10,7 @@ using Services;
 using ASP.NET_Core_UI.Code.Base;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
+using ASP.NET_Core_UI.Models.FeedModels;
 
 namespace ASP.NET_Core_UI.Controllers
 {

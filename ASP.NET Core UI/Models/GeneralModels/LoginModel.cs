@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 
-namespace ASP.NET_Core_UI.Models
+namespace ASP.NET_Core_UI.Models.GeneralModels
 {
     public class LoginModel
     {

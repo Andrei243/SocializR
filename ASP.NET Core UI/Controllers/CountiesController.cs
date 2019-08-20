@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataAccess;
-using Domain;
 using Microsoft.AspNetCore.Authorization;
+using ASP.NET_Core_UI.Models.DomainModels;
+using ASP.NET_Core_UI.Models.AdminModels;
 
 namespace ASP.NET_Core_UI.Controllers
 {
@@ -18,16 +19,18 @@ namespace ASP.NET_Core_UI.Controllers
     {
         //private readonly SocializRContext _context;
         private readonly Services.County.CountyService countyService;
+        private readonly Services.Locality.LocalityService localityService;
 
-        public CountiesController(Services.County.CountyService countyService)
+        public CountiesController(Services.County.CountyService countyService,Services.Locality.LocalityService localityService)
         {
             this.countyService = countyService;
+            this.localityService = localityService;
         }
 
         // GET: Counties
         public async Task<IActionResult> Index()
         {
-            return View(countyService.GetAll());
+            return View(countyService.GetAll().Select(e=>new County() {Id=e.Id,Name=e.Name }));
         }
 
         // GET: Counties/Details/5
@@ -43,8 +46,12 @@ namespace ASP.NET_Core_UI.Controllers
             {
                 return NotFound();
             }
-
-            return View(county);
+            var model = new DetailsCountyModel()
+            {
+                Name = county.Name
+            };
+            model.Localities = localityService.getAll(county.Id).Select(e => e.Name).ToList();
+            return View(model);
         }
 
         // GET: Counties/Create
@@ -58,14 +65,14 @@ namespace ASP.NET_Core_UI.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] County county)
+        public IActionResult Create(County model)
         {
             if (ModelState.IsValid)
             {
-                countyService.Add(county);
+                countyService.Add(model.Name);
                 return RedirectToAction(nameof(Index));
             }
-            return View(county);
+            return View(model);
         }
 
         // GET: Counties/Edit/5
@@ -78,11 +85,16 @@ namespace ASP.NET_Core_UI.Controllers
             }
 
             var county = countyService.GetCountyById(id);
+            var model = new EditCountyModel()
+            {
+                Id = county.Id,
+                Name = county.Name
+            };
             if (county == null)
             {
                 return NotFound();
             }
-            return View(county);
+            return View(model);
         }
 
         // POST: Counties/Edit/5
@@ -90,33 +102,16 @@ namespace ASP.NET_Core_UI.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] County county)
+        public async Task<IActionResult> Edit(EditCountyModel model)
         {
-            if (id != county.Id)
-            {
-                return NotFound();
-            }
+            
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    countyService.Update(county);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CountyExists(county.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                countyService.Update(model.Id, model.Name);
                 return RedirectToAction(nameof(Index));
             }
-            return View(county);
+            return View(model);
         }
 
         // GET: Counties/Delete/5
@@ -127,28 +122,11 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            var county = countyService.GetCountyById(id);
-            if (county == null)
-            {
-                return NotFound();
-            }
+            countyService.Remove(id.Value);
 
-            return View(county);
+            return RedirectToAction("Index", "Counties");
         }
 
-        // POST: Counties/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var county = countyService.GetCountyById(id);
-            countyService.Remove(county);
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool CountyExists(int id)
-        {
-            return countyService.GetCountyById(id)!=null;
-        }
+      
     }
 }

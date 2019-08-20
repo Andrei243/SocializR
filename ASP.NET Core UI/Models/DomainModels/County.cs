@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ASP.NET_Core_UI.Models
+namespace ASP.NET_Core_UI.Models.DomainModels
 {
-    public class UserFriendModel
+    public class County
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int? ProfilePhotoId { get; set; }
+
+        public List<Locality> Localities { get; set; }
     }
 }

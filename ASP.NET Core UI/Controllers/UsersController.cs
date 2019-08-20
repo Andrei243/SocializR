@@ -9,6 +9,7 @@ using DataAccess;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
+using ASP.NET_Core_UI.Models.GeneralModels;
 
 namespace ASP.NET_Core_UI.Controllers
 {
@@ -17,11 +18,11 @@ namespace ASP.NET_Core_UI.Controllers
         private readonly Services.User.UserService userService;
         private readonly SocializRUnitOfWork unitOfWork;
 
-        public List<Models.UserFriendModel> GetUsersByName(string name)
+        public List<UserDropdownModel> GetUsersByName(string name)
         {
             var el= userService
                 .GetUsersByName(name)
-                .Select(e => new Models.UserFriendModel() { Id = e.Id, ProfilePhotoId = e.PhotoId, Name = e.Name+" " + e.Surname })
+                .Select(e => new UserDropdownModel() { Id = e.Id, ProfilePhotoId = e.PhotoId, Name = e.Name+" " + e.Surname })
                 .OrderBy(e => e.Name)
                 .Take(5)
                 .ToList();

@@ -7,6 +7,9 @@ using Domain;
 using ASP.NET_Core_UI.Models;
 using Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ASP.NET_Core_UI.Models.ProfileModels;
+using ASP.NET_Core_UI.Models.FeedModels;
+using ASP.NET_Core_UI.Models.GeneralModels;
 
 namespace ASP.NET_Core_UI.Code.Mappers
 {
@@ -32,8 +35,8 @@ namespace ASP.NET_Core_UI.Code.Mappers
             CreateMap<EditUserModel, Users>();
             CreateMap<Users, PostUserModel>();
             CreateMap<PostUserModel, Users>();
-            CreateMap<Users, UserFriendModel>();
-            CreateMap<UserFriendModel, Users>();
+            CreateMap<Users, UserDropdownModel>();
+            CreateMap<UserDropdownModel, Users>();
             CreateMap<Users, RegisterModel>();
             CreateMap<RegisterModel, Users>();
             CreateMap<County, SelectListItem>()
@@ -43,7 +46,7 @@ namespace ASP.NET_Core_UI.Code.Mappers
                 .ForMember(dest => dest.Value, s => s.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Text, s => s.MapFrom(src => src.Name));
             CreateMap<Users, ProfileViewerModel>()
-                .ForMember(dest => dest.Album, s => s.MapFrom(src => new List<Models.Domain_Entities.Album>(src.Album.Select(e => new Models.Domain_Entities.Album()
+                .ForMember(dest => dest.Album, s => s.MapFrom(src => new List<Models.DomainModels.Album>(src.Album.Select(e => new Models.DomainModels.Album()
                 {
                     Id = e.Id,
                     Count = e.Photo.Count,

@@ -8,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using DataAccess;
 using Microsoft.AspNetCore.Authorization;
 using ASP.NET_Core_UI.Models;
-using ASP.NET_Core_UI.Models.DomainEntities;
+using ASP.NET_Core_UI.Models.DomainModels;
+using ASP.NET_Core_UI.Models.AdminModels;
 
 namespace ASP.NET_Core_UI.Controllers
 {

@@ -1,11 +1,10 @@
-﻿using ASP.NET_Core_UI.Models.Domain_Entities;
-using ASP.NET_Core_UI.Models.DomainEntities;
+﻿using ASP.NET_Core_UI.Models.DomainModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ASP.NET_Core_UI.Models
+namespace ASP.NET_Core_UI.Models.ProfileModels
 {
     public class ProfileViewerModel
     {
