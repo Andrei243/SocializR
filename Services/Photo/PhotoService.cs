@@ -73,5 +73,10 @@ namespace Services.Photo
             return unitOfWork.SaveChanges() != 0;
         }
 
+        public Domain.Photo GetPhoto(int id)
+        {
+            return unitOfWork.Photos.Query.FirstOrDefault(e => e.Id == id);
+        }
+
     }
 }

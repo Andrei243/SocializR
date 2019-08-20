@@ -147,7 +147,7 @@ namespace ASP.NET_Core_UI.Controllers
                 {
                     if (!user.InterestsId.Contains(x))
                     {
-                        interestsUsersService.AddInterest(x);
+                        interestsUsersService.AddInterest(x,currentUser.Id);
                     }
                    
                 }
@@ -156,7 +156,7 @@ namespace ASP.NET_Core_UI.Controllers
                     if (!interese.Contains(x))
                     {
 
-                        interestsUsersService.RemoveInterest(x);
+                        interestsUsersService.RemoveInterest(x,currentUser.Id);
                     }
                 }     
                 Domain.Users updateUser = new Domain.Users
@@ -212,6 +212,16 @@ namespace ASP.NET_Core_UI.Controllers
             }
 
         } 
+
+        public IActionResult RemoveAlbum(int? albumId)
+        {
+            if (albumId == null)
+            {
+                return NotFound();
+            }
+            albumService.RemoveAlbum(albumId.Value, currentUser.Id);
+            return RedirectToAction("Index", "Profile", null);
+        }
 
         public IActionResult FriendRequests()
         {

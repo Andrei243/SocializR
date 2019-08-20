@@ -29,10 +29,22 @@ namespace Services.Album
             unitOfWork.SaveChanges();
         }
 
-        public void RemoveAlbum(int albumId)
+        public void RemoveAlbum(int albumId,int userId)
         {
-            unitOfWork.Photos.RemoveRange(unitOfWork.Photos.Query.Where(e => e.AlbumId == albumId&&CurrentUser.ProfilePhoto!=e.Id));
-            unitOfWork.Albums.Remove(unitOfWork.Albums.Query.FirstOrDefault(e => e.Id == albumId));
+            var profilePhoto = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == userId).PhotoId;
+            var album = unitOfWork.Albums.Query.FirstOrDefault(e => e.Id == albumId);
+            if (profilePhoto!= null)
+            {
+                var photo = unitOfWork.Photos.Query.FirstOrDefault(e => e.Id == profilePhoto);
+                if (photo.AlbumId == albumId)
+                {
+                    var user = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == album.UserId);
+                    user.PhotoId = null;
+                    unitOfWork.Users.Update(user);
+                }
+            }
+            unitOfWork.Photos.RemoveRange(unitOfWork.Photos.Query.Where(e => e.AlbumId == albumId));
+            unitOfWork.Albums.Remove(album);
             unitOfWork.SaveChanges();
 
         }

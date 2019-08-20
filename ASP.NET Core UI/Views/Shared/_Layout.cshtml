@@ -55,7 +55,7 @@
                     @Html.ActionLink("Logout", "Logout", "Account");
                 }
 
-                
+
             </div>
 
         </nav>
@@ -77,42 +77,12 @@
 
 
 
-    
+
 
 
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script>
-        $(function () {
-     
-            $('#selection').keyup(function () {
-                var name = $('#selection').val();
-            $.ajax({
-                type: 'GET',
-                url: '/Users/GetUsersByName',
-                data: {
-                    name: name
-                },
-                success: function (response) {
-                    $("#users").empty();
-                    for (let i = 0; i < response.length; i++) {
-                        
-                        var redirect = '@Url.Action("Profile","Profile")' + "?userId=" + response[i].id;
-                            var photoURL ='@Url.Action("Download","Photos")' +"/" + response[i].profilePhotoId;
-                            $('#users').append(`<a href=${redirect}><div class="item"><img src=${photoURL} height="100em" /> <p>${response[i].name}</p>  </div></a>`)
-                        
-                    }
-                    
-                },
-                error: function (error) {
 
-                }
-
-            })
-        })
-
-    });
-
-    </script>
+    <script src="~/js/Layout.js"></script>
 </body>
 
 

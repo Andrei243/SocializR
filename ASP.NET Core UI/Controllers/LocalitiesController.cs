@@ -43,7 +43,7 @@ namespace ASP.NET_Core_UI.Controllers
         // GET: Localities/Create
         public IActionResult Create()
         {
-            AddLocalityModel model = new AddLocalityModel();
+            var model = new AddLocalityModel();
             model.CountyIds = countyService.GetAll().Select(e => new SelectListItem { Value = e.Id.ToString(), Text = e.Name }).ToList();
             return View(model);
         }
@@ -60,6 +60,7 @@ namespace ASP.NET_Core_UI.Controllers
                 localityService.AddLocality(model.Name, model.CountyId);
                 return RedirectToAction("Index","Localities");
             }
+
             model.CountyIds = countyService.GetAll().Select(e => new SelectListItem { Value = e.Id.ToString(), Text = e.Name }).ToList();
 
             return View(model);

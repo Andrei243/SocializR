@@ -87,33 +87,5 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-<script>
-    var url = '@Url.Action("GetLocalities", "Account")';
-    debugger;
-    $(function () {
-        $('#CountyId').on('change', function () {
-            $.ajax({
-                type: 'GET',
-                url: url,
-                data: {
-                    countyId: $('#CountyId').val()
-                },
-            success: function (response) {
-                    var elements = $.map(response, function (item) {
-                        return `<option value="${item.value}">${item.text}</option>`
-                    });
-                    $('#LocalityId').empty();
-                    $('#LocalityId').append(elements);
-                },
-                error: function (error) {
-
-                }
-
-            })
-        })
-
-
-    });
-
-</script>
+<script src="~/js/Localities.js"></script>
 

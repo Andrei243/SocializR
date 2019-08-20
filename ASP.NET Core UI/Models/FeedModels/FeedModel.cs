@@ -11,5 +11,6 @@ namespace ASP.NET_Core_UI.Models.FeedModels
         public PostAddModel PostAdd { get; set; }
         public int CurrentPage { get; set; }
 
+
     }
 }

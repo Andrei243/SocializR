@@ -1,72 +1,85 @@
-﻿@model Domain.Users
-
+﻿@model ProfileViewerModel
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/GeneralLayout.cshtml";
 }
 
-<h1>Details</h1>
+<div>
+    @if (Model.PhotoId.HasValue)
+    {
+    <img src="@Url.Action("Download", "Photos", new { id = Model.PhotoId })" height="60em" />
+    }
+    else
+    {
+        <img src="~/images/DefaultProfile.png" height="60em" />
+    }
+    @if (Model.IsRequested)
+    {
+        @Html.ActionLink(
+      linkText: "Accept",
+      actionName: "Accept",
+      controllerName: "Profile",
+      routeValues:
+      new { id = Model.Id },
+      htmlAttributes: null);
 
-<div>
-    <h4>Users</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Surname)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Surname)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Password)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BirthDay)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BirthDay)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SexualIdentity)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SexualIdentity)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Vizibility)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Vizibility)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Locality)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Locality.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Role)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Role.Name)
-        </dd>
-    </dl>
+        @Html.ActionLink(
+      linkText: "Refuse",
+      actionName: "Refuse",
+      controllerName: "Profile",
+      routeValues:
+      new { id = Model.Id },
+      htmlAttributes: null);
+    }
+    @if (Model.CanSendRequest)
+    {
+        @Html.ActionLink(
+            linkText: "Send Friend Request",
+            actionName: "Send",
+            controllerName: "Profile",
+            routeValues:
+            new { id = Model.Id },
+            htmlAttributes: null);
+    }
+
+
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+
+
+
+
+    <div>
+        <h2>Contact information</h2>
+
+        <h5>First Name  &nbsp;&nbsp; @Model.Name</h5>
+        <h5>Last Name  &nbsp;&nbsp; @Model.Surname</h5>
+        <h5>Birthday  &nbsp;&nbsp; @Model.Birthday.Year .@Model.Birthday.Month . @Model.Birthday.Day</h5>
+        @if (Model.Locality != null)
+        {
+            <h5>Locality  &nbsp;&nbsp; @Model.Locality</h5>
+            <h5>County  &nbsp;&nbsp; @Model.County</h5>
+        }
+        <h5>Gender  &nbsp;&nbsp; @Model.SexualIdentity</h5>
+    </div>
+
+    <div>
+        <h2>Likes and interests</h2>
+        @foreach (var interest in Model.Interests)
+        {
+            <p>@interest</p>
+        }
+
+    </div>
+
+    <div>
+        <h2>Albums</h2>
+        @foreach (var album in Model.Album)
+        {
+            <div>
+                <h5>@album.Name</h5>
+                <h6>@album.Count</h6>
+            </div>
+        }
+
+    </div>

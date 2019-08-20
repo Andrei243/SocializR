@@ -17,20 +17,11 @@ namespace Services.User
             this.currentUser = currentUser;
         }
 
+       
 
         public Users getCurrentUser()
         {
-            return unitOfWork
-                .Users
-                .Query
-                .AsNoTracking()
-                .Include(e => e.Locality).ThenInclude(e => e.County)
-                .AsNoTracking()
-                .Include(e=>e.Locality)
-                .AsNoTracking()
-                .Include(e => e.Role)
-                .AsNoTracking()
-                .FirstOrDefault(e => e.Id == currentUser.Id);
+            return getUserById(currentUser.Id);
         }
         public Users getUserById(int? id)
         {

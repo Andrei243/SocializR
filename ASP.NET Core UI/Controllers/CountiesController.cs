@@ -17,7 +17,6 @@ namespace ASP.NET_Core_UI.Controllers
 
     public class CountiesController : Controller
     {
-        //private readonly SocializRContext _context;
         private readonly Services.County.CountyService countyService;
         private readonly Services.Locality.LocalityService localityService;
 
@@ -28,13 +27,13 @@ namespace ASP.NET_Core_UI.Controllers
         }
 
         // GET: Counties
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             return View(countyService.GetAll().Select(e=>new County() {Id=e.Id,Name=e.Name }));
         }
 
         // GET: Counties/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
@@ -102,7 +101,7 @@ namespace ASP.NET_Core_UI.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(EditCountyModel model)
+        public IActionResult Edit(EditCountyModel model)
         {
             
 
@@ -115,7 +114,7 @@ namespace ASP.NET_Core_UI.Controllers
         }
 
         // GET: Counties/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {

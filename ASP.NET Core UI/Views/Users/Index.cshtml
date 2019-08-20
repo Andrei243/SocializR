@@ -1,7 +1,8 @@
-﻿@model IEnumerable<Domain.Users>
+﻿@model IEnumerable<UserIndex>
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/GeneralLayout.cshtml";
 }
 
 <h1>Index</h1>
@@ -13,32 +14,12 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Profile Photo
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Surname)
+                @Html.DisplayNameFor(model => model.FullName)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Password)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BirthDay)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SexualIdentity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Vizibility)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Locality)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Role)
-            </th>
+         
             <th></th>
         </tr>
     </thead>
@@ -46,35 +27,21 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.FullName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Surname)
+                @if (item.ProfilePhoto.HasValue)
+                {
+                <img src="@Url.Action("Download", "Photos", new { id = item.ProfilePhoto })" height="40em"/>
+                }
+                else
+                {
+                    <img src="~/images/DefaultProfile.png" height="40em"/>
+                }
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BirthDay)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SexualIdentity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Vizibility)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Locality.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Role.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                @Html.ActionLink("Edit","Edit","Users",new {userId=item.Id }) |
+                @Html.ActionLink("Details","Details","Users",new {userId=item.Id }) |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>

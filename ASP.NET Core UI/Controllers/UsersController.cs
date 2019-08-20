@@ -10,138 +10,151 @@ using Domain;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using ASP.NET_Core_UI.Models.GeneralModels;
+using ASP.NET_Core_UI.Models.AdminModels;
+using ASP.NET_Core_UI.Models.ProfileModels;
 
 namespace ASP.NET_Core_UI.Controllers
 {
+    [Authorize(Policy ="Admin")]
     public class UsersController : Code.Base.BaseController
     {
         private readonly Services.User.UserService userService;
-        private readonly SocializRUnitOfWork unitOfWork;
+        private readonly Services.CurrentUser currentUser;
+        private readonly Services.FriendShip.FriendshipService friendshipService;
+        private readonly Services.InterestsUsers.InterestsUsersService interestsUsersService;
+        private readonly Services.County.CountyService countyService;
+        private readonly Services.Locality.LocalityService localityService;
+        private readonly Services.Interest.InterestService interestService;
+       
 
+        public UsersController(IMapper mapper,
+            Services.User.UserService userService,
+            Services.CurrentUser currentUser,
+            Services.FriendShip.FriendshipService friendshipService,
+            Services.InterestsUsers.InterestsUsersService interestsUsersService,
+            Services.County.CountyService countyService,
+            Services.Locality.LocalityService localityService,
+            Services.Interest.InterestService interestService)
+            :base(mapper)
+        {
+            this.userService = userService;
+            this.currentUser = currentUser;
+            this.friendshipService = friendshipService;
+            this.interestsUsersService = interestsUsersService;
+            this.countyService = countyService;
+            this.localityService = localityService;
+            this.interestService = interestService;
+        }
         public List<UserDropdownModel> GetUsersByName(string name)
         {
-            var el= userService
+            var el = userService
                 .GetUsersByName(name)
-                .Select(e => new UserDropdownModel() { Id = e.Id, ProfilePhotoId = e.PhotoId, Name = e.Name+" " + e.Surname })
+                .Select(e => new UserDropdownModel() { Id = e.Id, ProfilePhotoId = e.PhotoId, Name = e.Name + " " + e.Surname })
                 .OrderBy(e => e.Name)
                 .Take(5)
                 .ToList();
             return el;
         }
 
-        public UsersController(SocializRUnitOfWork unitOfWork,IMapper mapper,Services.User.UserService userService)
-            :base(mapper)
-        {
-            this.unitOfWork = unitOfWork;
-            this.userService = userService;
-        }
-
         // GET: Users
-        //[Authorize(Policy ="Admin")]
-        [Authorize(Roles ="admin")]
-        public async Task<IActionResult> Index()
+        
+        public IActionResult Index()
         {
-            var socializRContext = userService.getAll();
-            return View(socializRContext.ToList());
+            var useri = userService.getAll().Select(e=>new UserIndex() {
+                FullName=e.Name+" "+e.Surname,
+                Id=e.Id,
+                ProfilePhoto=e.PhotoId
+            });
+            return View(useri);
         }
 
         // GET: Users/Details/5
         [HttpGet]
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? userId)
         {
-            if (id == null)
+            if (!userId.HasValue || userId == 0 || userService.getUserById(userId) == null)
             {
-                return NotFound();
+                return NotFoundView();
             }
-
-            var users = userService.getUserById(id);
-            if (users == null)
+            else
             {
-                return NotFound();
-            }
+                if (userId == currentUser.Id)
+                {
+                    return RedirectToAction("Index", "Profile", null);
+                }
 
-            return View(users);
+                var domainUser = userService.getUserById(userId);
+                ProfileViewerModel user = mapper.Map<ProfileViewerModel>(domainUser);
+                user.CanSee = friendshipService.canSee(userId.Value);
+                user.CanSendRequest = friendshipService.canSendRequest(userId.Value);
+                user.IsRequested = friendshipService.isFriendRequested(userId.Value);
+                user.Interests = interestsUsersService.GetAllInterests(domainUser.Id).Select(e => e.Name).ToList();
+
+                return View(user);
+            }
         }
 
-        // GET: Users/Create
-        public IActionResult Create()
+
+        [HttpGet]
+        public IActionResult Edit(int? userId)
         {
-            ViewData["LocalityId"] = new SelectList(unitOfWork.Localities.Query, "Id", "Name");
-            ViewData["RoleId"] = new SelectList(unitOfWork.Roles.Query, "Id", "Name");
-            return View();
+
+            var user = userService.getUserById(userId);
+            var model = mapper.Map<EditUserModel>(user);
+
+            var counties = countyService.GetAll();
+
+            var interests = interestService.getAll();
+
+            model.InterestsId = interestsUsersService.GetAllInterests(user.Id).Select(e => e.Id).ToList();
+            model.Interests = interests.Select(c => mapper.Map<SelectListItem>(c)).ToList();
+            model.Counties = counties.Select(c => mapper.Map<SelectListItem>(c)).ToList();
+            return View(model);
+
         }
 
-        // POST: Users/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Surname,Email,Password,RoleId,BirthDay,LocalityId,SexualIdentity,Vizibility")] Users users)
+        public IActionResult Edit(EditUserModel user)
         {
             if (ModelState.IsValid)
             {
-                unitOfWork.Users.Add(users);
-                unitOfWork.SaveChanges();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["LocalityId"] = new SelectList(unitOfWork.Localities.Query, "Id", "Name", users.LocalityId);
-            ViewData["RoleId"] = new SelectList(unitOfWork.Roles.Query, "Id", "Name", users.RoleId);
-            return View(users);
-        }
-
-        // GET: Users/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var users = userService.getUserById(id);
-            if (users == null)
-            {
-                return NotFound();
-            }
-            ViewData["LocalityId"] = new SelectList(unitOfWork.Localities.Query, "Id", "Name", users.LocalityId);
-            ViewData["RoleId"] = new SelectList(unitOfWork.Roles.Query, "Id", "Name", users.RoleId);
-            return View(users);
-        }
-
-        // POST: Users/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Surname,Email,Password,RoleId,BirthDay,LocalityId,SexualIdentity,Vizibility")] Users users)
-        {
-            if (id != users.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                user.InterestsId = interestsUsersService.GetAllInterests(user.Id).Select(e => e.Id).ToList();
+                Microsoft.Extensions.Primitives.StringValues raspunsuri;
+                Request.Form.TryGetValue("Interests",
+                                         out raspunsuri);
+                var interese = raspunsuri.Select(e => int.Parse(e));
+                foreach (int x in interese)
                 {
-                    unitOfWork.Users.Update(users);
-                    unitOfWork.SaveChanges();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UsersExists(users.Id))
+                    if (!user.InterestsId.Contains(x))
                     {
-                        return NotFound();
+                        interestsUsersService.AddInterest(x,user.Id);
                     }
-                    else
+
+                }
+                foreach (int x in user.InterestsId)
+                {
+                    if (!interese.Contains(x))
                     {
-                        throw;
+
+                        interestsUsersService.RemoveInterest(x,user.Id);
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                Domain.Users updateUser = new Domain.Users
+                {
+                    BirthDay = user.BirthDay,
+                    Id = user.Id,
+                    LocalityId = user.LocalityId,
+                    Name = user.Name,
+                    SexualIdentity = user.SexualIdentity,
+                    Surname = user.Surname,
+                    Vizibility = user.Visibility
+                };
+                userService.Update(updateUser);
+
+                return RedirectToAction("Index");
             }
-            ViewData["LocalityId"] = new SelectList(unitOfWork.Localities.Query, "Id", "Name", users.LocalityId);
-            ViewData["RoleId"] = new SelectList(unitOfWork.Roles.Query, "Id", "Name", users.RoleId);
-            return View(users);
+            return View(user);
+
         }
 
         // GET: Users/Delete/5
@@ -152,29 +165,10 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            var users = userService.getUserById(id);
-            if (users == null)
-            {
-                return NotFound();
-            }
-
-            return View(users);
+            //TBC
+            return View();
         }
 
-        // POST: Users/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var users = userService.getUserById(id);
-            unitOfWork.Users.Remove(users);
-            unitOfWork.SaveChanges();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool UsersExists(int id)
-        {
-            return userService.getUserById(id)!=null;
-        }
+       
     }
 }

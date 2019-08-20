@@ -11,6 +11,7 @@ using ASP.NET_Core_UI.Code.Base;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using ASP.NET_Core_UI.Models.FeedModels;
+using Domain;
 
 namespace ASP.NET_Core_UI.Controllers
 {
@@ -41,7 +42,7 @@ namespace ASP.NET_Core_UI.Controllers
         {
             FeedModel feedModel = new FeedModel();
             feedModel.CurrentPage = page ?? 0;
-            List<Domain.Post> postari;
+            var postari = new List<Post>();
             if (currentUser.IsAuthenticated)
             {
                 postari = postService.GetNewsfeed(feedModel.CurrentPage);
@@ -99,17 +100,7 @@ namespace ASP.NET_Core_UI.Controllers
             return PartialView("PartialPostAdd", post);
         }
 
-        //[HttpPost]
-        //public IActionResult Index(FeedModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-                
-
-        //    }
-        //    return View(model);
-        //}
-
+      
         public bool Reaction(int postId)
         {
             return reactionService.changeReaction(postId);
