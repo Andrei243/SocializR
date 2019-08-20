@@ -3,48 +3,32 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataAccess;
-using Domain;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
+using ASP.NET_Core_UI.Models.DomainModels;
 
 namespace ASP.NET_Core_UI.Controllers
 {
     [Authorize(Policy = "Admin")]
     public class InterestsController : Code.Base.BaseController
     {
-        //private readonly SocializRContext _context;
-        private readonly SocializRUnitOfWork unitOfWork;
 
-        public InterestsController(SocializRContext context,IMapper mapper,SocializRUnitOfWork unitOfWork):
+        private readonly Services.Interest.InterestService interestService;
+        public InterestsController(IMapper mapper,Services.Interest.InterestService interestService):
             base(mapper)
         {
-            //_context = context;
-            this.unitOfWork = unitOfWork;
+            this.interestService = interestService;
         }
 
         // GET: Interests
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await unitOfWork.Interests.Query.ToListAsync());
+            var interese = interestService.getAll().Select(e => new ASP.NET_Core_UI.Models.DomainModels.Interest() { Id = e.Id, Name = e.Name });
+
+            return View(interese);
         }
 
-        // GET: Interests/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var interest = await unitOfWork.Interests.Query
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (interest == null)
-            {
-                return NotFound();
-            }
-
-            return View(interest);
-        }
+        
 
         // GET: Interests/Create
         public IActionResult Create()
@@ -57,31 +41,31 @@ namespace ASP.NET_Core_UI.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Name")] Interest interest)
+        public IActionResult Create( Interest interest)
         {
             if (ModelState.IsValid)
             {
-                unitOfWork.Interests.Add(interest);
-                unitOfWork.SaveChanges();
+                interestService.AddInterest(interest.Name);
                 return RedirectToAction(nameof(Index));
             }
             return View(interest);
         }
 
         // GET: Interests/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var interest = unitOfWork.Interests.Query.FirstOrDefault(e=>e.Id==id);
-            if (interest == null)
+            var interest = interestService.GetInterest(id.Value);
+            var model = new Interest()
             {
-                return NotFound();
-            }
-            return View(interest);
+                Id = interest.Id,
+                Name = interest.Name
+            };
+            return View(model);
         }
 
         // POST: Interests/Edit/5
@@ -89,31 +73,12 @@ namespace ASP.NET_Core_UI.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("Id,Name")] Interest interest)
+        public IActionResult Edit( Interest interest)
         {
-            if (id != interest.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
-                    unitOfWork.Interests.Update(interest);
-                    unitOfWork.SaveChanges();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!InterestExists(interest.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+
+                interestService.EditInterest(interest.Id, interest.Name);
                 return RedirectToAction(nameof(Index));
             }
             return View(interest);
@@ -127,30 +92,11 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            var interest = unitOfWork.Interests.Query
-                .FirstOrDefault(m => m.Id == id);
-            if (interest == null)
-            {
-                return NotFound();
-            }
+            interestService.RemoveInterest(id.Value);
 
-            return View(interest);
+            return RedirectToAction("Index", "Interests");
         }
 
-        // POST: Interests/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            var interest = unitOfWork.Interests.Query.FirstOrDefault(e=>e.Id==id);
-            unitOfWork.Interests.Remove(interest);
-            unitOfWork.SaveChanges();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool InterestExists(int id)
-        {
-            return unitOfWork.Interests.Query.Any(e => e.Id == id);
-        }
+       
     }
 }

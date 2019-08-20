@@ -12,20 +12,32 @@ namespace Services.Interest
     {
         public InterestService(SocializRUnitOfWork unitOfWork) : base(unitOfWork) { }
 
-        public bool AddInterest(string denumire)
+        public Domain.Interest GetInterest(int id)
         {
+            return unitOfWork.Interests.Query.FirstOrDefault(e => e.Id == id);
+        }
+        public void EditInterest(int id,string name)
+        {
+            var interest = GetInterest(id);
+            interest.Name = name;
+            unitOfWork.Interests.Update(interest);
+            unitOfWork.SaveChanges();
+        }
+        public bool AddInterest(string name)
+        {
+            if (unitOfWork.Interests.Query.Any(e => e.Name == name)) return false;
             var interest = new Domain.Interest()
             {
-                Name = denumire
+                Name = name
             };
             unitOfWork.Interests.Add(interest);
             return unitOfWork.SaveChanges() != 0;
         }
 
-        public bool RemoveInterest(Domain.Interest interest)
+        public bool RemoveInterest(int interestId)
         {
-            unitOfWork.InterestsUserss.RemoveRange(unitOfWork.InterestsUserss.Query.Where(e => e.InterestId == interest.Id).ToList());
-            unitOfWork.Interests.Remove(interest);
+            unitOfWork.InterestsUserss.RemoveRange(unitOfWork.InterestsUserss.Query.Where(e => e.InterestId == interestId).ToList());
+            unitOfWork.Interests.Remove(GetInterest(interestId));
             return unitOfWork.SaveChanges() != 0;
         }
 

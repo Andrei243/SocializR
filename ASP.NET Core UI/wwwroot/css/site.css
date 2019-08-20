@@ -66,3 +66,12 @@ nav div a{
 nav div a:focus,nav a:hover{
     background-color:cadetblue
 }
+.dropdown{
+    position:relative;
+    bottom:0;
+}
+.main-header{
+    position:sticky;
+    z-index:1;
+    top:0;
+}
