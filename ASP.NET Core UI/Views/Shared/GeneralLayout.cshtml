@@ -10,17 +10,23 @@
             {
                 @if (currentUser.ProfilePhoto.HasValue)
                 {<a href=@Url.Action("Index","Profile")>
-                    <img src="@Url.Action("Download", "Photos", new { id = currentUser.ProfilePhoto })" height="100em" style="float:left" />
-                </a>
+                        <img src="@Url.Action("Download", "Photos", new { id = currentUser.ProfilePhoto })" height="100em" style="float:left" />
+                    </a>
                 }
                 else
                 {<a href=@Url.Action("Index","Profile")>
-                    <img src="~/images/DefaultProfile.png" height="100em" style="float:left" />
-                </a>
+                        <img src="~/images/DefaultProfile.png" height="100em" style="float:left" />
+                    </a>
                 }
                 @Html.ActionLink("Edit Profile", "Edit", "Profile");
                 @Html.ActionLink("View Friends", "FriendList", "Profile");
                 @Html.ActionLink("View Friend Requests", "FriendRequests", "Profile");
+                @if (currentUser.IsAdmin)
+                {
+                    @Html.ActionLink("Interests", "Index", "Interests");
+                    @Html.ActionLink("Counties", "Index", "Counties");
+                    @Html.ActionLink("Localities", "Index", "Localities");
+                }
             }
             else
             {

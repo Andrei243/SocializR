@@ -55,12 +55,7 @@
                     @Html.ActionLink("Logout", "Logout", "Account");
                 }
 
-                @if (currentUser.IsAdmin)
-                {
-                    @Html.ActionLink("Interests", "Index", "Interests");
-                    @Html.ActionLink("Counties", "Index", "Counties");
-                    @Html.ActionLink("Localities", "Index", "Localities");
-                }
+                
             </div>
 
         </nav>

@@ -56,7 +56,7 @@ namespace ASP.NET_Core_UI.Controllers
                 Id = e.Id,
                 Text = e.Text,
                 User = new PostUserModel { Id = e.User.Id, Name = e.User.Name, ProfilePhoto = e.User.PhotoId },
-                Comments = e.Comment.Select(f => new CommentModel { Text = f.Content, User = new PostUserModel { Id = f.User.Id, Name = f.User.Name, ProfilePhoto = f.User.PhotoId } }).ToList(),
+                Comments = e.Comment.Take(5).Select(f => new CommentModel { Text = f.Content, User = new PostUserModel { Id = f.User.Id, Name = f.User.Name, ProfilePhoto = f.User.PhotoId } }).ToList(),
                 Reactions = e.Reaction.Select(f => f.UserId).ToList(),
                 PhotoId = photoService.getPhotos(e.Id, null).Select(f => f.Id).ToList()
 

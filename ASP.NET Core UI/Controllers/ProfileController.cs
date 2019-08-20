@@ -64,12 +64,25 @@ namespace ASP.NET_Core_UI.Controllers
             return View(user);
         }
 
+        public IActionResult MakeProfilePhoto(int? photoId)
+        {
+            if (!userService.HasThisPhoto(photoId.Value))
+            {
+                return RedirectToAction("Index", "Profile");
+            }
+            userService.UpdateProfilePhoto(photoId.Value);
+            return RedirectToAction("Index", "Profile");
+
+        }
+
         public IActionResult Album(int? albumId)
         {
             AlbumViewerModel albumViewerModel = new AlbumViewerModel()
             {
                 poze = photoService.getPhotos(null, albumId).Select(e => e.Id).ToList(),
-                PhotoModel=new PhotoModel() { AlbumId=albumId}
+                PhotoModel = new PhotoModel() { AlbumId = albumId },
+                HasThisAlbum = albumService.HasThisAlbum(albumId.Value)
+                
             };
 
             return View(albumViewerModel);

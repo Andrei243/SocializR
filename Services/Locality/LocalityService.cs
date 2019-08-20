@@ -14,6 +14,11 @@ namespace Services.Locality
         {
         }
 
+        public Domain.Locality GetLocality(int id)
+        {
+            return unitOfWork.Localities.Query.FirstOrDefault(e => e.Id == id);
+        }
+
         public bool AddLocality(string denumire,int countyId)
         {
             if (unitOfWork.Localities.Query.Any(e =>e.Name==denumire && e.CountyId==countyId)) return false;
@@ -24,13 +29,28 @@ namespace Services.Locality
             };
             unitOfWork.Localities.Add(locality);
             return unitOfWork.SaveChanges() != 0;
-
         }
 
-        public bool RemoveLocality(Domain.Locality locality)
+        public void EditLocality(int id,string name,int countyId)
         {
-            if (!unitOfWork.Localities.Query.Any(e => e.Id == locality.Id)) return false;
-            unitOfWork.Localities.Remove(locality);
+            var locality = unitOfWork.Localities.Query.FirstOrDefault(e => e.Id == id);
+            locality.Name = name;
+            locality.CountyId = countyId;
+            unitOfWork.Localities.Update(locality);
+            unitOfWork.SaveChanges();
+        }
+
+        public bool RemoveLocality(int id)
+        {
+            if (!unitOfWork.Localities.Query.Any(e => e.Id == id)) return false;
+            unitOfWork.Localities.Remove(unitOfWork.Localities.Query.FirstOrDefault(e=>e.Id==id));
+            var users = unitOfWork.Users.Query.Where(e => e.LocalityId == id);
+            foreach(var user in users)
+            {
+                user.LocalityId = null;
+                unitOfWork.Users.Update(user);
+            }
+            
             return unitOfWork.SaveChanges() != 0;
 
         }
@@ -38,6 +58,11 @@ namespace Services.Locality
         public List<Domain.Locality> getAll(int countyId)
         {
             return unitOfWork.Localities.Query.AsNoTracking().Where(e=>e.CountyId==countyId).ToList();
+        }
+
+        public List<Domain.Locality> getAll()
+        {
+            return unitOfWork.Localities.Query.Include(e=>e.County).AsNoTracking().ToList();
         }
 
     }

@@ -4,6 +4,12 @@
 @foreach(var photo in Model.poze)
 {
     <img src="@Url.Action("Download","Photos",new {id=photo })" height="40em" />
+    @if (Model.HasThisAlbum)
+    {
+        @Html.ActionLink("Make this your profile picture", "MakeProfilePhoto", "Profile", new {photoId=photo })
+    }
 }
-
-@Html.Partial("PartialAddPhoto",Model.PhotoModel)
+@if (Model.HasThisAlbum)
+{
+    @Html.Partial("PartialAddPhoto", Model.PhotoModel)
+}

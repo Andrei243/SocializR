@@ -61,6 +61,7 @@ namespace ASP.NET_Core_UI.Code.Extensions
                         Locality=user.Locality,
                         Password=user.Password
                         
+                        
                     };
                 else
                 {

@@ -74,5 +74,27 @@ namespace Services.User
             unitOfWork.Users.Update(oldUser);
             unitOfWork.SaveChanges();
         }
+
+        public bool HasThisPhoto(int photoId)
+        {
+            var poza = unitOfWork.Photos.Query.Include(e => e.Album).Include(e => e.Post).FirstOrDefault(e => e.Id == photoId);
+
+            if (poza.Album != null)
+            {
+                return poza.Album.UserId == currentUser.Id;
+            }
+            else
+            {
+                return poza.Post.UserId == currentUser.Id;
+            }
+        }
+
+        public void UpdateProfilePhoto(int photoId)
+        {
+            var user = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == currentUser.Id);
+            user.PhotoId = photoId;
+            unitOfWork.Users.Update(user);
+            unitOfWork.SaveChanges();
+        }
     }
 }

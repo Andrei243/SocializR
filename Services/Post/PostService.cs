@@ -84,42 +84,27 @@ namespace Services.Post
         {
             var friends = unitOfWork.Friendships.Query.AsNoTracking().Where(e => e.IdReceiver == CurrentUser.Id && (e.Accepted??false)).Select(e=>e.IdSender).ToList();
 
-            var posts1 = unitOfWork
-                .Posts
-                .Query
-                .AsNoTracking()
+            
+            var posts = unitOfWork.Posts.Query
                 .Include(e => e.User)
                 .AsNoTracking()
                 .Include(e => e.Comment)
-                .ThenInclude(e=>e.User)
-                .AsNoTracking()
-                .Include(e => e.Photo)
-                .AsNoTracking()
-                .Include(e => e.Reaction)
-                .Where(e => friends.Contains(e.Id) && e.Vizibilitate=="friends")
-                .ToList();
-            var posts2 = GetAllPersonalPost();
-            var posts3 = unitOfWork
-                .Posts
-                .Query
-                .Include(e=>e.User)
-                .AsNoTracking()
-                .Include(e => e.Comment)
-                .ThenInclude(e=>e.User)
+                .ThenInclude(e => e.User)
                 .AsNoTracking()
                 .Include(e => e.Photo)
                 .AsNoTracking()
                 .Include(e => e.Reaction)
                 .AsNoTracking()
-                .Where(e => e.Vizibilitate == "public");
-            posts1.AddRange(posts2);
-            posts1.AddRange(posts3);
-            return posts1
-                .Distinct(new PostComparer())
+                .Where(e =>
+                (e.Vizibilitate == "public") ||
+                (e.UserId == CurrentUser.Id) ||
+                (friends.Contains(e.UserId) && e.Vizibilitate == "friends")
+                )
                 .OrderByDescending(e => e.AddingMoment)
                 .Skip(currentPage * Base.GlobalConstants.PAGESIZE)
                 .Take(Base.GlobalConstants.PAGESIZE)
                 .ToList();
+            return posts;
         }
 
     }

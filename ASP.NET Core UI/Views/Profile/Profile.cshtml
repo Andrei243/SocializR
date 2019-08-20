@@ -5,7 +5,7 @@
 }
 
 <div>
-    <img src="@Url.Action("Download","Photos",currentUser.ProfilePhoto)" />
+    <img src="@Url.Action("Download","Photos",new { id= Model.PhotoId })" />
 
   @if (Model.IsRequested)
   {
@@ -50,8 +50,11 @@
     <h5>First Name  &nbsp;&nbsp; @Model.Name</h5>
     <h5>Last Name  &nbsp;&nbsp; @Model.Surname</h5>
     <h5>Birthday  &nbsp;&nbsp; @Model.Birthday.Year .@Model.Birthday.Month . @Model.Birthday.Day</h5>
+    @if (Model.Locality != null)
+    {
     <h5>Locality  &nbsp;&nbsp; @Model.Locality</h5>
     <h5>County  &nbsp;&nbsp; @Model.County</h5>
+    }
     <h5>Gender  &nbsp;&nbsp; @Model.SexualIdentity</h5>
 </div>
 

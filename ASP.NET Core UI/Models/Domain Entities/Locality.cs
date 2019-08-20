@@ -8,7 +8,7 @@ namespace ASP.NET_Core_UI.Models.DomainEntities
     public class Locality
     {
         public int Id { get; set; }
-        public int Name { get; set; }
+        public string Name { get; set; }
         public int CountyId { get; set; }
         public County County { get; set; }
 

@@ -37,5 +37,10 @@ namespace Services.Album
 
         }
 
+        public bool HasThisAlbum(int albumId)
+        {
+            return unitOfWork.Albums.Query.FirstOrDefault(e => e.Id == albumId && e.UserId == CurrentUser.Id) != null;
+        }
+
     }
 }

@@ -9,5 +9,6 @@ namespace ASP.NET_Core_UI.Models
     {
         public PhotoModel PhotoModel { get; set; }
         public List<int> poze { get; set; }
+        public bool HasThisAlbum { get; set; }
     }
 }
