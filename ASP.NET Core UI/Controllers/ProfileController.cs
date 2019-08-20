@@ -6,6 +6,7 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ASP.NET_Core_UI.Models;
+using System.IO;
 
 namespace ASP.NET_Core_UI.Controllers
 {
@@ -17,10 +18,20 @@ namespace ASP.NET_Core_UI.Controllers
         private readonly Services.FriendShip.FriendshipService friendService;
         private readonly Services.Interest.InterestService interestService;
         private readonly Services.InterestsUsers.InterestsUsersService interestsUsersService;
+        private readonly Services.Album.AlbumService albumService;
+        private readonly Services.Photo.PhotoService photoService;
 
 
-        public ProfileController(IMapper mapper,CurrentUser currentUser, Services.FriendShip.FriendshipService friendRequest,Services.User.UserService userService,Services.County.CountyService countyService,
-            Services.Interest.InterestService interestService,Services.InterestsUsers.InterestsUsersService interestsUsersService
+        public ProfileController(
+            IMapper mapper,
+            CurrentUser currentUser, 
+            Services.FriendShip.FriendshipService friendshipService,
+            Services.User.UserService userService,
+            Services.County.CountyService countyService,
+            Services.Interest.InterestService interestService,
+            Services.InterestsUsers.InterestsUsersService interestsUsersService,
+            Services.Album.AlbumService albumService,
+            Services.Photo.PhotoService photoService
             )
             : base(mapper)
         {
@@ -29,7 +40,9 @@ namespace ASP.NET_Core_UI.Controllers
             this.userService = userService;
             this.countyService = countyService;
             this.currentUser = currentUser;
-            this.friendService = friendRequest;
+            this.friendService = friendshipService;
+            this.albumService = albumService;
+            this.photoService = photoService;
         }
 
 
@@ -38,7 +51,52 @@ namespace ASP.NET_Core_UI.Controllers
             var domainUser = userService.getUserById(currentUser.Id);
             ProfileViewerModel user = mapper.Map<ProfileViewerModel>(domainUser);
             user.Interests = interestsUsersService.GetAllInterests(domainUser.Id).Select(e => e.Name).ToList();
+            user.Album = albumService.GetAll(currentUser.Id).Select(
+                e => new Models.Domain_Entities.Album
+                {
+                    Name = e.Name,
+                    Id = e.Id,
+                    Count = e.Photo.Count,
+                    CoverPhoto = e.Photo.Count > 0 ? e.Photo.OrderBy(f=>f.Position).FirstOrDefault(f => f.AlbumId==e.Id).Id : -1
+                }
+
+                ).ToList();
             return View(user);
+        }
+
+        public IActionResult Album(int? albumId)
+        {
+            AlbumViewerModel albumViewerModel = new AlbumViewerModel()
+            {
+                poze = photoService.getPhotos(null, albumId).Select(e => e.Id).ToList(),
+                PhotoModel=new PhotoModel() { AlbumId=albumId}
+            };
+
+            return View(albumViewerModel);
+        }
+
+        [HttpPost]
+        public IActionResult AddPhoto(PhotoModel model,int? albumId)
+        {
+            if (ModelState.IsValid)
+            {
+
+                Domain.Photo photo = new Domain.Photo()
+                {
+                    AlbumId = model.AlbumId,
+                    MIMEType = model.Binar.ContentType
+                };
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    model.Binar.CopyTo(memoryStream);
+                    photo.Binar = memoryStream.ToArray();
+                }
+                photoService.AddPhoto(photo);
+
+                return RedirectToAction("Album", "Profile", new { albumId = model.AlbumId });
+            }
+            return PartialView("PartialAddPhoto", model);
         }
 
         [HttpGet]
@@ -101,6 +159,17 @@ namespace ASP.NET_Core_UI.Controllers
             }
             return View(user);
 
+        }
+
+        [HttpPost]
+        public IActionResult AddAlbum(AddAlbumModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                albumService.AddAlbum(model.Name);
+                return RedirectToAction("Index", "Profile");
+            }
+            return PartialView("PartialAddAlbum", model);
         }
 
         public IActionResult Profile(int? userId)

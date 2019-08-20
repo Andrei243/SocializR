@@ -1,0 +1,9 @@
+﻿@model AlbumViewerModel
+
+<h1>Album</h1>
+@foreach(var photo in Model.poze)
+{
+    <img src="@Url.Action("Download","Photos",new {id=photo })" height="40em" />
+}
+
+@Html.Partial("PartialAddPhoto",Model.PhotoModel)

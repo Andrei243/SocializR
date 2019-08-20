@@ -20,7 +20,6 @@ namespace ASP.NET_Core_UI.Controllers
         private readonly CurrentUser currentUser;
         private readonly Services.Photo.PhotoService photoService;
         private readonly Services.Reaction.ReactionService reactionService;
-        private int NumberOfPages{ get; set; }
         public HomeController(IMapper mapper,
             Services.Post.PostService postService,
             Services.Comment.CommentService commentService,
@@ -41,38 +40,28 @@ namespace ASP.NET_Core_UI.Controllers
         {
             FeedModel feedModel = new FeedModel();
             feedModel.CurrentPage = page ?? 0;
+            List<Domain.Post> postari;
             if (currentUser.IsAuthenticated)
             {
-                feedModel.Posts =
-                    postService.GetNewsfeed(feedModel.CurrentPage)
-                    .Select(e => new PostModel()
-                    {   Id=e.Id,
-                        Text = e.Text,
-                        User = new PostUserModel { Id = e.User.Id, Name = e.User.Name, ProfilePhoto = e.User.PhotoId },
-                        Comments = e.Comment.Select(f => new CommentModel { Text = f.Content, User = new PostUserModel { Id = f.User.Id, Name = f.User.Name, ProfilePhoto = f.User.PhotoId } }).ToList(),
-                        Reactions=e.Reaction.Select(f=>f.UserId ).ToList(),
-                        PhotoId = photoService.getPhotos(e.Id, null).Select(f => f.Id).ToList()
-                    }
-                    )
-                    .ToList();
+                postari = postService.GetNewsfeed(feedModel.CurrentPage);
+                    
             }
             else
             {
-                feedModel.Posts =
-                   postService.GetPublicNewsfeed(feedModel.CurrentPage)
-                   .Select(e => new PostModel()
-                   {   Id=e.Id,
-                       Text = e.Text,
-                       User = new PostUserModel { Id = e.User.Id, Name = e.User.Name, ProfilePhoto = e.User.PhotoId },
-                       Comments = e.Comment.Select(f => new CommentModel { Text = f.Content, User = new PostUserModel { Id = f.User.Id, Name = f.User.Name, ProfilePhoto = f.User.PhotoId } }).ToList(),
-                       Reactions = e.Reaction.Select(f => f.UserId ).ToList(),
-                       PhotoId = photoService.getPhotos(e.Id, null).Select(f => f.Id).ToList()
-
-                   }
-                   )
-                   .ToList();
+                postari = postService.GetPublicNewsfeed(feedModel.CurrentPage);
 
             }
+            feedModel.Posts=postari.Select(e => new PostModel()
+            {
+                Id = e.Id,
+                Text = e.Text,
+                User = new PostUserModel { Id = e.User.Id, Name = e.User.Name, ProfilePhoto = e.User.PhotoId },
+                Comments = e.Comment.Select(f => new CommentModel { Text = f.Content, User = new PostUserModel { Id = f.User.Id, Name = f.User.Name, ProfilePhoto = f.User.PhotoId } }).ToList(),
+                Reactions = e.Reaction.Select(f => f.UserId).ToList(),
+                PhotoId = photoService.getPhotos(e.Id, null).Select(f => f.Id).ToList()
+
+            })
+            .ToList();
             return View(feedModel);
         }
 
@@ -109,16 +98,16 @@ namespace ASP.NET_Core_UI.Controllers
             return PartialView("PartialPostAdd", post);
         }
 
-        [HttpPost]
-        public IActionResult Index(FeedModel model)
-        {
-            if (ModelState.IsValid)
-            {
+        //[HttpPost]
+        //public IActionResult Index(FeedModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
                 
 
-            }
-            return View(model);
-        }
+        //    }
+        //    return View(model);
+        //}
 
         public bool Reaction(int postId)
         {

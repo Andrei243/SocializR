@@ -24,5 +24,6 @@ namespace ASP.NET_Core_UI.Models
         public List<string> Interests { get; set; }
         public List<Album> Album { get; set; }
         public int? PhotoId { get; set; }
+        public AddAlbumModel AddAlbumModel { get; set; }
     }
 }

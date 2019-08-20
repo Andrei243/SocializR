@@ -24,6 +24,11 @@ namespace Services.Photo
                 post.Photo = photo;
                 unitOfWork.Posts.Update(post);
             }
+            else
+            {
+                photo.Position = unitOfWork.Photos.Query.Where(e => e.AlbumId == photo.AlbumId).Select(e => e.Position).OrderBy(e => e).LastOrDefault() ?? 0;
+                photo.Position++;
+            }
             unitOfWork.SaveChanges();
         }
 

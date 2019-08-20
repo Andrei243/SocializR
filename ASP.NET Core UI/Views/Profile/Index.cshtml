@@ -40,8 +40,19 @@
     {
         <div>
             <h5>@album.Name</h5>
+            <a href="@Url.Action("Album","Profile",new {albumId=album.Id })">
+                @if (album.CoverPhoto == -1)
+                {
+                    <img src="~/images/genericAlbumCoverPhoto.jpg" height="40em"/>
+                }
+                else
+                {
+                    <img src="@Url.Action("Download","Photos",new {id=album.CoverPhoto })" height="40em" />
+                }
+            </a>
             <h6>@album.Count</h6>
         </div>
     }
 
+    @Html.Partial("PartialAddAlbum",Model.AddAlbumModel)
 </div>
