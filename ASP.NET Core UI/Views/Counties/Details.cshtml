@@ -1,7 +1,8 @@
 ﻿@model ASP.NET_Core_UI.Models.AdminModels.DetailsCountyModel
 
 @{
-    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
 <h1>Details</h1>
@@ -10,17 +11,17 @@
     <h4>County</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model=>model.Localities)
+            @Html.DisplayNameFor(model => model.Localities)
         </dt>
         <dd class="col-sm-10">
-            @foreach(string oras in Model.Localities)
+            @foreach (string oras in Model.Localities)
             {
                 <p>@oras</p>
             }

@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<ASP.NET_Core_UI.Models.DomainModels.County>
 
 @{
-    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
 <h1>Index</h1>
@@ -19,18 +20,19 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a class="needConfirmation" data-id="@item.Id" href="#" onclick="return false">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a class="needConfirmation" data-id="@item.Id" href="#" onclick="return false">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 <script src="~/js/CountyDeleter.js"></script>

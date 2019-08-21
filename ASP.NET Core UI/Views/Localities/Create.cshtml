@@ -1,7 +1,8 @@
 ﻿@model AddLocalityModel
 
 @{
-    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
 <h1>Create</h1>
@@ -14,8 +15,8 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="CountyId" class="control-label"></label>
-                <select asp-for="CountyId" class ="form-control">
-                    @foreach(var county in Model.CountyIds)
+                <select asp-for="CountyId" class="form-control">
+                    @foreach (var county in Model.CountyIds)
                     {
                         <option value="@county.Value">@county.Text</option>
                     }

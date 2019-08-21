@@ -1,7 +1,8 @@
 ﻿@model EditLocalityModel
 
 @{
-    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
 <h1>Edit</h1>
@@ -16,7 +17,7 @@
             <div class="form-group">
                 <label asp-for="CountyId" class="control-label"></label>
                 <select asp-for="CountyId" class="form-control">
-                    @foreach(var county in Model.CountyIds)
+                    @foreach (var county in Model.CountyIds)
                     {
                         <option value="@county.Value" selected="@county.Selected">@county.Text</option>
                     }
