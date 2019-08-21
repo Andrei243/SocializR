@@ -53,16 +53,19 @@ namespace ASP.NET_Core_UI.Controllers
                 postari = postService.GetPublicNewsfeed(feedModel.CurrentPage);
 
             }
-            feedModel.Posts=postari.Select(e => new PostModel()
+            feedModel.Posts=postari.Select(e => 
+            new PostModel()
             {
                 Id = e.Id,
                 Text = e.Text,
-                User = new PostUserModel { Id = e.User.Id, Name = e.User.Name, ProfilePhoto = e.User.PhotoId },
-                Comments = e.Comment.Take(5).Select(f => new CommentModel { Text = f.Content, User = new PostUserModel { Id = f.User.Id, Name = f.User.Name, ProfilePhoto = f.User.PhotoId } }).ToList(),
+                User = mapper.Map<PostUserModel>(e.User), 
+                Comments = e.Comment.Take(5).Select(f => mapper.Map<CommentModel>(f)).ToList(),
                 Reactions = e.Reaction.Select(f => f.UserId).ToList(),
                 PhotoId = photoService.getPhotos(e.Id, null).Select(f => f.Id).ToList()
 
-            })
+            }
+            
+            )
             .ToList();
             return View(feedModel);
         }
@@ -72,11 +75,8 @@ namespace ASP.NET_Core_UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                Domain.Post newPost = new Domain.Post
-                {
-                    Text = post.Text,
-                    Vizibilitate = post.Visibility
-                };
+                
+                var newPost = mapper.Map<Domain.Post>(post);
                 postService.AddPost(newPost);
 
                 if (post.Binar != null)

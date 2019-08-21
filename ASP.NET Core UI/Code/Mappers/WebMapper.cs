@@ -31,20 +31,20 @@ namespace ASP.NET_Core_UI.Code.Mappers
         {
             CreateMap<Users, LoginModel>();
             CreateMap<LoginModel, Users>();
-            CreateMap<Users, EditUserModel>();
-            CreateMap<EditUserModel, Users>();
-            CreateMap<Users, PostUserModel>();
-            CreateMap<PostUserModel, Users>();
             CreateMap<Users, UserDropdownModel>();
             CreateMap<UserDropdownModel, Users>();
             CreateMap<Users, RegisterModel>();
             CreateMap<RegisterModel, Users>();
             CreateMap<County, SelectListItem>()
-                .ForMember(dest => dest.Value, s => s.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Value, s => s.MapFrom(src => src.Id.ToString()))
                 .ForMember(dest => dest.Text, s => s.MapFrom(src => src.Name));
             CreateMap<Interest, SelectListItem>()
-                .ForMember(dest => dest.Value, s => s.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Value, s => s.MapFrom(src => src.Id.ToString()))
                 .ForMember(dest => dest.Text, s => s.MapFrom(src => src.Name));
+            CreateMap<Locality, SelectListItem>()
+                .ForMember(dest => dest.Value, s => s.MapFrom(src => src.Id.ToString()))
+                .ForMember(dest => dest.Text, s => s.MapFrom(src => src.Name));
+
             CreateMap<Users, ProfileViewerModel>()
                 .ForMember(dest => dest.Album, s => s.MapFrom(src => new List<Models.DomainModels.Album>(src.Album.Select(e => new Models.DomainModels.Album()
                 {
@@ -56,6 +56,7 @@ namespace ASP.NET_Core_UI.Code.Mappers
                 .ForMember(dest=>dest.Locality,s=>s.MapFrom(src=>src.Locality.Name))
                 .ForMember(dest=>dest.County,s=>s.MapFrom(src=>src.Locality.County.Name))
                 ;
+            
         }
 
     }

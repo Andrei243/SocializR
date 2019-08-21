@@ -55,14 +55,7 @@ namespace ASP.NET_Core_UI.Controllers
             ProfileViewerModel user = mapper.Map<ProfileViewerModel>(domainUser);
             user.Interests = interestsUsersService.GetAllInterests(domainUser.Id).Select(e => e.Name).ToList();
             user.Album = albumService.GetAll(currentUser.Id).Select(
-                e => new Album
-                {
-                    Name = e.Name,
-                    Id = e.Id,
-                    Count = e.Photo.Count,
-                    CoverPhoto = e.Photo.Count > 0 ? e.Photo.OrderBy(f=>f.Position).FirstOrDefault(f => f.AlbumId==e.Id).Id : -1
-                }
-
+                e=>mapper.Map<Album>(e)
                 ).ToList();
             return View(user);
         }
@@ -97,12 +90,7 @@ namespace ASP.NET_Core_UI.Controllers
             if (ModelState.IsValid)
             {
 
-                Domain.Photo photo = new Domain.Photo()
-                {
-                    AlbumId = model.AlbumId,
-                    MIMEType = model.Binar.ContentType
-                };
-
+                var photo = mapper.Map<Domain.Photo>(model);
                 using (var memoryStream = new MemoryStream())
                 {
                     model.Binar.CopyTo(memoryStream);
@@ -158,17 +146,9 @@ namespace ASP.NET_Core_UI.Controllers
 
                         interestsUsersService.RemoveInterest(x,currentUser.Id);
                     }
-                }     
-                Domain.Users updateUser = new Domain.Users
-                {
-                    BirthDay = user.BirthDay,
-                    Id = user.Id,
-                    LocalityId = user.LocalityId,
-                    Name = user.Name,
-                    SexualIdentity = user.SexualIdentity,
-                    Surname = user.Surname,
-                    Vizibility = user.Visibility
-                };
+                }
+                
+                var updateUser = mapper.Map<Domain.Users>(user);
                 userService.Update(updateUser);
 
                 return RedirectToAction("Index");

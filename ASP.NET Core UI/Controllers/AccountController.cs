@@ -110,23 +110,13 @@ namespace ASP.NET_Core_UI.Controllers
 
         public List<SelectListItem> GetCounties()
         {
-            return countyService.GetAll().Select(c => new SelectListItem
-            {
-                Text = c.Name,
-                Value = c.Id.ToString()
-            }).ToList();
+            return countyService.GetAll().Select(c =>mapper.Map<SelectListItem>(c)).ToList();
         }
 
         [HttpGet]
         public List<SelectListItem> GetLocalities(int CountyId)
         {
-            return countyService.GetLocalities(CountyId).Select(e=>new SelectListItem
-            {
-                Text=e.Name,
-                Value=e.Id.ToString()
-
-            }).ToList();
-
+            return countyService.GetLocalities(CountyId).Select(e=> mapper.Map<SelectListItem>(e)).ToList();
         }
     }
 }

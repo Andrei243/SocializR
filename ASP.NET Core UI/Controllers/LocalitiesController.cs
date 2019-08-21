@@ -10,18 +10,23 @@ using Microsoft.AspNetCore.Authorization;
 using ASP.NET_Core_UI.Models;
 using ASP.NET_Core_UI.Models.DomainModels;
 using ASP.NET_Core_UI.Models.AdminModels;
+using ASP.NET_Core_UI.Code.Base;
+using AutoMapper;
 
 namespace ASP.NET_Core_UI.Controllers
 {
     [Authorize(Policy ="Admin")]
-    public class LocalitiesController : Controller
+    public class LocalitiesController : BaseController
     {
         private readonly Services.Locality.LocalityService localityService;
         private readonly Services.County.CountyService countyService;
+       
         public LocalitiesController(
             Services.Locality.LocalityService localityService,
-            Services.County.CountyService countyService
-            )
+            Services.County.CountyService countyService,
+            IMapper mapper
+            ):
+            base(mapper)
         {
             this.localityService = localityService;
             this.countyService = countyService;
@@ -30,13 +35,7 @@ namespace ASP.NET_Core_UI.Controllers
         // GET: Localities
         public IActionResult Index()
         {
-            var localities = localityService.getAll().Select(e => new Locality
-            {
-                County = new County { Name = e.County.Name, Id = e.County.Id },
-                Id = e.Id,
-                Name = e.Name
-
-            });
+            var localities = localityService.getAll().Select(e =>mapper.Map<Locality>(e));
             return View(localities);
         }     
 
@@ -44,13 +43,11 @@ namespace ASP.NET_Core_UI.Controllers
         public IActionResult Create()
         {
             var model = new AddLocalityModel();
-            model.CountyIds = countyService.GetAll().Select(e => new SelectListItem { Value = e.Id.ToString(), Text = e.Name }).ToList();
+            model.CountyIds = countyService.GetAll().Select(e => mapper.Map<SelectListItem>(e)).ToList();
             return View(model);
         }
 
         // POST: Localities/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(AddLocalityModel model)
@@ -79,13 +76,9 @@ namespace ASP.NET_Core_UI.Controllers
             {
                 return NotFound();
             }
-            EditLocalityModel model = new EditLocalityModel()
-            {
-                CountyId = locality.CountyId,
-                CountyIds = countyService.GetAll().Select(e => new SelectListItem { Value = e.Id.ToString(), Text = e.Name,Selected=e.Id==locality.CountyId }).ToList(),
-                Id = locality.Id,
-                Name = locality.Name
-            };
+            
+            var model = mapper.Map<EditLocalityModel>(locality);
+            model.CountyIds = countyService.GetAll().Select(e => { var item = mapper.Map<SelectListItem>(e); item.Selected = e.Id == locality.Id; return item; }).ToList();
             return View(model);
         }
 
@@ -99,7 +92,7 @@ namespace ASP.NET_Core_UI.Controllers
                 localityService.EditLocality(model.Id, model.Name, model.CountyId);
                 return RedirectToAction(nameof(Index));
             }
-            model.CountyIds = countyService.GetAll().Select(e => new SelectListItem { Value = e.Id.ToString(), Text = e.Name, Selected = e.Id == model.CountyId }).ToList();
+            model.CountyIds = countyService.GetAll().Select(e => { var item = mapper.Map<SelectListItem>(e); item.Selected = e.Id == model.Id; return item; }).ToList();
             return View(model);
         }
 

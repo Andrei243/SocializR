@@ -9,18 +9,22 @@ using DataAccess;
 using Microsoft.AspNetCore.Authorization;
 using ASP.NET_Core_UI.Models.DomainModels;
 using ASP.NET_Core_UI.Models.AdminModels;
+using ASP.NET_Core_UI.Code.Base;
+using AutoMapper;
 
 namespace ASP.NET_Core_UI.Controllers
 {
     
     [Authorize(Policy = "Admin")]
 
-    public class CountiesController : Controller
+    public class CountiesController : BaseController
     {
         private readonly Services.County.CountyService countyService;
         private readonly Services.Locality.LocalityService localityService;
+        
 
-        public CountiesController(Services.County.CountyService countyService,Services.Locality.LocalityService localityService)
+        public CountiesController(Services.County.CountyService countyService,Services.Locality.LocalityService localityService,IMapper mapper):
+            base(mapper)
         {
             this.countyService = countyService;
             this.localityService = localityService;
@@ -45,10 +49,8 @@ namespace ASP.NET_Core_UI.Controllers
             {
                 return NotFound();
             }
-            var model = new DetailsCountyModel()
-            {
-                Name = county.Name
-            };
+           
+            var model = mapper.Map<DetailsCountyModel>(county);
             model.Localities = localityService.getAll(county.Id).Select(e => e.Name).ToList();
             return View(model);
         }
@@ -84,11 +86,8 @@ namespace ASP.NET_Core_UI.Controllers
             }
 
             var county = countyService.GetCountyById(id);
-            var model = new EditCountyModel()
-            {
-                Id = county.Id,
-                Name = county.Name
-            };
+            
+            var model = mapper.Map<EditCountyModel>(county);
             if (county == null)
             {
                 return NotFound();

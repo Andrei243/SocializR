@@ -23,7 +23,7 @@ namespace ASP.NET_Core_UI.Controllers
         // GET: Interests
         public IActionResult Index()
         {
-            var interese = interestService.getAll().Select(e => new ASP.NET_Core_UI.Models.DomainModels.Interest() { Id = e.Id, Name = e.Name });
+            var interese = interestService.getAll().Select(e =>mapper.Map<Interest>(e));
 
             return View(interese);
         }
@@ -60,11 +60,8 @@ namespace ASP.NET_Core_UI.Controllers
             }
 
             var interest = interestService.GetInterest(id.Value);
-            var model = new Interest()
-            {
-                Id = interest.Id,
-                Name = interest.Name
-            };
+           
+            var model = mapper.Map<Interest>(interest);
             return View(model);
         }
 

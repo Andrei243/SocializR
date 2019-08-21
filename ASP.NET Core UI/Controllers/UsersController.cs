@@ -60,11 +60,9 @@ namespace ASP.NET_Core_UI.Controllers
         
         public IActionResult Index()
         {
-            var useri = userService.getAll().Select(e=>new UserIndex() {
-                FullName=e.Name+" "+e.Surname,
-                Id=e.Id,
-                ProfilePhoto=e.PhotoId
-            });
+            var useri = userService.getAll().Select(e=>
+            mapper.Map<UserIndex>(e)
+            );
             return View(useri);
         }
 
@@ -139,26 +137,27 @@ namespace ASP.NET_Core_UI.Controllers
                         interestsUsersService.RemoveInterest(x,user.Id);
                     }
                 }
-                Domain.Users updateUser = new Domain.Users
-                {
-                    BirthDay = user.BirthDay,
-                    Id = user.Id,
-                    LocalityId = user.LocalityId,
-                    Name = user.Name,
-                    SexualIdentity = user.SexualIdentity,
-                    Surname = user.Surname,
-                    Vizibility = user.Visibility
-                };
+                
+                var updateUser = mapper.Map<Domain.Users>(user);
                 userService.Update(updateUser);
 
                 return RedirectToAction("Index");
             }
             return View(user);
+        }
+        public IActionResult DeleteAlbum(int? userId,int? albumId)
+        {
+            if (userId == null||albumId==null)
+            {
+                return NotFound();
+            }
 
+
+            return RedirectToAction("Edit", new { userId = userId });
         }
 
         // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {

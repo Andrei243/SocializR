@@ -1,5 +1,4 @@
 ﻿var url = '/Account/GetLocalities';
-debugger;
 $(function () {
     $('#CountyId').on('change', function () {
         $.ajax({

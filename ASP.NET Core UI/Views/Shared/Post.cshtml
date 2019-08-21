@@ -2,7 +2,14 @@
 
 <div class="post">
     <a href="@Url.Action("Profile","Profile",new {userId=Model.User.Id })">
+        @if (Model.User.ProfilePhoto != null)
+        {
         <img src="@Url.Action("Download", "Photos", new { id = Model.User.ProfilePhoto })" height="75em" />
+        }
+        else
+        {
+            <img src="~/images/DefaultProfile.png" height="75em" />
+        }
     </a>
     <span>@Model.User.Name</span>
     <p>@Model.Text</p>

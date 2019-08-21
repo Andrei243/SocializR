@@ -1,6 +1,13 @@
 ﻿@model CommentModel
 <div class="comment">
+    @if (Model.User.ProfilePhoto != null)
+    {
     <img src="@Url.Action("Download", "Photos", new { id = Model.User.ProfilePhoto })" height="50em" style="float:left"/>
+    }
+    else
+    {
+        <img src="~/images/DefaultProfile.png" height="50em" style="float:left" />
+    }
     <p>@Model.Text</p>
     @if (Model.User.Id == currentUser.Id)
     {
