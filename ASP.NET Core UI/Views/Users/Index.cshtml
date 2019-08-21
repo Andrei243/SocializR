@@ -42,7 +42,7 @@
             <td>
                 @Html.ActionLink("Edit","Edit","Users",new {userId=item.Id }) |
                 @Html.ActionLink("Details","Details","Users",new {userId=item.Id }) |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a class="neddConfirmation" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 }

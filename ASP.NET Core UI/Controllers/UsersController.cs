@@ -25,6 +25,8 @@ namespace ASP.NET_Core_UI.Controllers
         private readonly Services.County.CountyService countyService;
         private readonly Services.Locality.LocalityService localityService;
         private readonly Services.Interest.InterestService interestService;
+        private readonly Services.Album.AlbumService albumService;
+        private readonly Services.Photo.PhotoService photoService;
        
 
         public UsersController(IMapper mapper,
@@ -34,7 +36,9 @@ namespace ASP.NET_Core_UI.Controllers
             Services.InterestsUsers.InterestsUsersService interestsUsersService,
             Services.County.CountyService countyService,
             Services.Locality.LocalityService localityService,
-            Services.Interest.InterestService interestService)
+            Services.Interest.InterestService interestService,
+            Services.Album.AlbumService albumService,
+            Services.Photo.PhotoService photoService)
             :base(mapper)
         {
             this.userService = userService;
@@ -44,6 +48,8 @@ namespace ASP.NET_Core_UI.Controllers
             this.countyService = countyService;
             this.localityService = localityService;
             this.interestService = interestService;
+            this.albumService = albumService;
+            this.photoService = photoService;
         }
         public List<UserDropdownModel> GetUsersByName(string name)
         {
@@ -60,9 +66,7 @@ namespace ASP.NET_Core_UI.Controllers
         
         public IActionResult Index()
         {
-            var useri = userService.getAll().Select(e=>
-            mapper.Map<UserIndex>(e)
-            );
+            var useri = userService.getAll().Select(e=>mapper.Map<UserIndex>(e));
             return View(useri);
         }
 
@@ -87,6 +91,7 @@ namespace ASP.NET_Core_UI.Controllers
                 user.CanSendRequest = friendshipService.canSendRequest(userId.Value);
                 user.IsRequested = friendshipService.isFriendRequested(userId.Value);
                 user.Interests = interestsUsersService.GetAllInterests(domainUser.Id).Select(e => e.Name).ToList();
+                user.Album = albumService.GetAll(userId.Value).Select(e => mapper.Map<ASP.NET_Core_UI.Models.DomainModels.Album>(e)).ToList();
 
                 return View(user);
             }
@@ -151,23 +156,54 @@ namespace ASP.NET_Core_UI.Controllers
             {
                 return NotFound();
             }
+            albumService.RemoveAlbum(albumId.Value,userId.Value);
 
 
-            return RedirectToAction("Edit", new { userId = userId });
+            return RedirectToAction("Details", new { userId = userId });
+        }
+
+        public IActionResult Album(int? albumId)
+        {
+            if (albumId == null)
+            {
+                return NotFound();
+            }
+            var model=mapper.Map<AlbumEditModel>(albumService.GetAlbum(albumId.Value));
+
+            return View(model);
+        }
+
+        public IActionResult DeletePhoto(int? photoId,int? albumId)
+        {
+            if(photoId==null || albumId == null)
+            {
+                return NotFound();
+            }
+            photoService.RemovePhoto(photoId.Value, null, albumId);
+            return RedirectToAction("Album", new { albumId = albumId });
+
         }
 
         // GET: Users/Delete/5
-        public IActionResult Delete(int? id)
+        public IActionResult Delete(int? userId)
         {
-            if (id == null)
+            if (userId == null)
             {
                 return NotFound();
             }
 
             //TBC
-            return View();
+            return RedirectToAction("Index");
         }
 
+        public IActionResult Ban(int? userId)
+        {
+            if (userId == null) { return NotFound(); }
+
+            userService.RemoveUser(userId.Value);
+
+            return RedirectToAction("Index");
+        }
        
     }
 }

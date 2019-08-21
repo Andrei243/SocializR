@@ -12,6 +12,7 @@ namespace Domain
         public int? AlbumId { get; set; }
         public int? PostId { get; set; }
         public int? Position { get; set; }
+        public string Description { get; set; }
 
         public virtual Album Album { get; set; }
         public virtual Post Post { get; set; }

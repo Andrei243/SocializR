@@ -12,14 +12,14 @@ namespace Services.Album
     {
         public readonly CurrentUser CurrentUser;
 
-        public AlbumService(CurrentUser currentUser,SocializRUnitOfWork unitOfWork) : base(unitOfWork)
+        public AlbumService(CurrentUser currentUser, SocializRUnitOfWork unitOfWork) : base(unitOfWork)
         {
             this.CurrentUser = currentUser;
         }
 
         public List<Domain.Album> GetAll(int idUser)
         {
-            return unitOfWork.Albums.Query.Where(e => e.UserId == idUser).AsNoTracking().Include(e=>e.Photo).AsNoTracking().OrderBy(e => e.Id).ToList();
+            return unitOfWork.Albums.Query.Where(e => e.UserId == idUser).AsNoTracking().Include(e => e.Photo).AsNoTracking().OrderBy(e => e.Id).ToList();
         }
 
         public void AddAlbum(string denumire)
@@ -29,11 +29,11 @@ namespace Services.Album
             unitOfWork.SaveChanges();
         }
 
-        public void RemoveAlbum(int albumId,int userId)
+        public void RemoveAlbum(int albumId, int userId)
         {
             var profilePhoto = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == userId).PhotoId;
             var album = unitOfWork.Albums.Query.FirstOrDefault(e => e.Id == albumId);
-            if (profilePhoto!= null)
+            if (profilePhoto != null)
             {
                 var photo = unitOfWork.Photos.Query.FirstOrDefault(e => e.Id == profilePhoto);
                 if (photo.AlbumId == albumId)
@@ -54,5 +54,9 @@ namespace Services.Album
             return unitOfWork.Albums.Query.FirstOrDefault(e => e.Id == albumId && e.UserId == CurrentUser.Id) != null;
         }
 
+        public Domain.Album GetAlbum(int albumId)
+        {
+            return unitOfWork.Albums.Query.Include(e => e.Photo).FirstOrDefault(e => e.Id == albumId);
+        }
     }
 }

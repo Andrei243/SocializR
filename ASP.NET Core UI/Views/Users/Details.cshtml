@@ -79,6 +79,17 @@
             <div>
                 <h5>@album.Name</h5>
                 <h6>@album.Count</h6>
+                <a class="needConfirmation" href="@Url.Action("DeleteAlbum","Users",new {userId=Model.Id,albumId=album.Id })">Delete this album</a>
+                <a href="@Url.Action("Album", "Users", new {albumId=album.Id})">
+                    @if (album.CoverPhoto!=-1)
+                    {
+                        <img src="@Url.Action("Download", "Photos", new {id=album.CoverPhoto})" heigth="40em"/>
+                    }
+                    else
+                    {
+                        <img src="~/images/genericAlbumCoverPhoto.jpg" height="40em"/>
+                    }
+                </a>
             </div>
         }
 

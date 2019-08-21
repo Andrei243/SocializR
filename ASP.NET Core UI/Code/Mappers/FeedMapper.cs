@@ -69,7 +69,14 @@ namespace ASP.NET_Core_UI.Code.Mappers
                          Name = src.County.Name
                      }
                    ));
+            CreateMap<Domain.Album, AlbumEditModel>()
+                .ForMember(dest => dest.Photos, s => s.MapFrom(src => src.Photo.Select(e => e.Id)));
 
+            CreateMap<PhotoModel, Domain.Photo>()
+                .ForMember(dest => dest.AlbumId, s => s.MapFrom(src => src.AlbumId))
+                .ForMember(dest => dest.PostId, s => s.MapFrom(src => src.PostId))
+                .ForMember(dest => dest.Position, s => s.MapFrom(src => src.Position))
+                .ForMember(dest => dest.MIMEType, s => s.MapFrom(src => src.Binar.ContentType));
 
         }
     }

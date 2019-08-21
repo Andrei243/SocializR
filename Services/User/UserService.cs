@@ -87,5 +87,25 @@ namespace Services.User
             unitOfWork.Users.Update(user);
             unitOfWork.SaveChanges();
         }
+
+        public void RemoveUser(int userId)
+        {
+            var albums = unitOfWork.Albums.Query.Where(e => e.UserId == userId);
+            var posts = unitOfWork.Posts.Query.Where(e => e.UserId == userId);
+            var comments = unitOfWork.Comments.Query.Where(e => e.UserId == userId || posts.Select(f => f.Id).Contains(e.PostId));
+            var reactions = unitOfWork.Reactions.Query.Where(e => e.UserId == userId || posts.Select(f => f.Id).Contains(e.PostId));
+            var friendships = unitOfWork.Friendships.Query.Where(e => e.IdReceiver == userId || e.IdSender == userId);
+            var interestsUsers = unitOfWork.InterestsUserss.Query.Where(e => e.UserId == userId);
+            var photos = unitOfWork.Photos.Query.Where(e => posts.Select(f => f.Id).Contains(e.PostId.Value) || albums.Select(f => f.Id).Contains(e.AlbumId.Value));
+            unitOfWork.Photos.RemoveRange(photos);
+            unitOfWork.InterestsUserss.RemoveRange(interestsUsers);
+            unitOfWork.Friendships.RemoveRange(friendships);
+            unitOfWork.Reactions.RemoveRange(reactions);
+            unitOfWork.Comments.RemoveRange(comments);
+            unitOfWork.Posts.RemoveRange(posts);
+            unitOfWork.Albums.RemoveRange(albums);
+            unitOfWork.Users.Remove(unitOfWork.Users.Query.First(e => e.Id == userId));
+            unitOfWork.SaveChanges();
+        }
     }
 }

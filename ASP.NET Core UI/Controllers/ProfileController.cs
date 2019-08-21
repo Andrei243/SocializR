@@ -90,11 +90,18 @@ namespace ASP.NET_Core_UI.Controllers
             if (ModelState.IsValid)
             {
 
-                var photo = mapper.Map<Domain.Photo>(model);
+                var photo = new Domain.Photo()
+                {
+                    AlbumId = albumId,
+                    PostId = null,
+                    MIMEType = model.Binar.ContentType
+                };
+                //var photo = mapper.Map<Domain.Photo>(model);
                 using (var memoryStream = new MemoryStream())
                 {
                     model.Binar.CopyTo(memoryStream);
                     photo.Binar = memoryStream.ToArray();
+                    
                 }
                 photoService.AddPhoto(photo);
 
