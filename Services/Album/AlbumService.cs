@@ -22,11 +22,12 @@ namespace Services.Album
             return unitOfWork.Albums.Query.Where(e => e.UserId == idUser).AsNoTracking().Include(e => e.Photo).AsNoTracking().OrderBy(e => e.Id).ToList();
         }
 
-        public void AddAlbum(string denumire)
+        public int AddAlbum(string denumire)
         {
             Domain.Album album = new Domain.Album { Name = denumire, UserId = CurrentUser.Id };
             unitOfWork.Albums.Add(album);
             unitOfWork.SaveChanges();
+            return album.Id;
         }
 
         public void RemoveAlbum(int albumId, int userId)

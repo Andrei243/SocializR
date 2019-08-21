@@ -21,6 +21,20 @@ namespace Services.Comment
             return unitOfWork.Comments.Query.AsNoTracking().Include(e=>e.User).AsNoTracking().Where(e => e.PostId == PostId).OrderBy(e => e.AddingMoment).ToList();
         }
 
+        public List<Domain.Comment> GetComments(int currentPage,int postId)
+        {
+            return unitOfWork
+                .Comments
+                .Query
+                .AsNoTracking()
+                .Where(e => e.PostId == postId)
+                .OrderBy(e => e.AddingMoment)
+                .Skip(currentPage * Base.GlobalConstants.PAGESIZE)
+                .Take(Base.GlobalConstants.PAGESIZE)
+                .Include(e => e.User)
+                .ToList();
+        }
+
         public bool AddComment(string text,int PostId)
         {
             var comment = new Domain.Comment()

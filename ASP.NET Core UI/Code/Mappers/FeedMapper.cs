@@ -77,6 +77,8 @@ namespace ASP.NET_Core_UI.Code.Mappers
                 .ForMember(dest => dest.PostId, s => s.MapFrom(src => src.PostId))
                 .ForMember(dest => dest.Position, s => s.MapFrom(src => src.Position))
                 .ForMember(dest => dest.MIMEType, s => s.MapFrom(src => src.Binar.ContentType));
+            CreateMap<Domain.Photo, Photo>();
+            CreateMap<Photo, Domain.Photo>();
 
         }
     }

@@ -17,6 +17,10 @@ namespace Services.County
             return unitOfWork.Counties.Query.AsNoTracking().Include(e=>e.Locality).AsNoTracking().ToList();
         }
 
+        public bool CanBeDeleted(int countyId)
+        {
+            return !unitOfWork.Localities.Query.Any(e => e.CountyId == countyId);
+        }
         public Domain.County GetCountyById(int? id)
         {
             return unitOfWork.Counties.Query.AsNoTracking().FirstOrDefault(e => e.Id == id);

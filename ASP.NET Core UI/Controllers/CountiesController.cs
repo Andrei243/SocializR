@@ -112,6 +112,20 @@ namespace ASP.NET_Core_UI.Controllers
             return View(model);
         }
 
+        public bool CanDelete(int? countyId)
+        {
+            if (countyId == null)
+            {
+                return true;
+            }
+            bool x = countyService.CanBeDeleted(countyId.Value);
+            if (x)
+            {
+                countyService.Remove(countyId.Value);
+            }
+            return x;
+        }
+
         // GET: Counties/Delete/5
         public IActionResult Delete(int? id)
         {
@@ -120,7 +134,7 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            countyService.Remove(id.Value);
+            //countyService.Remove(id.Value);
 
             return RedirectToAction("Index", "Counties");
         }

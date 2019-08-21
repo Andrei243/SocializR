@@ -12,6 +12,7 @@ using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using ASP.NET_Core_UI.Models.FeedModels;
 using Domain;
+using Newtonsoft.Json;
 
 namespace ASP.NET_Core_UI.Controllers
 {
@@ -59,7 +60,7 @@ namespace ASP.NET_Core_UI.Controllers
                 Id = e.Id,
                 Text = e.Text,
                 User = mapper.Map<PostUserModel>(e.User), 
-                Comments = e.Comment.Take(5).Select(f => mapper.Map<CommentModel>(f)).ToList(),
+                Comments=commentService.GetComments(0,e.Id).Select(f=>mapper.Map<CommentModel>(f)).ToList(),
                 Reactions = e.Reaction.Select(f => f.UserId).ToList(),
                 PhotoId = photoService.getPhotos(e.Id, null).Select(f => f.Id).ToList()
 
@@ -68,6 +69,18 @@ namespace ASP.NET_Core_UI.Controllers
             )
             .ToList();
             return View(feedModel);
+        }
+
+        public IActionResult GetComments(int? postId,int page)
+        {
+            if (postId == null)
+            {
+                return Json(null);
+            }
+
+            //JsonResult result = new JsonResult(commentService.GetComments(page, postId.Value).Select(e => mapper.Map<CommentModel>(e)));
+            return Json(commentService.GetComments(page, postId.Value).Select(e => mapper.Map<CommentModel>(e)));
+
         }
 
         [HttpPost]

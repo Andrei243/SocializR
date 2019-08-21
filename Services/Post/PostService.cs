@@ -88,9 +88,6 @@ namespace Services.Post
             var posts = unitOfWork.Posts.Query
                 .Include(e => e.User)
                 .AsNoTracking()
-                .Include(e => e.Comment)
-                .ThenInclude(e => e.User)
-                .AsNoTracking()
                 .Include(e => e.Photo)
                 .AsNoTracking()
                 .Include(e => e.Reaction)

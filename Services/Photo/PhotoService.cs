@@ -15,6 +15,22 @@ namespace Services.Photo
         {
         }
 
+        public void ChangeDescription(int photoId,string description)
+        {
+            var image = unitOfWork.Photos.Query.FirstOrDefault(e => e.Id == photoId);
+            image.Description = description;
+            unitOfWork.Photos.Update(image);
+            unitOfWork.SaveChanges();
+
+        }
+
+        public bool HasThisPhoto(int photoId,int userId)
+        {
+            var photo = unitOfWork.Photos.Query.FirstOrDefault(e => e.Id == photoId);
+            var albums = unitOfWork.Albums.Query.Where(e => e.UserId == userId);
+            return albums.Select(e => e.Id).Contains(photo.AlbumId.Value);
+
+        }
         public void AddPhoto(Domain.Photo photo)
         {
             unitOfWork.Photos.Add(photo);

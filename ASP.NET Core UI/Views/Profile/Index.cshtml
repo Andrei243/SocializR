@@ -6,8 +6,8 @@
 
 <h1>Index</h1>
 
-<div >
-    <img  src="@Url.Action("Download","Photos",new { id=currentUser.ProfilePhoto })" />
+<div>
+    <img src="@Url.Action("Download","Photos",new { id=currentUser.ProfilePhoto })" />
 
 </div>
 
@@ -19,15 +19,15 @@
     <h5>Birthday  &nbsp;&nbsp; @currentUser.BirthDay.Year . @currentUser.BirthDay.Month . @currentUser.BirthDay.Day</h5>
     @if (currentUser.Locality != null)
     {
-    <h5>Locality  &nbsp;&nbsp; @currentUser.Locality.Name</h5>
-    <h5>County  &nbsp;&nbsp; @currentUser.Locality.County.Name</h5>
+        <h5>Locality  &nbsp;&nbsp; @currentUser.Locality.Name</h5>
+        <h5>County  &nbsp;&nbsp; @currentUser.Locality.County.Name</h5>
     }
     <h5>Gender  &nbsp;&nbsp; @currentUser.SexualIdentity</h5>
 </div>
 
 <div>
     <h2>Likes and interests</h2>
-    @foreach(var interest in Model.Interests)
+    @foreach (var interest in Model.Interests)
     {
         <p>@interest</p>
     }
@@ -36,14 +36,14 @@
 
 <div>
     <h2>Albums</h2>
-    @foreach(var album in Model.Album)
+    @foreach (var album in Model.Album)
     {
         <div>
             <h5>@album.Name</h5>
             <a href="@Url.Action("Album","Profile",new {albumId=album.Id })">
                 @if (album.CoverPhoto == -1)
                 {
-                    <img src="~/images/genericAlbumCoverPhoto.jpg" height="40em"/>
+                    <img src="~/images/genericAlbumCoverPhoto.jpg" height="40em" />
                 }
                 else
                 {
@@ -54,5 +54,5 @@
         </div>
     }
 
-    @Html.Partial("PartialAddAlbum",Model.AddAlbumModel)
+    @Html.Partial("PartialAddAlbum", Model.AddAlbumModel)
 </div>

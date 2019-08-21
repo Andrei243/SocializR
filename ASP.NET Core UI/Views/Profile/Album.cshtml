@@ -1,15 +1,21 @@
 ﻿@model AlbumViewerModel
 
 <h1>Album</h1>
-@foreach(var photo in Model.poze)
-{
-    <img src="@Url.Action("Download","Photos",new {id=photo })" height="40em" />
-    @if (Model.HasThisAlbum)
-    {
-        @Html.ActionLink("Make this your profile picture", "MakeProfilePhoto", "Profile", new {photoId=photo },new {@class="needConfirmation" })
-    }
+@foreach (var photo in Model.poze)
+{<div class="imagine">
+        <img src="@Url.Action("Download","Photos",new {id=photo.Id })" height="40em" />
+        <p>@photo.Description</p>
+        @if (Model.HasThisAlbum)
+        {
+            @Html.ActionLink("Make this your profile picture", "MakeProfilePhoto", "Profile", new { photoId = photo.Id }, new { @class = "needConfirmation" })
+            @Html.ActionLink("Delete this photo", "DeletePhoto", "Profile", new { photoId = photo, albumId = Model.Id }, new { @class = "needConfirmation" })
+            <input type="text" class="description" />
+            <button class="changeDescription" data-photoid=@photo.Id>Save</button>
+        }
+    </div>
 }
 @if (Model.HasThisAlbum)
 {
     @Html.Partial("PartialAddPhoto", Model.PhotoModel)
+    <script src="~/js/Description.js"></script>
 }

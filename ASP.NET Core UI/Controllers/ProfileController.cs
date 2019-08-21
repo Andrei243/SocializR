@@ -48,6 +48,15 @@ namespace ASP.NET_Core_UI.Controllers
             this.photoService = photoService;
         }
 
+        public bool ChangeDescription(int? photoId,string description)
+        {
+            if (photoId == null || !photoService.HasThisPhoto(photoId.Value, currentUser.Id))
+            {
+                return false;
+            }
+            photoService.ChangeDescription(photoId.Value, description);
+            return true;
+        }
 
         public IActionResult Index()
         {
@@ -73,15 +82,31 @@ namespace ASP.NET_Core_UI.Controllers
 
         public IActionResult Album(int? albumId)
         {
+            if (albumId == null)
+            {
+                return NotFound();
+            }
             AlbumViewerModel albumViewerModel = new AlbumViewerModel()
             {
-                poze = photoService.getPhotos(null, albumId).Select(e => e.Id).ToList(),
+                poze = photoService.getPhotos(null, albumId).Select(e => mapper.Map<Photo>(e)).ToList(),
                 PhotoModel = new PhotoModel() { AlbumId = albumId },
-                HasThisAlbum = albumService.HasThisAlbum(albumId.Value)
-                
+                HasThisAlbum = albumService.HasThisAlbum(albumId.Value),
+                Id=albumId.Value
             };
 
             return View(albumViewerModel);
+        }
+
+        public IActionResult RemovePhoto(int? photoId,int? albumId)
+        {
+            if (photoId == null||albumId==null || !photoService.HasThisPhoto(photoId.Value, currentUser.Id))
+            {
+                return NotFound();
+            }
+
+            photoService.RemovePhoto(photoId.Value,null,albumId.Value);
+
+            return RedirectToAction("Album", new { albumId = albumId.Value });
         }
 
         [HttpPost]
@@ -96,7 +121,6 @@ namespace ASP.NET_Core_UI.Controllers
                     PostId = null,
                     MIMEType = model.Binar.ContentType
                 };
-                //var photo = mapper.Map<Domain.Photo>(model);
                 using (var memoryStream = new MemoryStream())
                 {
                     model.Binar.CopyTo(memoryStream);
@@ -169,8 +193,8 @@ namespace ASP.NET_Core_UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                albumService.AddAlbum(model.Name);
-                return RedirectToAction("Index", "Profile");
+                int albumId= albumService.AddAlbum(model.Name);
+                return RedirectToAction("Album", "Profile",new {albumId=albumId });
             }
             return PartialView("PartialAddAlbum", model);
         }
