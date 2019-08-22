@@ -10,6 +10,7 @@ using System.IO;
 using ASP.NET_Core_UI.Models.ProfileModels;
 using ASP.NET_Core_UI.Models.DomainModels;
 using ASP.NET_Core_UI.Models.GeneralModels;
+using System.Collections.Generic;
 
 namespace ASP.NET_Core_UI.Controllers
 {
@@ -67,6 +68,15 @@ namespace ASP.NET_Core_UI.Controllers
                 e=>mapper.Map<Album>(e)
                 ).ToList();
             return View(user);
+        }
+
+        public List<Photo> GetPhotos(int? albumId)
+        {
+            if (albumId == null)
+            {
+                return new List<Photo>();
+            }
+            return albumService.GetPhotos(albumId.Value).Select(e => mapper.Map<Photo>(e)).ToList();
         }
 
         public IActionResult MakeProfilePhoto(int? photoId)

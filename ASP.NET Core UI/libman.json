@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "lightgallery@1.6.12",
+      "destination": "wwwroot/lib/lightgallery/"
+    },
+    {
+      "library": "handlebars.js@4.1.2",
+      "destination": "wwwroot/lib/handlebars.js/"
+    },
+    {
+      "library": "lg-fullscreen@1.1.0",
+      "destination": "wwwroot/lib/lg-fullscreen/"
+    },
+    {
+      "library": "lg-thumbnail@1.1.0",
+      "destination": "wwwroot/lib/lg-thumbnail/"
+    },
+    {
+      "library": "lg-autoplay@1.0.4",
+      "destination": "wwwroot/lib/lg-autoplay/"
+    },
+    {
+      "library": "lg-zoom@1.1.0",
+      "destination": "wwwroot/lib/lg-zoom/"
+    },
+    {
+      "library": "lg-hash@1.0.4",
+      "destination": "wwwroot/lib/lg-hash/"
+    },
+    {
+      "library": "lightbox2@2.11.1",
+      "destination": "wwwroot/lib/lightbox2/"
+    }
+  ]
+}

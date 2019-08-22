@@ -8,7 +8,7 @@
 
 <div>
     <img src="@Url.Action("Download","Photos",new { id=currentUser.ProfilePhoto })" />
-
+    <a href="@Url.Action("Download","Photos",new { id=currentUser.ProfilePhoto })" data-lightbox="pozaprofil"></a>
 </div>
 
 <div>
@@ -40,7 +40,8 @@
     {
         <div>
             <h5>@album.Name</h5>
-            <a href="@Url.Action("Album","Profile",new {albumId=album.Id })">
+            
+            <div class="poze" data-id="@album.Id">
                 @if (album.CoverPhoto == -1)
                 {
                     <img src="~/images/genericAlbumCoverPhoto.jpg" height="40em" />
@@ -49,10 +50,11 @@
                 {
                     <img src="@Url.Action("Download","Photos",new {id=album.CoverPhoto })" height="40em" />
                 }
-            </a>
+            </div>
             <h6>@album.Count</h6>
         </div>
     }
 
     @Html.Partial("PartialAddAlbum", Model.AddAlbumModel)
 </div>
+<script src="~/js/Carousel.js"></script>
