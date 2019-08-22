@@ -1,5 +1,6 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
+/* https://coolors.co/bfb48f-564e58-904e55-f2efe9-252627 for the color picker*/
 
 a.navbar-brand {
   white-space: normal;
@@ -42,8 +43,11 @@ html {
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    background-color: #F2EFE9;
+    font-family: 'Noto Sans', sans-serif;
+    width:100%;
 }
 .footer {
   position: absolute;
@@ -55,23 +59,99 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
 
-nav div a{
-    background-color:aquamarine;
-    border-radius:10px;
-    color:azure;
-    padding:1em;
-    text-decoration:none;
+header {
+    background-color: #252627;
+}
+nav div a {
+    background-color: #904E55;
+    border-radius: 10px;
+    color: #564E58;
+    padding: 1em;
+    text-decoration: none;
 }
 
-nav div a:focus,nav a:hover{
-    background-color:cadetblue
+nav div a:focus, nav a:hover {
+        background-color: #BFB48F;
+        text-decoration: none;
+        color: #564E58;
 }
-.dropdown{
-    position:relative;
-    bottom:0;
+
+.dropdownDiv {
+    text-align: center;
+    position: fixed;
+    margin-left: 25vw;
+    margin-right: 25vw;
+    margin-top: -17px;
+    width: 50vw;
+    z-index: 1;
+}
+
+.dropdownResult {
+    text-align: center;
+    width: 50vw;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #252627;
+}
+dropdown *{
+    margin-left:auto;
+    margin-right:auto;
 }
 .main-header{
     position:sticky;
     z-index:1;
     top:0;
+}
+#login-register-links{
+    margin-right:0;
+    margin-left:auto;
+}
+
+#logo {
+    margin-left: 0;
+}
+    #logo a, #logo a:focus, #logo a:hover {
+        background-color: #252627;
+    }
+
+.input-dropdown{
+    margin-left:auto;
+    margin-right:auto;
+}
+#imagineLogin{
+    margin-right:0;
+    margin-left:auto;
+}
+
+#divImagineLogin{
+    text-align:right;
+}
+
+
+.login, .register{
+    text-align:center;
+}
+
+form, input, textarea {
+    text-rendering: auto;
+    /*font: 400 13.3333px Arial;*/
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, Arial, sans-serif;
+    font-weight:400;
+    font-size:13.3333px;
+}
+
+.myProfile{
+    text-align:center;
+    top:75px;
+    position:sticky;
+    margin-top:150px;
+    /*display:inline-block*/;
+}
+
+.divImagineProfil{
+    text-align:center;
+    margin-bottom:100px;
+}
+.linkuriProfil{
+    display:inline-block;
 }

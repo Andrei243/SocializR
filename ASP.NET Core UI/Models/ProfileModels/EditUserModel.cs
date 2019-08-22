@@ -14,6 +14,7 @@ namespace ASP.NET_Core_UI.Models.ProfileModels
             Counties = new List<SelectListItem>();
             InterestsId = new List<int>();
             Interests = new List<SelectListItem>();
+            Albume = new List<DomainModels.Album>();
         }
 
         public int Id { get; set; }
@@ -27,6 +28,6 @@ namespace ASP.NET_Core_UI.Models.ProfileModels
         public List<int> InterestsId { get; set; }
         public List<SelectListItem> Counties { get; set; }
         public List<SelectListItem> Interests { get; set; }
-        
+        public List<ASP.NET_Core_UI.Models.DomainModels.Album> Albume { get; set; }
     }
 }

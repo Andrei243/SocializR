@@ -158,6 +158,7 @@ namespace ASP.NET_Core_UI.Controllers
             model.InterestsId = interestsUsersService.GetAllInterests(currentUser.Id).Select(e => e.Id).ToList();
             model.Interests = interests.Select(c => mapper.Map<SelectListItem>(c)).ToList();
             model.Counties = counties.Select(c => mapper.Map<SelectListItem>(c)).ToList();
+            model.Albume = albumService.GetAll(currentUser.Id).Select(e => mapper.Map<Album>(e)).ToList();
             return View(model);
 
         }
@@ -194,6 +195,7 @@ namespace ASP.NET_Core_UI.Controllers
 
                 return RedirectToAction("Index");
             }
+            user.Albume = albumService.GetAll(user.Id).Select(e => mapper.Map<Album>(e)).ToList();
             return View(user);
 
         }

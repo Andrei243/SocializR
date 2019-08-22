@@ -51,6 +51,7 @@ namespace ASP.NET_Core_UI.Controllers
             this.albumService = albumService;
             this.photoService = photoService;
         }
+        [AllowAnonymous]
         public List<UserDropdownModel> GetUsersByName(string name)
         {
             var el = userService

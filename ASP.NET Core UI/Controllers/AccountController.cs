@@ -47,14 +47,14 @@ namespace ASP.NET_Core_UI.Controllers
             }
 
             await LogIn(user);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Feed");
 
         }
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await LogOut();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Feed");
         }
 
         public async Task LogIn(Domain.Users user)

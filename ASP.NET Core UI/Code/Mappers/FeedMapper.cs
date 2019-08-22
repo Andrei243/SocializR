@@ -43,8 +43,16 @@ namespace ASP.NET_Core_UI.Code.Mappers
                 .ForMember(dest => dest.MIMEType, s => s.MapFrom(src => src.Binar.ContentType));
             CreateMap<EditUserModel, Domain.Users>()
                 .ForMember(dest => dest.Vizibility, s => s.MapFrom(src => src.Visibility));
+
             CreateMap<Domain.Users, EditUserModel>()
-                .ForMember(dest => dest.Visibility, s => s.MapFrom(src => src.Vizibility));
+                .ForMember(dest => dest.Visibility, s => s.MapFrom(src => src.Vizibility))
+                .ForMember(dest => dest.Albume, s => s.MapFrom(src => src.Album.Select(e => new Album
+                {
+                    Count = e.Photo.Count,
+                    CoverPhoto = e.Photo.Count > 0 ? e.Photo.First().Id : -1,
+                    Id = e.Id,
+                    Name = e.Name
+                })));
 
             CreateMap<Domain.Users, UserIndex>()
                 .ForMember(dest => dest.FullName, s => s.MapFrom(src => src.Name + " " + src.Surname))

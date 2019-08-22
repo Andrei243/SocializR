@@ -5,7 +5,7 @@
         console.log(e.currentTarget.dataset.post)
         $.ajax({
             type: 'GET',
-            url: '/Home/Reaction',
+            url: '/Feed/Reaction',
             data: {
                 postId: e.currentTarget.dataset.post
             },
@@ -33,7 +33,7 @@
 
         $.ajax({
             type: "GET",
-            url: '/Home/Comment',
+            url: '/Feed/Comment',
             data: {
                 postId: e.currentTarget.dataset.post,
                 comentariu: e.currentTarget.parentNode.querySelector("input").value

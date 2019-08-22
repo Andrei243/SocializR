@@ -3,41 +3,59 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
 }
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            @if (currentUser.IsAuthenticated)
-            {
-                <div class="col-sm-3">
+    <div class="container-fluid"  >
+        <div class="row" >
+            
+            <div class="col-sm-3" >
+                <div class="myProfile">
+                    @if (currentUser.IsAuthenticated)
+                    {<div>
 
-                    @if (currentUser.ProfilePhoto.HasValue)
-                    {<a href=@Url.Action("Index", "Profile")>
-                            <img src="@Url.Action("Download", "Photos", new { id = currentUser.ProfilePhoto })" height="100em" style="float:left" />
-                        </a>
-                    }
-                    else
-                    {<a href=@Url.Action("Index", "Profile")>
-                            <img src="~/images/DefaultProfile.png" height="100em" style="float:left" />
-                        </a>
-                    }
-                    @Html.ActionLink("Edit Profile", "Edit", "Profile");
-                    @Html.ActionLink("View Friends", "FriendList", "Profile");
-                    @Html.ActionLink("View Friend Requests", "FriendRequests", "Profile");
-                    @if (currentUser.IsAdmin)
-                    {
-                        @Html.ActionLink("Interests", "Index", "Interests");
-                        @Html.ActionLink("Counties", "Index", "Counties");
-                        @Html.ActionLink("Localities", "Index", "Localities");
-                        @Html.ActionLink("Users", "Index", "Users");
-                    }
+                            <div class="divImagineProfil">
+                                <p>@currentUser.Name @currentUser.Surname</p>
+                                @if (currentUser.ProfilePhoto.HasValue)
+                                {<a href=@Url.Action("Index", "Profile")>
+                                        <img src="@Url.Action("Download", "Photos", new { id = currentUser.ProfilePhoto })" height="100em" />
+                                    </a>
+                                }
+                                else
+                                {<a href=@Url.Action("Index", "Profile")>
+                                        <img src="~/images/DefaultProfile.png" height="100em" />
+                                    </a>
+                                }
 
+                            </div>
+                            <div id="linkuriProfil" class="list-group">
+                                <a href="@Url.Action("Edit","Profile")" class="list-group-item list-group-item-action">Edit Profile</a>
 
+                                <a href="@Url.Action("FriendList","Profile")" class="list-group-item list-group-item-action">View Friends</a>
+
+                                <a href="@Url.Action("FriendRequests","Profile")" class="list-group-item list-group-item-action">View Friend Requests</a>
+
+                            </div>
+                            @if (currentUser.IsAdmin)
+                            {
+                                <div class="dropdown" style="display:inline-block">
+                                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                        Admin
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li> @Html.ActionLink("Interests", "Index", "Interests")</li>
+                                        <li> @Html.ActionLink("Counties", "Index", "Counties")</li>
+                                        <li> @Html.ActionLink("Localities", "Index", "Localities")</li>
+                                        <li>@Html.ActionLink("Users", "Index", "Users")</li>
+                                    </ul>
+                                </div>
+                            }
+                      </div>
+                }
+            </div>
                 </div>
-            }
+            
             <div class="col-sm-8">
                 @RenderBody()
             </div>
         </div>
     </div>
-</body>
 

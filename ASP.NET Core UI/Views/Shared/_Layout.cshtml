@@ -39,13 +39,19 @@
     <link href="~/lib/lightbox2/css/lightbox.css" rel="stylesheet" />
     <script src="~/lib/handlebars.js/handlebars.js"></script>
     <link rel="stylesheet" href="~/css/site.css" />
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap&subset=cyrillic,cyrillic-ext,devanagari,greek,greek-ext,latin-ext,vietnamese" rel="stylesheet">
 </head>
 <body>
     <header class="main-header">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" style="background-color:aqua" align="center">
-            <a href="/"><img src="~/images/Titlu.png" height="40em" /></a>
-            <div align="center">
-                <input type="text" id="selection" />
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" align="center">
+            <div id="logo">
+                <a href="/"><img src="~/images/Titlu.png" height="40em" /></a>
+            </div>
+            <div id="divSelection" class="col-xs-3">
+                <input type="text" id="selection" class="form-control" />
+            </div>
+            <div id="login-register-links">
+
 
 
 
@@ -63,9 +69,13 @@
             </div>
 
         </nav>
-        <div class="dropdown" id="users">
-        </div>
+
+
     </header>
+    <div class="dropdownDiv">
+        <div class="dropdownResult" id="users">
+        </div>
+    </div>
     <div class="content">
         <partial name="_CookieConsentPartial" />
         <main role="main" class="pb-3">
@@ -75,7 +85,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2019 - ASP.NET_Core_UI - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2019 - ASP.NET_Core_UI - <a asp-area="" asp-controller="Feed" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
 

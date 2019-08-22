@@ -56,7 +56,7 @@ namespace ASP.NET_Core_UI
                 .AddCookie("SocializR", options =>
                 {
                     options.LoginPath = new PathString("/Account/Login");
-                    options.AccessDeniedPath = new PathString("/Home");
+                    options.AccessDeniedPath = new PathString("/Feed");
                     
                 });
             services.AddAuthorization(options =>
@@ -94,7 +94,7 @@ namespace ASP.NET_Core_UI
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Feed}/{action=Index}/{id?}");
             });
         }
     }

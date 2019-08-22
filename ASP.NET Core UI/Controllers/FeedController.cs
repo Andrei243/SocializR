@@ -16,14 +16,14 @@ using Newtonsoft.Json;
 
 namespace ASP.NET_Core_UI.Controllers
 {
-    public class HomeController : BaseController
+    public class FeedController : BaseController
     {
         private readonly Services.Post.PostService postService;
         private readonly Services.Comment.CommentService commentService;
         private readonly CurrentUser currentUser;
         private readonly Services.Photo.PhotoService photoService;
         private readonly Services.Reaction.ReactionService reactionService;
-        public HomeController(IMapper mapper,
+        public FeedController(IMapper mapper,
             Services.Post.PostService postService,
             Services.Comment.CommentService commentService,
             CurrentUser currentUser,
