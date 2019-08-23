@@ -34,6 +34,17 @@ namespace Services.Comment
                 .Include(e => e.User)
                 .ToList();
         }
+        public List<Domain.Comment> GetComments( int postId)
+        {
+            return unitOfWork
+                .Comments
+                .Query
+                .AsNoTracking()
+                .Where(e => e.PostId == postId)
+                .OrderBy(e => e.AddingMoment)
+                .Include(e => e.User)
+                .ToList();
+        }
 
         public bool AddComment(string text,int PostId)
         {
@@ -45,6 +56,12 @@ namespace Services.Comment
                 AddingMoment=DateTime.Now
             };
             unitOfWork.Comments.Add(comment);
+            return unitOfWork.SaveChanges() != 0;
+        }
+
+        public bool RemoveComment(int commentId)
+        {
+            unitOfWork.Comments.Remove(unitOfWork.Comments.Query.FirstOrDefault(e => e.Id == commentId));
             return unitOfWork.SaveChanges() != 0;
         }
 

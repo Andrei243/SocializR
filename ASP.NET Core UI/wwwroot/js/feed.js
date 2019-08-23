@@ -1,8 +1,7 @@
 ﻿$(document).ready(function () {
 
     $(".like").click(function (e) {
-        console.log(e.currentTarget)
-        console.log(e.currentTarget.dataset.post)
+       
         $.ajax({
             type: 'GET',
             url: '/Feed/Reaction',
@@ -10,7 +9,6 @@
                 postId: e.currentTarget.dataset.post
             },
             success: function (response) {
-                console.log(response);
                 if (response) {
                     e.currentTarget.querySelector("img").src = "images/Liked.png";
                     e.currentTarget.parentNode.querySelector(".reactionCounter").innerText = parseInt(e.currentTarget.parentNode.querySelector(".reactionCounter").innerText) + 1;
@@ -30,7 +28,6 @@
     });
 
     $(".buttonComment").click(function (e) {
-
         $.ajax({
             type: "GET",
             url: '/Feed/Comment',
@@ -40,6 +37,48 @@
             },
             success: function (response) {
                 location.reload(true);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+
+
+        })
+
+    })
+
+    $(".buttonDeleteComment").click(function (e) {
+        $.ajax({
+            type: "GET",
+            url: '/Feed/RemoveComment',
+            data: {
+                commentId: e.currentTarget.dataset.comment,
+                
+            },
+            success: function (response) {
+                location.reload(true);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+
+
+        })
+
+    })
+    $(".buttonDeletePost").click(function (e) {
+        $.ajax({
+            type: "GET",
+            url: '/Feed/RemovePost',
+            data: {
+                postId: e.currentTarget.dataset.post,
+
+            },
+            success: function (response) {
+                location.reload(true);
+            },
+            error: function (error) {
+                console.log(error);
             }
 
 

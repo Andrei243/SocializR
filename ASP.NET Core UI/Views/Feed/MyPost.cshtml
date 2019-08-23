@@ -1,0 +1,61 @@
+﻿@model PostModel
+
+<div class="post">
+    <div class="bodyPostare">
+        <div class="divProfilPostare">
+            <a class="linkProfilPostare" href="@Url.Action("Profile","Profile",new {userId=Model.User.Id })">
+                <span>@Model.User.Name</span>
+                <br />
+                @if (Model.User.ProfilePhoto != null)
+                {
+                    <img class="pozaProfilPostare" src="@Url.Action("Download", "Photos", new { id = Model.User.ProfilePhoto })" height="75em" />
+                }
+                else
+                {
+                    <img class="pozaProfilPostare" src="~/images/DefaultProfile.png" height="75em" />
+                }
+            </a>
+        </div>
+        <br />
+        <br />
+        <p>@Model.Text</p>
+        <br />
+        @foreach (var image in Model.PhotoId)
+        {
+            <img src="@Url.Action("Download","Photos",new {id=image })" height="50em" />
+            <br />
+        }
+    </div>
+
+    <br />
+
+    <div class="comentariiPostare">
+        @foreach (CommentModel comment in Model.Comments)
+        {
+            @Html.Partial("MyComment", comment);
+            <br />
+        }
+    </div>
+
+
+
+    <a class="like" data-post="@Model.Id">
+        @if (Model.Reactions.Contains(currentUser.Id))
+        {
+            <img src="~/images/Liked.png" height="20em" />
+        }
+        else
+        {
+            <img src="~/images/notLiked.png" height="20em" />
+        }
+    </a>
+
+    <p class="reactionCounter">@Model.Reactions.Count</p>
+    <input type="text" class="addComment form-control" />
+    <button class="btn buttonComment " data-post="@Model.Id">Comment</button>
+    @if (Model.User.Id == currentUser.Id)
+    {
+        <button class="btn buttonDeletePost btn-danger" data-post="@Model.Id">Delete this post</button>
+    }
+
+</div>

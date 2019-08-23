@@ -36,7 +36,16 @@ namespace ASP.NET_Core_UI.Controllers
             this.photoService = photoService;
             this.reactionService = reactionService;
         }
-
+        [Authorize]
+        public void RemoveComment(int commentId)
+        {
+            commentService.RemoveComment(commentId);
+        }
+        [Authorize]
+        public void RemovePost(int postId)
+        {
+            postService.RemovePost(postId);
+        }
         
         [HttpGet]
         public IActionResult Index(int? page)
@@ -60,12 +69,39 @@ namespace ASP.NET_Core_UI.Controllers
                 Id = e.Id,
                 Text = e.Text,
                 User = mapper.Map<PostUserModel>(e.User), 
-                Comments=commentService.GetComments(0,e.Id).Select(f=>mapper.Map<CommentModel>(f)).ToList(),
+                Comments=commentService.GetComments(e.Id).Select(f=>mapper.Map<CommentModel>(f)).ToList(),
                 Reactions = e.Reaction.Select(f => f.UserId).ToList(),
                 PhotoId = photoService.getPhotos(e.Id, null).Select(f => f.Id).ToList()
 
             }
             
+            )
+            .ToList();
+            return View(feedModel);
+        }
+
+        [HttpGet]
+        public IActionResult MyFeed(int? page)
+        {
+            FeedModel feedModel = new FeedModel();
+            feedModel.CurrentPage = page ?? 0;
+            var postari = new List<Post>();
+            
+                postari = postService.GetAllPersonalPost(feedModel.CurrentPage);
+
+            
+            feedModel.Posts = postari.Select(e =>
+              new PostModel()
+              {
+                  Id = e.Id,
+                  Text = e.Text,
+                  User = mapper.Map<PostUserModel>(e.User),
+                  Comments = commentService.GetComments(e.Id).Select(f => mapper.Map<CommentModel>(f)).ToList(),
+                  Reactions = e.Reaction.Select(f => f.UserId).ToList(),
+                  PhotoId = photoService.getPhotos(e.Id, null).Select(f => f.Id).ToList()
+
+              }
+
             )
             .ToList();
             return View(feedModel);

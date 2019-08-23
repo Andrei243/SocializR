@@ -1,39 +1,57 @@
 ﻿@model PostModel
 
-<div class="post">
-    <a href="@Url.Action("Profile","Profile",new {userId=Model.User.Id })">
-        @if (Model.User.ProfilePhoto != null)
-        {
-        <img src="@Url.Action("Download", "Photos", new { id = Model.User.ProfilePhoto })" height="75em" />
-        }
-        else
-        {
-            <img src="~/images/DefaultProfile.png" height="75em" />
-        }
-    </a>
-    <span>@Model.User.Name</span>
-    <p>@Model.Text</p>
-    @foreach(var image in Model.PhotoId)
-    {
-        <img src="@Url.Action("Download","Photos",new {id=image })" height="50em" />
-    }
-    @foreach(CommentModel comment in Model.Comments )
-    {
-        @Html.Partial("Comment",comment);  
-    }
-    <button class="like" data-post="@Model.Id">
-        @if (Model.Reactions.Contains(currentUser.Id ))
-        {
-            <img src="~/images/Liked.png" height="10em" />
-        }
-        else
-        {
-            <img src="~/images/notLiked.png" height="10em" />
-        }
-    </button>
+    <div class="post">
+        <div class="bodyPostare">
+            <div class="divProfilPostare">
+                <a class="linkProfilPostare" href="@Url.Action("Profile","Profile",new {userId=Model.User.Id })">
+                    <span>@Model.User.Name</span>
+                    <br />
+                    @if (Model.User.ProfilePhoto != null)
+                    {
+                        <img class="pozaProfilPostare" src="@Url.Action("Download", "Photos", new { id = Model.User.ProfilePhoto })" height="75em" />
+                    }
+                    else
+                    {
+                        <img class="pozaProfilPostare" src="~/images/DefaultProfile.png" height="75em" />
+                    }
+                </a>
+            </div>
+            <br />
+            <br />
+            <p>@Model.Text</p>
+            <br />
+            @foreach (var image in Model.PhotoId)
+            {
+                <img src="@Url.Action("Download","Photos",new {id=image })" height="50em" />
+                <br />
+            }
+        </div>
 
-    <p class="reactionCounter">@Model.Reactions.Count</p>
-    <input type="text" class="addComment"/>
-    <button class="buttonComment" data-post="@Model.Id">Adauga Comentariu</button>
+        <br />
 
-</div>
+        <div class="comentariiPostare">
+            @foreach (CommentModel comment in Model.Comments)
+            {
+                @Html.Partial("Comment", comment);
+                <br />
+            }
+        </div>
+
+
+
+        <a class="like" data-post="@Model.Id">
+            @if (Model.Reactions.Contains(currentUser.Id))
+            {
+                <img src="~/images/Liked.png" height="20em" />
+            }
+            else
+            {
+                <img src="~/images/notLiked.png" height="20em" />
+            }
+        </a>
+
+        <p class="reactionCounter">@Model.Reactions.Count</p>
+        <input type="text" class="addComment form-control" />
+        <button class="btn buttonComment " data-post="@Model.Id">Comment</button>
+        
+    </div>

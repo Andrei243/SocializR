@@ -41,7 +41,7 @@ namespace Services.Post
 
         }
 
-        public List<Domain.Post> GetAllPersonalPost()
+        public List<Domain.Post> GetAllPersonalPost(int currentPage)
         {
             return unitOfWork
                 .Posts
@@ -56,6 +56,9 @@ namespace Services.Post
                 .Include(e=>e.Reaction)
                 .AsNoTracking()
                 .Where(e => e.UserId == CurrentUser.Id)
+                .OrderByDescending(e => e.AddingMoment)
+                .Skip(currentPage * Base.GlobalConstants.PAGESIZE)
+                .Take(Base.GlobalConstants.PAGESIZE)
                 .ToList();
         }
 
@@ -102,6 +105,18 @@ namespace Services.Post
                 .Take(Base.GlobalConstants.PAGESIZE)
                 .ToList();
             return posts;
+        }
+
+        public bool RemovePost(int postId)
+        {
+            var reactions = unitOfWork.Reactions.Query.Where(e => e.PostId == postId);
+            var comments = unitOfWork.Comments.Query.Where(e => e.PostId == postId);
+            var photos = unitOfWork.Photos.Query.Where(e => e.PostId == postId);
+            unitOfWork.Reactions.RemoveRange(reactions);
+            unitOfWork.Comments.RemoveRange(comments);
+            unitOfWork.Photos.RemoveRange(photos);
+            unitOfWork.Posts.Remove(unitOfWork.Posts.Query.FirstOrDefault(e => e.Id == postId));
+            return unitOfWork.SaveChanges() != 0;
         }
 
     }

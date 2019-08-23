@@ -1,7 +1,7 @@
 ﻿@model CommentModel
 <div class="comment">
     <div class="profilComment">
-        <a class="linkProfilComment" href="@Url.Action("Profile","Profile",new {userId=Model.User.Id })" >
+        <a class="linkProfilComment" href="@Url.Action("Profile","Profile",new {userId=Model.User.Id })">
             <p>@Model.User.Name</p>
             @if (Model.User.ProfilePhoto != null)
             {
@@ -14,10 +14,9 @@
         </a>
     </div>
     <p>@Model.Text</p>
+
     
-    @if (Model.User.Id == currentUser.Id)
-    {
         <button class="btn buttonDeleteComment btn-danger " data-comment="@Model.Id">Delete this comment</button>
-    }
+    
 
 </div>

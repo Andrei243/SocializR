@@ -155,3 +155,44 @@ form, input, textarea {
 .linkuriProfil{
     display:inline-block;
 }
+a.linkProfilPostare ,a.linkProfilPostare:hover{
+    text-decoration: none;
+    color: black;
+}
+a.linkProfilComment,a.linkProfilComment:hover{
+    text-decoration:none;
+    color:black;
+}
+
+.divProfilPostare{
+    float:left;
+}
+
+.bodyPostare{
+    float:none;
+    display:block;
+    margin-left:2vw;
+}
+
+.comentariiPostare{
+    display:block;
+    float:none;
+    margin-left:4vw;
+}
+
+.profilComment{
+}
+
+.comment{
+    display:block;
+    float:none;
+}
+
+div.post {
+    background-color: #BFB48F;
+    border-radius:25px;
+}
+.btn-danger {
+    background-color: #904E55;
+    border-color: #904E55;
+}

@@ -4,17 +4,16 @@
 {
     <form enctype="multipart/form-data" method="post" asp-controller="Feed" asp-action="AddPost">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="Binar" class="control-label"></label>
-            <input type="file" asp-for="Binar" class="form-control" />
-            <span asp-validation-for="Binar" class="text-danger"></span>
-        </div>
-
 
         <div class="form-group">
             <label asp-for="Text" class="control-label"></label>
             <input type="text" asp-for="Text" class="form-control" />
             <span asp-validation-for="Text" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Binar" class="control-label"></label>
+            <input type="file" asp-for="Binar" class="form-control" />
+            <span asp-validation-for="Binar" class="text-danger"></span>
         </div>
 
         <div class="form-group">
@@ -24,6 +23,7 @@
                 <option value="public">Public</option>
                 <option value="private">Private</option>
             </select>
+
             <span asp-validation-for="Visibility" class="text-danger"></span>
         </div>
         <div class="form-group">
