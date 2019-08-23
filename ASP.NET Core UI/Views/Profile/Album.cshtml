@@ -1,6 +1,6 @@
 ﻿@model AlbumViewerModel
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/GeneralLayout.cshtml";
 
 }
 <h1>Album</h1>
@@ -21,4 +21,36 @@
 {
     @Html.Partial("PartialAddPhoto", Model.PhotoModel)
     <script src="~/js/Description.js"></script>
+}
+
+@if (Model.HasThisAlbum)
+{
+<script id="image-template" type="text/x-handlebars-template">
+
+    <div class="imagine">
+        <img src="/Photos/Download/{{id}}" height="40" />
+        <p>{{description}}</p>
+        <div class="photoActions">
+            <a class="needConfirmation" href="/Profile/MakeProfilePicture?photoId={{id}}">Make this your profile picture</a>
+            <a class="needConfirmation" href="/Profile/FeletePhoto?photoId={{id}}&albumId={{albumId}}">Delete this photo</a>
+            <input type="text" class="description" />
+            <button class="changeDescription" data-photoid="{{id}}">Save</button>
+        </div>
+
+    </div>
+
+</script>
+}
+else
+{
+<script id="image-template" type="text/x-handlebars-template">
+
+    <div class="imagine">
+        <img src="/Photos/Download/{{id}}" height="40" />
+        <p>{{description}}</p>
+
+
+    </div>
+
+</script>
 }

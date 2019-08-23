@@ -39,18 +39,24 @@ namespace ASP.NET_Core_UI.Controllers
         [Authorize]
         public void RemoveComment(int commentId)
         {
-            commentService.RemoveComment(commentId);
+            if (commentService.CanDeleteComment(commentId))
+            {
+                commentService.RemoveComment(commentId);
+            }
         }
         [Authorize]
         public void RemovePost(int postId)
         {
-            postService.RemovePost(postId);
+            if (postService.CanDetelePost(postId))
+            { 
+                postService.RemovePost(postId);
+            }
         }
         
         [HttpGet]
         public IActionResult Index(int? page)
         {
-            FeedModel feedModel = new FeedModel();
+            var feedModel = new FeedModel();
             feedModel.CurrentPage = page ?? 0;
             var postari = new List<Post>();
             if (currentUser.IsAuthenticated)
@@ -80,6 +86,7 @@ namespace ASP.NET_Core_UI.Controllers
             return View(feedModel);
         }
 
+        //refactor : remove duplicate code
         [HttpGet]
         public IActionResult MyFeed(int? page)
         {
@@ -106,16 +113,19 @@ namespace ASP.NET_Core_UI.Controllers
             .ToList();
             return View(feedModel);
         }
-
+        [Authorize]
         public IActionResult GetComments(int? postId,int page)
         {
             if (postId == null)
             {
                 return Json(null);
             }
-
-            //JsonResult result = new JsonResult(commentService.GetComments(page, postId.Value).Select(e => mapper.Map<CommentModel>(e)));
-            return Json(commentService.GetComments(page, postId.Value).Select(e => mapper.Map<CommentModel>(e)));
+            if (postService.CanSeePost(postId.Value))
+            {
+                //JsonResult result = new JsonResult(commentService.GetComments(page, postId.Value).Select(e => mapper.Map<CommentModel>(e)));
+                return Json(commentService.GetComments(page, postId.Value).Select(e => mapper.Map<CommentModel>(e)));
+            }
+            else return Json(null);
 
         }
 
@@ -146,19 +156,50 @@ namespace ASP.NET_Core_UI.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            return PartialView("PartialPostAdd", post);
+            //return PartialView("PartialPostAdd", post);
+            var feedModel = new FeedModel();
+            feedModel.CurrentPage = 0;
+            var postari = new List<Post>();
+            if (currentUser.IsAuthenticated)
+            {
+                postari = postService.GetNewsfeed(feedModel.CurrentPage);
+
+            }
+            else
+            {
+                postari = postService.GetPublicNewsfeed(feedModel.CurrentPage);
+
+            }
+            feedModel.Posts = postari.Select(e =>
+              new PostModel()
+              {
+                  Id = e.Id,
+                  Text = e.Text,
+                  User = mapper.Map<PostUserModel>(e.User),
+                  Comments = commentService.GetComments(e.Id).Select(f => mapper.Map<CommentModel>(f)).ToList(),
+                  Reactions = e.Reaction.Select(f => f.UserId).ToList(),
+                  PhotoId = photoService.getPhotos(e.Id, null).Select(f => f.Id).ToList()
+              }
+
+            )
+            .ToList();
+            feedModel.PostAdd = post;
+            return View("Index", feedModel);
         }
 
       
         public bool Reaction(int postId)
         {
-            return reactionService.changeReaction(postId);
+            if(postService.CanSeePost(postId)) return reactionService.changeReaction(postId);
+            return false;
         }
 
         public void Comment(int postId,string comentariu)
         {
-            commentService.AddComment(comentariu, postId);
-            
+            if (postService.CanSeePost(postId))
+            {
+                commentService.AddComment(comentariu, postId);
+            }
         }
 
         public IActionResult Privacy()

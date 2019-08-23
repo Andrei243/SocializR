@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<ASP.NET_Core_UI.Models.DomainModels.County>
 
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/GeneralLayout.cshtml";
 
 }
 
@@ -35,4 +35,21 @@
         }
     </tbody>
 </table>
-<script src="~/js/CountyDeleter.js"></script>
+
+<script id="county-template" type="text/x-handlebars-template">
+        <tr>
+            <td>
+                {{name}}
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="{{id}}">Edit</a> |
+                <a asp-action="Details" asp-route-id="{{id}}">Details</a> |
+                <a class="needConfirmation" data-id="{{id}}" href="#" onclick="return false">Delete</a>
+            </td>
+
+
+        </tr>
+
+</script>
+
+<script src="~/js/County.js"></script>

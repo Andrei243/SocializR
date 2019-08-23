@@ -87,7 +87,8 @@ namespace ASP.NET_Core_UI.Code.Mappers
                 .ForMember(dest => dest.MIMEType, s => s.MapFrom(src => src.Binar.ContentType));
             CreateMap<Domain.Photo, Photo>();
             CreateMap<Photo, Domain.Photo>();
-
+            CreateMap<Domain.County, ASP.NET_Core_UI.Models.JsonModels.County>();
+            CreateMap< ASP.NET_Core_UI.Models.JsonModels.County, Domain.County>();
         }
     }
 }

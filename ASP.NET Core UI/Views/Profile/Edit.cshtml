@@ -30,6 +30,7 @@
                 <span asp-validation-for="BirthDay" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label  class="control-label">County</label>
                 <select id="CountyId" class="form-control" asp-items="Model.Counties"></select>
             </div>
             <div class="form-group">
@@ -80,7 +81,7 @@
 </div>
 
 <div>
-    @foreach(var album in Model.Albume)
+    @foreach (var album in Model.Albume)
     {
         <div>
             <h6>@album.Name</h6>
@@ -91,12 +92,13 @@
                 }
                 else
                 {
-                    <img src="~/images/genericAlbumCoverPhoto.jpg" height="40"/>
+                    <img src="~/images/genericAlbumCoverPhoto.jpg" height="40" />
                 }
             </a>
         </div>
 
     }
+    @Html.Partial("PartialAddAlbum", Model.AddAlbumModel)
 </div>
 
 <div>

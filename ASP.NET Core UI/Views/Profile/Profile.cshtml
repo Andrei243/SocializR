@@ -44,7 +44,7 @@
 
 
 
-<div>
+<div class="informatiiContact jumbotron">
     <h2>Contact information</h2>
 
     <h5>First Name  &nbsp;&nbsp; @Model.Name</h5>
@@ -59,7 +59,7 @@
 </div>
 
 <div>
-    <h2>Likes and interests</h2>
+    <h2 class="interestsDiv">Likes and interests</h2>
     @foreach (var interest in Model.Interests)
     {
         <p>@interest</p>
@@ -67,7 +67,7 @@
 
 </div>
 
-<div>
+<div class="albumsDiv">
     <h2>Albums</h2>
     @foreach (var album in Model.Album)
     {

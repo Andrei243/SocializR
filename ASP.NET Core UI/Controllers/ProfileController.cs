@@ -62,7 +62,7 @@ namespace ASP.NET_Core_UI.Controllers
         public IActionResult Index()
         {
             var domainUser = userService.getUserById(currentUser.Id);
-            ProfileViewerModel user = mapper.Map<ProfileViewerModel>(domainUser);
+            var user = mapper.Map<ProfileViewerModel>(domainUser);
             user.Interests = interestsUsersService.GetAllInterests(domainUser.Id).Select(e => e.Name).ToList();
             user.Album = albumService.GetAll(currentUser.Id).Select(
                 e=>mapper.Map<Album>(e)
@@ -141,7 +141,18 @@ namespace ASP.NET_Core_UI.Controllers
 
                 return RedirectToAction("Album", "Profile", new { albumId = model.AlbumId });
             }
-            return PartialView("PartialAddPhoto", model);
+            if (albumId == null)
+            {
+                return NotFound();
+            }
+            AlbumViewerModel albumViewerModel = new AlbumViewerModel()
+            {
+                poze = photoService.getPhotos(null, albumId).Select(e => mapper.Map<Photo>(e)).ToList(),
+                PhotoModel = model,
+                HasThisAlbum = albumService.HasThisAlbum(albumId.Value),
+                Id = albumId.Value
+            };
+            return View("Album", albumViewerModel);
         }
 
         [HttpGet]
@@ -163,6 +174,7 @@ namespace ASP.NET_Core_UI.Controllers
 
         }
 
+        //refactor
         [HttpPost]
         public IActionResult Edit(EditUserModel user)
         {

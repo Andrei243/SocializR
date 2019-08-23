@@ -22,5 +22,55 @@
     @Html.ActionLink("Pagina urmatoare", "Index", "Feed", new { page = Model.CurrentPage + 1 })
 </div>
 
+<script id="comment-template" type="text/x-handlebars-template">
 
-<script src="~/js/feed.js"></script>
+    <div class="comment">
+        <div class="profilComment">
+            <a class="linkProfilComment" href="/Profile/Profile?userId={{userId}}">
+                <p>{{userName}}</p>
+                {{#if profilePhoto}}
+                <img src="/Photos/Download/{{profilePhoto}}" height="50" style="float:left" />
+                {{else}}
+                <img src="~/images/DefaultProfile.png" height="50" style="float:left" />
+                {{/if}}
+            </a>
+
+        </div>
+        <p>{{text}}</p>
+        {{#if isMine}}
+        <button class="btn buttonDeleteComment btn-danger btn-sm" data-comment="{{id}}">Delete this comment</button>
+        {{/if}}
+    </div>
+    <br />
+</script>
+
+
+<script id="post-template" type="text/x-handlebars-template">
+    <div class="post">
+        <div class="bodyPostare">
+            <a class="linkProfilPostare" href="/Profile/Profile/{{userId}}">
+                <span>{{userName}}</span>
+                <br />
+                {{if profilePhoto}}
+                <img class="pozaProfilPostare" src="/Photos/Download/{{profilePhoto}}" height="75" />
+                {{else}}
+                <img class="pozaProfilPostare" src="~/images/DefaultProfile.png" height="75" />
+                {{/if}}
+
+            </a>
+        </div>
+        <br />
+        <br />
+        <p>{{text}}</p>
+        <br />
+        {{#each photoId}}
+        <img src="/Photos/Download/{{this}}" height="50" />
+        <br />
+        {{/each}}
+        <br />
+        <div class="comentariiPostare">
+
+        </div>
+
+    </div>
+    <script src="~/js/feed.js"></script>

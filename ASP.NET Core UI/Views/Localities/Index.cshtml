@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<ASP.NET_Core_UI.Models.DomainModels.Locality>
 
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/GeneralLayout.cshtml";
 
 }
 
@@ -40,3 +40,20 @@
         }
     </tbody>
 </table>
+
+<script id="locality-template" type="text/x-handlebars-template">
+    <tr>
+        <td>
+            {{name}}
+        </td>
+        <td>
+            {{county}}
+        </td>
+        <td>
+            <a asp-action="Edit" asp-route-id="{{id}}">Edit</a> |
+            <a class="needConfirmation" asp-action="Delete" asp-route-id="{{id}}">Delete</a>
+        </td>
+
+    </tr>
+
+</script>

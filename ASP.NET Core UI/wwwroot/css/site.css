@@ -1,6 +1,6 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
-/* https://coolors.co/bfb48f-564e58-904e55-f2efe9-252627 for the color picker*/
+/*https://coolors.co/faf3dd-c8d5b9-8fc0a9-68b0ab-696d7d for the color pcker2*/
 
 a.navbar-brand {
   white-space: normal;
@@ -45,9 +45,9 @@ html {
 body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
-    background-color: #F2EFE9;
+    background-color: #faf3dd;
     font-family: 'Noto Sans', sans-serif;
-    width:100%;
+    width: 100%;
 }
 .footer {
   position: absolute;
@@ -60,21 +60,21 @@ body {
 }
 
 header {
-    background-color: #252627;
+    background-color: #696d7d;
 }
 nav div a {
-    background-color: #904E55;
+    background-color: #696d7d;
     border-radius: 10px;
-    color: #564E58;
+    color: #faf3dd;
     padding: 1em;
     text-decoration: none;
 }
 
-nav div a:focus, nav a:hover {
-        background-color: #BFB48F;
+    nav div a:focus, nav a:hover {
+        background-color: #696d7d;
         text-decoration: none;
-        color: #564E58;
-}
+        color: #8fc0a9;
+    }
 
 .dropdownDiv {
     text-align: center;
@@ -91,7 +91,7 @@ nav div a:focus, nav a:hover {
     width: 50vw;
     margin-left: auto;
     margin-right: auto;
-    background-color: #252627;
+    background-color: #696d7d;
 }
 dropdown *{
     margin-left:auto;
@@ -111,7 +111,7 @@ dropdown *{
     margin-left: 0;
 }
     #logo a, #logo a:focus, #logo a:hover {
-        background-color: #252627;
+        background-color: #696d7d;
     }
 
 .input-dropdown{
@@ -183,16 +183,33 @@ a.linkProfilComment,a.linkProfilComment:hover{
 .profilComment{
 }
 
-.comment{
-    display:block;
-    float:none;
+.comment {
+    display: block;
+    float: none;
+    border-color: #b9c6aa;
+    border-radius: 5px;
+    border-style: solid;
 }
 
 div.post {
-    background-color: #BFB48F;
-    border-radius:25px;
+    background-color: #c8d5b9;
+    border-radius: 25px;
 }
 .btn-danger {
-    background-color: #904E55;
-    border-color: #904E55;
+    background-color: #68b0ab;
+    border-color: #68b0ab;
+}
+
+#divSelection{
+    margin-left:20px;
+    width:400px;
+}
+
+#butonAdaugarePoza {
+    cursor: pointer;
+    background-color: #c8d5b9;
+    border-radius: 25px;
+    font-size: large;
+    padding: 5px;
+    color: #696d7d;
 }

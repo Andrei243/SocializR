@@ -139,6 +139,13 @@ namespace ASP.NET_Core_UI.Controllers
             return RedirectToAction("Index", "Counties");
         }
 
-      
+        public JsonResult GetCounties(int already)
+        {
+            var counties = countyService.GetCounties(already, PageSize).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.County>(e)).ToList();
+
+            return Json(counties);
+
+        }
+
     }
 }

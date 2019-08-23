@@ -57,7 +57,7 @@ namespace Services.Album
 
         public bool HasThisAlbum(int albumId)
         {
-            return unitOfWork.Albums.Query.FirstOrDefault(e => e.Id == albumId && e.UserId == CurrentUser.Id) != null;
+            return unitOfWork.Albums.Query.Any(e => e.Id == albumId && e.UserId == CurrentUser.Id);
         }
 
         public Domain.Album GetAlbum(int albumId)

@@ -37,3 +37,21 @@
   htmlAttributes: null);
 </div>
 }
+
+<script id="friendRequest-template" type="text/x-handlebars-template">
+    <div class="friend">
+        <p>{{name}}</p>
+        <a href="/Profile/Profile?userId={{id}}">
+            {{#if profilePhoto}}
+            <img src="/Photos/Download/{{profilePhoto}}" height="100" />
+            {{else}}
+            <img src="~/images/DefaultProfile.png" height="100" />
+            {{/if}}
+        </a>
+
+        <a href="/Profile/Accept/{{id}}">Accept</a>
+        <a href="/Profile/Refuse/{{id}}">Refuse</a>
+
+    </div>
+
+</script>

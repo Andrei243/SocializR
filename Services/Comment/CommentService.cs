@@ -65,5 +65,14 @@ namespace Services.Comment
             return unitOfWork.SaveChanges() != 0;
         }
 
+        public bool CanDeleteComment(int commentId)
+        {
+            if (CurrentUser.IsAdmin) return true;
+            var bool1 = unitOfWork.Comments.Query.First(e => e.Id == commentId).UserId == CurrentUser.Id;
+            if (bool1) return true;
+            var postId = unitOfWork.Comments.Query.First(e => e.Id == commentId).PostId;
+            return unitOfWork.Posts.Query.First(e => e.Id == postId).UserId == CurrentUser.Id;
+        }
+
     }
 }
