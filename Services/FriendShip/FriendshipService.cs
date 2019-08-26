@@ -102,5 +102,24 @@ namespace Services.FriendShip
             return unitOfWork.Friendships.Query.AsNoTracking().Any(e => e.IdSender == currentUser.Id && e.IdReceiver == to && !e.Accepted.HasValue);
         }
 
+        public List<Users> GetFriends(int already,int howMany)
+        {
+            return unitOfWork.Friendships.Query
+                .Where(e => e.IdSender == currentUser.Id && (e.Accepted ?? false))
+                .Skip(already).Take(howMany)
+                .Select(e => e.IdReceiverNavigation)
+                .ToList();
+        }
+
+        public List<Users> GetRequesters(int already,int howMany)
+        {
+            return unitOfWork.Friendships.Query
+                .Where(e => e.IdReceiver == currentUser.Id && !e.Accepted.HasValue)
+                .Skip(already)
+                .Take(howMany)
+                .Select(e => e.IdSenderNavigation)
+                .ToList();
+        }
+
     }
 }

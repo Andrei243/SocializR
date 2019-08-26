@@ -206,5 +206,12 @@ namespace ASP.NET_Core_UI.Controllers
             return RedirectToAction("Index");
         }
        
+        public JsonResult GetUsers(int already)
+        {
+            var users = userService.GetUsers(already, PageSize).Select(mapper.Map<ASP.NET_Core_UI.Models.JsonModels.User>).ToList();
+            return Json(users);
+
+        }
+
     }
 }

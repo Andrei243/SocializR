@@ -11,6 +11,7 @@ using ASP.NET_Core_UI.Models.ProfileModels;
 using ASP.NET_Core_UI.Models.DomainModels;
 using ASP.NET_Core_UI.Models.GeneralModels;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ASP.NET_Core_UI.Controllers
 {
@@ -57,6 +58,13 @@ namespace ASP.NET_Core_UI.Controllers
             }
             photoService.ChangeDescription(photoId.Value, description);
             return true;
+        }
+
+        public JsonResult GetPhotosJson(int already,int albumId)
+        {
+            var photos = photoService.GetPhotos(already, PageSize, albumId).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Image>(e)).ToList();
+            return Json(photos);
+
         }
 
         public IActionResult Index()
@@ -289,7 +297,20 @@ namespace ASP.NET_Core_UI.Controllers
             friendService.SendFriendRequest(id);
             return RedirectToAction("Profile", "Profile", new {userId=id });
         }
+        [Authorize]
+        public JsonResult GetFriends(int already)
+        {
+            var friends = friendService.GetFriends(already, PageSize).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Friend>(e)).ToList();
+            return Json(friends);
 
+        }
+        [Authorize]
+        public JsonResult GetRequesters(int already)
+        {
+            var friends = friendService.GetRequesters(already, PageSize).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Friend>(e)).ToList();
+            return Json(friends);
+
+        }
 
     }
 }

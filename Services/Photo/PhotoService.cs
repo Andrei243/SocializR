@@ -94,5 +94,10 @@ namespace Services.Photo
             return unitOfWork.Photos.Query.FirstOrDefault(e => e.Id == id);
         }
 
+        public List<Domain.Photo> GetPhotos(int already,int howMany,int albumId)
+        {
+            return unitOfWork.Photos.Query.Where(e => e.AlbumId == albumId).OrderBy(e => e.Position).Skip(already).Take(howMany).ToList();
+        }
+
     }
 }

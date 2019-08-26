@@ -1,4 +1,4 @@
-﻿@model  FriendListModel
+﻿@model FriendListModel
 @{
     ViewData["Title"] = "FriendList";
     Layout = "~/Views/Shared/GeneralLayout.cshtml";
@@ -6,23 +6,29 @@
 
 <h1>FriendList</h1>
 
-@foreach(var e in Model.friends)
-{<div style="background-color:black">
-    <p>@e.Name</p>
+@*@foreach(var e in Model.friends)
+    {<div style="background-color:black">
+        <p>@e.Name</p>
 
-    <a href="@Url.Action("Profile","Profile",new {userId=e.Id })">
-    @if (e.ProfilePhotoId != null)
-    {
-        <img src="@Url.Action("Download", "Photo", new { id = e.ProfilePhotoId })" height="100em" />
-    }
-    else
-    {
-        <img src="~/images/DefaultProfile.png" height="100em" />
-    }
+        <a href="@Url.Action("Profile","Profile",new {userId=e.Id })">
+        @if (e.ProfilePhotoId != null)
+        {
+            <img src="@Url.Action("Download", "Photo", new { id = e.ProfilePhotoId })" height="100em" />
+        }
+        else
+        {
+            <img src="~/images/DefaultProfile.png" height="100em" />
+        }
 
-    </a>
+        </a>
+    </div>
+    }*@
+
+<div id="friendBody">
+
 </div>
-}
+
+<button id="friendGetter">Load more friends</button>
 
 <script id="friend-template" type="text/x-handlebars-template">
     <div class="friendDiv">
@@ -31,8 +37,9 @@
             {{#if profilePhoto}}
             <img src="/Photos/Download/{{profilePhoto}}" height="100" />
             {{else}}
-            <img src="~/images/DefaultProfile.png" />
+            <img src="/images/DefaultProfile.png" height="100" />
             {{/if}}
         </a>
     </div>
 </script>
+<script src="~/js/Friends.js"></script>

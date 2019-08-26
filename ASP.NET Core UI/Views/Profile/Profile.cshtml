@@ -44,40 +44,72 @@
 
 
 
-    <div class="informatiiContact jumbotron">
-        <h2>Contact information</h2>
+<div class="container jumbotron">
+    <ul class="nav nav-tabs nav-justified">
+        <li class="active nav-item"><a data-toggle="tab" href="#contactDiv">Contact Information </a> </li>
+        <li class="nav-item"><a data-toggle="tab" href="#interestsDiv">Likes and Interests</a></li>
+        <li class="nav-item"><a data-toggle="tab" href="#albumsDiv">Albums</a></li>
+    </ul>
 
-        <h5>First Name  &nbsp;&nbsp; @Model.Name</h5>
-        <h5>Last Name  &nbsp;&nbsp; @Model.Surname</h5>
-        <h5>Birthday  &nbsp;&nbsp; @Model.Birthday.Year .@Model.Birthday.Month . @Model.Birthday.Day</h5>
-        @if (Model.Locality != null)
-        {
-            <h5>Locality  &nbsp;&nbsp; @Model.Locality</h5>
-            <h5>County  &nbsp;&nbsp; @Model.County</h5>
-        }
-        <h5>Gender  &nbsp;&nbsp; @Model.SexualIdentity</h5>
-    </div>
+    <div class="tab-content">
 
-    <div>
-        <h2 class="interestsDiv">Likes and interests</h2>
-        @foreach (var interest in Model.Interests)
-        {
-            <p>@interest</p>
-        }
+        <div id="contactDiv" class=" tab-pane fade show active">
+            <div class="container-fluid">
+                <h2>Contact information</h2>
 
-    </div>
-
-    <div class="albumsDiv">
-        <h2>Albums</h2>
-        @foreach (var album in Model.Album)
-        {
-            <div>
-                <h5>@album.Name</h5>
-                <h6>@album.Count</h6>
+                <div class="row">
+                    <div class="col-6">
+                        <h5>First Name  &nbsp;&nbsp; @currentUser.Name</h5>
+                        <h5>Last Name  &nbsp;&nbsp; @currentUser.Surname</h5>
+                        <h5>Birthday  &nbsp;&nbsp; @currentUser.BirthDay.Year . @currentUser.BirthDay.Month . @currentUser.BirthDay.Day</h5>
+                    </div>
+                    <div class="col-6">
+                        @if (currentUser.Locality != null)
+                        {
+                            <h5>Locality  &nbsp;&nbsp; @currentUser.Locality.Name</h5>
+                            <h5>County  &nbsp;&nbsp; @currentUser.Locality.County.Name</h5>
+                        }
+                        <h5>Gender  &nbsp;&nbsp; @currentUser.SexualIdentity</h5>
+                    </div>
+                </div>
             </div>
-        }
+        </div>
 
+        <div id="interestsDiv" class="tab-pane fade">
+            <h2>Likes and interests</h2>
+            @foreach (var interest in Model.Interests)
+            {
+                <p>@interest</p>
+            }
+
+        </div>
+
+        <div id="albumsDiv" class="tab-pane fade">
+            <h2>Albums</h2>
+            @foreach (var album in Model.Album)
+            {
+                <div>
+                    <h5>@album.Name</h5>
+
+                    <div class="poze" data-id="@album.Id">
+                        @if (album.CoverPhoto == -1)
+                        {
+                            <img src="~/images/genericAlbumCoverPhoto.jpg" height="40em" />
+                        }
+                        else
+                        {
+                            <img src="@Url.Action("Download","Photos",new {id=album.CoverPhoto })" height="40em" />
+                        }
+                    </div>
+                    <h6>@album.Count</h6>
+                </div>
+            }
+
+
+        </div>
     </div>
+
+</div>
 
     <div id="postBody">
 
@@ -149,4 +181,5 @@
 
     </script>
     <script src="~/js/Profile.js"></script>
+<script src="~/js/Carousel.js"></script>
 }

@@ -107,5 +107,14 @@ namespace Services.User
             unitOfWork.Users.Remove(unitOfWork.Users.Query.First(e => e.Id == userId));
             unitOfWork.SaveChanges();
         }
+
+        public List<Users> GetUsers(int already,int howMany)
+        {
+            return unitOfWork.Users.Query
+                .OrderBy(e => e.BirthDay)
+                .Skip(already)
+                .Take(howMany)
+                .ToList();
+        }
     }
 }

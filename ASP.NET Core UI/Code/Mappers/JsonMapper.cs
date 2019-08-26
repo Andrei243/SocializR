@@ -29,6 +29,12 @@ namespace ASP.NET_Core_UI.Code.Mappers
                 .ForMember(dest => dest.ProfilePhoto, s => s.MapFrom(src => src.User.PhotoId))
                 .ForMember(dest => dest.NoReactions, s => s.MapFrom(src => src.Reaction.Count))
                 .ForMember(dest => dest.PhotoId, s => s.MapFrom(src => new List<int>() { src.Photo.Id }));
+            CreateMap<Domain.Photo, ASP.NET_Core_UI.Models.JsonModels.Image>();
+            CreateMap<Domain.Users, ASP.NET_Core_UI.Models.JsonModels.Friend>()
+                .ForMember(dest => dest.ProfilePhoto, s => s.MapFrom(src => src.PhotoId));
+            CreateMap<Domain.Users, ASP.NET_Core_UI.Models.JsonModels.User>()
+                .ForMember(dest => dest.ProfilePhoto, s => s.MapFrom(src => src.PhotoId))
+                .ForMember(dest => dest.Name, s => s.MapFrom(src => src.Name + " " + src.Surname));
                 
 
         }

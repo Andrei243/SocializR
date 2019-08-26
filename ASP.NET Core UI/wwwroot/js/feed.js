@@ -99,7 +99,6 @@
                     postId: idPost
                 },
                 success: (result) => {
-                    debugger;
                     for (let i = 0; i < result.length; i++) {
                         let comment = result[i];
                         let html = templateComment(comment);

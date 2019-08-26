@@ -4,53 +4,56 @@
 
 }
 <h1>Album</h1>
-@foreach (var photo in Model.poze)
-{<div class="imagine">
-        <img src="@Url.Action("Download","Photos",new {id=photo.Id })" height="40em" />
-        <p>@photo.Description</p>
-        @if (Model.HasThisAlbum)
-        {
-            @Html.ActionLink("Make this your profile picture", "MakeProfilePhoto", "Profile", new { photoId = photo.Id }, new { @class = "needConfirmation" })
-            @Html.ActionLink("Delete this photo", "DeletePhoto", "Profile", new { photoId = photo, albumId = Model.Id }, new { @class = "needConfirmation" })
-            <input type="text" class="description" />
-            <button class="changeDescription" data-photoid=@photo.Id>Save</button>
-        }
-    </div>
-}
+<div id="imageBody">
+    @*@foreach (var photo in Model.poze)
+    {<div class="imagine">
+            <img src="@Url.Action("Download","Photos",new {id=photo.Id })" height="40em" />
+            <p>@photo.Description</p>
+            @if (Model.HasThisAlbum)
+            {
+                @Html.ActionLink("Make this your profile picture", "MakeProfilePhoto", "Profile", new { photoId = photo.Id }, new { @class = "needConfirmation" })
+                @Html.ActionLink("Delete this photo", "DeletePhoto", "Profile", new { photoId = photo, albumId = Model.Id }, new { @class = "needConfirmation" })
+                <input type="text" class="description" />
+                <button class="changeDescription" data-photoid=@photo.Id>Save</button>
+            }
+        </div>
+    }*@
+</div>
 @if (Model.HasThisAlbum)
 {
     @Html.Partial("PartialAddPhoto", Model.PhotoModel)
-    <script src="~/js/Description.js"></script>
 }
 
 @if (Model.HasThisAlbum)
 {
-<script id="image-template" type="text/x-handlebars-template">
+    <script id="image-template" type="text/x-handlebars-template">
 
-    <div class="imagine">
-        <img src="/Photos/Download/{{id}}" height="40" />
-        <p>{{description}}</p>
-        <div class="photoActions">
-            <a class="needConfirmation" href="/Profile/MakeProfilePicture?photoId={{id}}">Make this your profile picture</a>
-            <a class="needConfirmation" href="/Profile/FeletePhoto?photoId={{id}}&albumId={{albumId}}">Delete this photo</a>
-            <input type="text" class="description" />
-            <button class="changeDescription" data-photoid="{{id}}">Save</button>
+        <div class="imagine">
+            <img src="/Photos/Download/{{id}}" height="40" />
+            <p>{{description}}</p>
+            <div class="photoActions">
+                <a class="needConfirmation" href="/Profile/MakeProfilePicture?photoId={{id}}">Make this your profile picture</a>
+                <a class="needConfirmation" href="/Profile/DeletePhoto?photoId={{id}}&albumId={{albumId}}">Delete this photo</a>
+                <input type="text" class="description" />
+                <button id="changeDescription{{id}}" data-photoid="{{id}}">Save</button>
+            </div>
+
         </div>
 
-    </div>
-
-</script>
+    </script>
 }
 else
 {
-<script id="image-template" type="text/x-handlebars-template">
+    <script id="image-template" type="text/x-handlebars-template">
 
-    <div class="imagine">
-        <img src="/Photos/Download/{{id}}" height="40" />
-        <p>{{description}}</p>
+        <div class="imagine">
+            <img src="/Photos/Download/{{id}}" height="40" />
+            <p>{{description}}</p>
 
 
-    </div>
+        </div>
 
-</script>
+    </script>
 }
+<button id="imageGetter" data-album="@Model.Id">Load more images</button>
+<script src="~/js/Image.js"></script>
