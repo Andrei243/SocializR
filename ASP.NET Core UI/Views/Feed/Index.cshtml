@@ -1,10 +1,10 @@
-﻿@model FeedModel
+﻿@model PostAddModel
 @{
     ViewData["Title"] = "Home Page";
     Layout = "GeneralLayout";
 }
 
-<div class="formularPostare">@Html.Partial("PartialPostAdd", Model.PostAdd)</div>
+<div class="formularPostare">@Html.Partial("PartialPostAdd", Model)</div>
 
 
 <div id="postBody" class="containerPostari">

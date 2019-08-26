@@ -56,30 +56,26 @@ namespace ASP.NET_Core_UI.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var feedModel = new FeedModel();
-            feedModel.PostAdd = new PostAddModel();
-            return View(feedModel);
+            var postModelAdd = new PostAddModel();
+            return View(postModelAdd);
         }
 
-        //refactor : remove duplicate code
-        [HttpGet]
-        public IActionResult MyFeed()
-        {
-            FeedModel feedModel = new FeedModel();
-            
-            return View(feedModel);
-        }
+        
        
         [Authorize]
         public JsonResult GetComments(int postId,int already)
         {
-            var comments = commentService.GetComments(already, PageSize, postId).Select(e =>
+            if (postService.CanSeePost(postId))
             {
-                var comment = mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Comment>(e);
-                comment.IsMine = (currentUser.Id == comment.UserId);
-                return comment;
-            }).ToList();
-            return Json(comments);
+                var comments = commentService.GetComments(already, PageSize, postId).Select(e =>
+                {
+                    var comment = mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Comment>(e);
+                    comment.IsMine = (currentUser.Id == comment.UserId);
+                    return comment;
+                }).ToList();
+                return Json(comments);
+            }
+            return Json(new List<int>());
         }
 
         public JsonResult GetPosts(int already)

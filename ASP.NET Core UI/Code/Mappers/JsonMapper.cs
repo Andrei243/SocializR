@@ -34,7 +34,8 @@ namespace ASP.NET_Core_UI.Code.Mappers
                 .ForMember(dest => dest.ProfilePhoto, s => s.MapFrom(src => src.PhotoId));
             CreateMap<Domain.Users, ASP.NET_Core_UI.Models.JsonModels.User>()
                 .ForMember(dest => dest.ProfilePhoto, s => s.MapFrom(src => src.PhotoId))
-                .ForMember(dest => dest.Name, s => s.MapFrom(src => src.Name + " " + src.Surname));
+                .ForMember(dest => dest.Name, s => s.MapFrom(src => src.Name + " " + src.Surname))
+                .ForMember(dest => dest.IsAdmin, s => s.MapFrom(src => src.RoleId==2));
                 
 
         }

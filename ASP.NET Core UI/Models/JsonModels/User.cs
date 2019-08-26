@@ -10,5 +10,6 @@ namespace ASP.NET_Core_UI.Models.JsonModels
         public int Id { get; set; }
         public string Name { get; set; }
         public int ProfilePhoto { get; set; }
+        public int IsAdmin { get; set; }
     }
 }

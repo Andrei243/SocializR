@@ -17,6 +17,14 @@ namespace Services.Album
             this.CurrentUser = currentUser;
         }
 
+        public bool CanSeeAlbum(int albumId)
+        {
+            if (CurrentUser.IsAdmin) return true;
+            var album = unitOfWork.Albums.Query.AsNoTracking().First(e => e.Id == albumId);
+            if (album.UserId == CurrentUser.Id) return true;
+            return unitOfWork.Friendships.Query.Any(e => e.IdReceiver == CurrentUser.Id && e.IdSender == album.UserId);
+        }
+
         public List<Domain.Album> GetAll(int idUser)
         {
             return unitOfWork.Albums.Query.Where(e => e.UserId == idUser).AsNoTracking().Include(e => e.Photo).AsNoTracking().OrderBy(e => e.Id).ToList();
@@ -33,6 +41,11 @@ namespace Services.Album
             unitOfWork.Albums.Add(album);
             unitOfWork.SaveChanges();
             return album.Id;
+        }
+        public bool CanDeleteAlbum(int albumId)
+        {
+            if (CurrentUser.IsAdmin) return true;
+            return unitOfWork.Albums.Query.Any(e => e.Id == albumId && e.UserId == CurrentUser.Id);
         }
 
         public void RemoveAlbum(int albumId, int userId)

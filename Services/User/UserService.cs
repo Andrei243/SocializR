@@ -19,11 +19,11 @@ namespace Services.User
 
        
 
-        public Users getCurrentUser()
+        public Users GetCurrentUser()
         {
-            return getUserById(currentUser.Id);
+            return GetUserById(currentUser.Id);
         }
-        public Users getUserById(int? id)
+        public Users GetUserById(int? id)
         {
             return unitOfWork
                 .Users
@@ -37,10 +37,10 @@ namespace Services.User
                 .AsNoTracking()
                 .FirstOrDefault(e => e.Id == id);
         }
-        public IEnumerable<Users> getAll()
-        {
-            return unitOfWork.Users.Query.AsNoTracking().Include(e => e.Locality).AsNoTracking().Include(e => e.Role).AsNoTracking();
-        }
+        //public IEnumerable<Users> GetAll()
+        //{
+        //    return unitOfWork.Users.Query.AsNoTracking().Include(e => e.Locality).AsNoTracking().Include(e => e.Role).AsNoTracking();
+        //}
 
         public IEnumerable<Users> GetUsersByName(string name)
         {
@@ -88,6 +88,24 @@ namespace Services.User
             unitOfWork.SaveChanges();
         }
 
+        public void MakeAdmin(int userId)
+        {
+            var user = unitOfWork.Users.Query.First(e => e.Id == userId);
+            user.RoleId = 1;
+            unitOfWork.Users.Update(user);
+            unitOfWork.SaveChanges();
+
+        }
+
+        public void RevokeAdmin(int userId)
+        {
+            var user = unitOfWork.Users.Query.First(e => e.Id == userId);
+            user.RoleId = 2;
+            unitOfWork.Users.Update(user);
+            unitOfWork.SaveChanges();
+
+        }
+
         public void RemoveUser(int userId)
         {
             var albums = unitOfWork.Albums.Query.Where(e => e.UserId == userId);
@@ -111,6 +129,7 @@ namespace Services.User
         public List<Users> GetUsers(int already,int howMany)
         {
             return unitOfWork.Users.Query
+                .Where(e=>e.Id!=currentUser.Id)
                 .OrderBy(e => e.BirthDay)
                 .Skip(already)
                 .Take(howMany)

@@ -23,7 +23,6 @@ namespace ASP.NET_Core_UI.Controllers
         private readonly Services.FriendShip.FriendshipService friendshipService;
         private readonly Services.InterestsUsers.InterestsUsersService interestsUsersService;
         private readonly Services.County.CountyService countyService;
-        private readonly Services.Locality.LocalityService localityService;
         private readonly Services.Interest.InterestService interestService;
         private readonly Services.Album.AlbumService albumService;
         private readonly Services.Photo.PhotoService photoService;
@@ -35,7 +34,6 @@ namespace ASP.NET_Core_UI.Controllers
             Services.FriendShip.FriendshipService friendshipService,
             Services.InterestsUsers.InterestsUsersService interestsUsersService,
             Services.County.CountyService countyService,
-            Services.Locality.LocalityService localityService,
             Services.Interest.InterestService interestService,
             Services.Album.AlbumService albumService,
             Services.Photo.PhotoService photoService)
@@ -46,7 +44,6 @@ namespace ASP.NET_Core_UI.Controllers
             this.friendshipService = friendshipService;
             this.interestsUsersService = interestsUsersService;
             this.countyService = countyService;
-            this.localityService = localityService;
             this.interestService = interestService;
             this.albumService = albumService;
             this.photoService = photoService;
@@ -58,7 +55,7 @@ namespace ASP.NET_Core_UI.Controllers
                 .GetUsersByName(name)
                 .Select(e => new UserDropdownModel() { Id = e.Id, ProfilePhotoId = e.PhotoId, Name = e.Name + " " + e.Surname })
                 .OrderBy(e => e.Name)
-                .Take(5)
+                .Take(PageSize)
                 .ToList();
             return el;
         }
@@ -67,15 +64,14 @@ namespace ASP.NET_Core_UI.Controllers
         
         public IActionResult Index()
         {
-            var useri = userService.getAll().Select(e=>mapper.Map<UserIndex>(e));
-            return View(useri);
+            return View();
         }
 
         // GET: Users/Details/5
         [HttpGet]
         public IActionResult Details(int? userId)
         {
-            if (!userId.HasValue || userId == 0 || userService.getUserById(userId) == null)
+            if (!userId.HasValue || userId == 0 || userService.GetUserById(userId) == null)
             {
                 return NotFoundView();
             }
@@ -86,7 +82,7 @@ namespace ASP.NET_Core_UI.Controllers
                     return RedirectToAction("Index", "Profile", null);
                 }
 
-                var domainUser = userService.getUserById(userId);
+                var domainUser = userService.GetUserById(userId);
                 ProfileViewerModel user = mapper.Map<ProfileViewerModel>(domainUser);
                 user.CanSee = friendshipService.canSee(userId.Value);
                 user.CanSendRequest = friendshipService.canSendRequest(userId.Value);
@@ -103,7 +99,7 @@ namespace ASP.NET_Core_UI.Controllers
         public IActionResult Edit(int? userId)
         {
 
-            var user = userService.getUserById(userId);
+            var user = userService.GetUserById(userId);
             var model = mapper.Map<EditUserModel>(user);
 
             var counties = countyService.GetAll();
@@ -160,7 +156,7 @@ namespace ASP.NET_Core_UI.Controllers
             albumService.RemoveAlbum(albumId.Value,userId.Value);
 
 
-            return RedirectToAction("Details", new { userId = userId });
+            return RedirectToAction("Details", new { userId });
         }
 
         public IActionResult Album(int? albumId)
@@ -181,7 +177,7 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
             photoService.RemovePhoto(photoId.Value, null, albumId);
-            return RedirectToAction("Album", new { albumId = albumId });
+            return RedirectToAction("Album", new { albumId });
 
         }
 
@@ -205,7 +201,28 @@ namespace ASP.NET_Core_UI.Controllers
 
             return RedirectToAction("Index");
         }
-       
+
+        public IActionResult MakeAdmin(int? userId)
+        {
+            if (userId == null)
+            {
+                return NotFoundView();
+            }
+            userService.MakeAdmin(userId.Value);
+            return RedirectToAction("Index");
+
+        }
+        public IActionResult RevokeAdmin(int? userId)
+        {
+            if (userId == null)
+            {
+                return NotFoundView();
+            }
+            userService.RevokeAdmin(userId.Value);
+            return RedirectToAction("Index");
+
+        }
+
         public JsonResult GetUsers(int already)
         {
             var users = userService.GetUsers(already, PageSize).Select(mapper.Map<ASP.NET_Core_UI.Models.JsonModels.User>).ToList();

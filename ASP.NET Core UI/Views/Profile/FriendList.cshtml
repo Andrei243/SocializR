@@ -1,28 +1,11 @@
-﻿@model FriendListModel
-@{
-    ViewData["Title"] = "FriendList";
+﻿@{
+    ViewData["Title"] = "Friend List";
     Layout = "~/Views/Shared/GeneralLayout.cshtml";
 }
 
 <h1>FriendList</h1>
 
-@*@foreach(var e in Model.friends)
-    {<div style="background-color:black">
-        <p>@e.Name</p>
 
-        <a href="@Url.Action("Profile","Profile",new {userId=e.Id })">
-        @if (e.ProfilePhotoId != null)
-        {
-            <img src="@Url.Action("Download", "Photo", new { id = e.ProfilePhotoId })" height="100em" />
-        }
-        else
-        {
-            <img src="~/images/DefaultProfile.png" height="100em" />
-        }
-
-        </a>
-    </div>
-    }*@
 
 <div id="friendBody">
 
