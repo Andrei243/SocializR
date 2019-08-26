@@ -45,5 +45,10 @@ namespace Services.Interest
         {
             return unitOfWork.Interests.Query.AsNoTracking().ToList();
         }
+
+        public List<Domain.Interest> GetInterests(int already,int howMany)
+        {
+            return unitOfWork.Interests.Query.OrderBy(e => e.Id).Skip(already).Take(howMany).AsNoTracking().ToList();
+        }
     }
 }

@@ -74,5 +74,15 @@ namespace Services.Comment
             return unitOfWork.Posts.Query.First(e => e.Id == postId).UserId == CurrentUser.Id;
         }
 
+        public List<Domain.Comment> GetComments(int already,int howMany,int postId)
+        {
+            return unitOfWork.Comments.Query.OrderByDescending(e => e.AddingMoment)
+                .Where(e=>e.PostId==postId)
+                .Skip(already)
+                .Take(howMany)
+                .Include(e => e.User)
+                .AsNoTracking()
+                .ToList();
+        }
     }
 }

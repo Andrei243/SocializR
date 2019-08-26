@@ -22,22 +22,22 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.County.Name)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a class="needConfirmation" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
+    <tbody id="localityBody">
+        @*@foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.County.Name)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a class="needConfirmation" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }*@
     </tbody>
 </table>
 
@@ -50,10 +50,12 @@
             {{county}}
         </td>
         <td>
-            <a asp-action="Edit" asp-route-id="{{id}}">Edit</a> |
-            <a class="needConfirmation" asp-action="Delete" asp-route-id="{{id}}">Delete</a>
+            <a href="/Localities/Edit/{{id}}">Edit</a> |
+            <a class="needConfirmation" href="/Localities/Delete/{{id}}" >Delete</a>
         </td>
 
     </tr>
 
 </script>
+<button id="localityGetter">Get more localities</button>
+<script src="~/js/LocalityIndex.js"></script>

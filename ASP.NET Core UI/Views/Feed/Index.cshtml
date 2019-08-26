@@ -4,26 +4,16 @@
     Layout = "GeneralLayout";
 }
 
-    <div class="formularPostare">@Html.Partial("PartialPostAdd", Model.PostAdd)</div>
+<div class="formularPostare">@Html.Partial("PartialPostAdd", Model.PostAdd)</div>
 
 
-    <div class="containerPostari">
-        @foreach (var post in Model.Posts)
-        {
-            @Html.Partial("Post", post);
-        }
-    </div>
+<div id="postBody" class="containerPostari">
+    
+</div>
 
-    <div class="butoaneNavigare">
-        @if (Model.CurrentPage != 0)
-        {
-            @Html.ActionLink("Pagina precedenta", "Index", "Feed", new { page = Model.CurrentPage - 1 });
-        }
-    @Html.ActionLink("Pagina urmatoare", "Index", "Feed", new { page = Model.CurrentPage + 1 })
-    </div>
 
-   
-<script src="~/js/feed.js"></script>
+<button id="postGetter">Load more posts</button>
+
 <script id="comment-template" type="text/x-handlebars-template">
 
     <div class="comment">
@@ -40,10 +30,11 @@
         </div>
         <p>{{text}}</p>
         {{#if isMine}}
-        <button class="btn buttonDeleteComment btn-danger btn-sm" data-comment="{{id}}">Delete this comment</button>
-            {{/if}}
+        <button id="deleteComment{{id}}" class="btn buttonDeleteComment btn-danger btn-sm" data-comment="{{id}}">Delete this comment</button>
+        {{/if}}
     </div>
     <br />
+
 </script>
 
 
@@ -53,10 +44,10 @@
             <a class="linkProfilPostare" href="/Profile/Profile/{{userId}}">
                 <span>{{userName}}</span>
                 <br />
-                {{if profilePhoto}}
+                {{#if profilePhoto}}
                 <img class="pozaProfilPostare" src="/Photos/Download/{{profilePhoto}}" height="75" />
                 {{else}}
-                <img class="pozaProfilPostare" src="~/images/DefaultProfile.png" height="75" />
+                <img class="pozaProfilPostare" src="images/DefaultProfile.png" height="75" />
                 {{/if}}
 
             </a>
@@ -70,10 +61,22 @@
         <br />
         {{/each}}
         <br />
-        <div class="comentariiPostare">
+        <div id="commentBody{{id}}">
 
         </div>
+        <button id="commentGetter{{id}}" data-post="{{id}}">Load more comments</button>
 
+        <a id="like{{id}}"  data-post="{{id}}">
+            {{#if liked}}
+            <img src="images/Liked.png" height="20" />
+            {{else}}
+            <img src="images/notLiked.png" height="20" />
+            {{/if}}
+        </a>
+        <p class="reactionCounter">{{noReactions}}</p>
+        <input type="text" class="addComment form-control" />
+        <button id="commentAdd{{id}}" class="btn buttonComment " data-post="{{id}}">Comment</button>
     </div>
 
 </script>
+<script src="~/js/feed.js"></script>

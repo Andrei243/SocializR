@@ -113,16 +113,17 @@
 
     };
 
-    let eventPost = (() => {
+    let eventPost = ((userId) => {
         var sourcePost = document.getElementById("post-template").innerHTML;
         var templatePost = Handlebars.compile(sourcePost);
         let noPosts = 0;
         return () => {
             $.ajax({
                 type: 'GET',
-                url: 'Feed/GetPosts',
+                url: 'Feed/GetPersonPosts',
                 data: {
-                    already: noPosts
+                    already: noPosts,
+                    userId: userId
                 },
                 success: (result) => {
                     for (let i = 0; i < result.length; i++) {
@@ -143,10 +144,8 @@
 
         }
 
-    })();
+    })(document.getElementById("postGetter").dataset.user);
     eventPost();
     $("#postGetter").click(eventPost);
 
 });
-
-

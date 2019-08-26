@@ -71,6 +71,7 @@ namespace Services.County
                 .OrderBy(e => e.Name)
                 .Skip(already)
                 .Take(howMany)
+                .AsNoTracking()
                 .ToList();
 
         }

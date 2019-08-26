@@ -43,14 +43,13 @@ namespace Services.Post
 
         
 
-        public List<Domain.Post> GetAllPersonalPost(int currentPage)
+        public List<Domain.Post> GetPersonPost(int already,int howMany,int userId)
         {
             return GetFeed()
-                .Where(e => e.UserId == CurrentUser.Id)
-                            .OrderByDescending(e => e.AddingMoment)
-                            .Skip(currentPage * Base.GlobalConstants.PAGESIZE) // from parameter
-                            .Take(Base.GlobalConstants.PAGESIZE)
-                            .ToList();
+                .Where(e => e.UserId == userId)
+                .Skip(already)
+                .Take(howMany)
+                .ToList();
         }
 
         public bool CanDetelePost(int postId)
@@ -65,8 +64,6 @@ namespace Services.Post
                             .Query
                             .AsNoTracking()
                             .Include(e => e.User)
-                            .Include(e => e.Comment)
-                            .ThenInclude(e => e.User)
                             .AsNoTracking()
                             .Include(e => e.Photo)
                             .AsNoTracking()
@@ -75,17 +72,17 @@ namespace Services.Post
                             ;
         }
 
-        public List<Domain.Post> GetPublicNewsfeed(int currentPage)
+        public List<Domain.Post> GetPublicNewsfeed(int already,int howMany)
         {
             return GetFeed()
                 .Where(e=>e.Vizibilitate == "public")
                 .OrderByDescending(e => e.AddingMoment)
-                .Skip(currentPage*Base.GlobalConstants.PAGESIZE)
-                .Take(Base.GlobalConstants.PAGESIZE)
+                .Skip(already)
+                .Take(howMany)
                 .ToList();
         }
 
-        public List<Domain.Post> GetNewsfeed(int currentPage)
+        public List<Domain.Post> GetNewsfeed(int already,int howMany)
         {
             var friends = unitOfWork.Friendships.Query.AsNoTracking().Where(e => e.IdReceiver == CurrentUser.Id && (e.Accepted??false)).Select(e=>e.IdSender).ToList();
 
@@ -97,11 +94,12 @@ namespace Services.Post
                 (friends.Contains(e.UserId) && e.Vizibilitate == "friends")
                 )
                 .OrderByDescending(e => e.AddingMoment)
-                .Skip(currentPage * Base.GlobalConstants.PAGESIZE)
-                .Take(Base.GlobalConstants.PAGESIZE)
+                .Skip(already)
+                .Take(howMany)
                 .ToList();
             return posts;
         }
+        
 
         public bool RemovePost(int postId)
         {

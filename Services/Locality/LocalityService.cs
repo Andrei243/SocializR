@@ -65,5 +65,10 @@ namespace Services.Locality
             return unitOfWork.Localities.Query.Include(e=>e.County).AsNoTracking().ToList();
         }
 
+        public List<Domain.Locality> GetLocalities(int already,int howMany)
+        {
+            return unitOfWork.Localities.Query.OrderBy(e => e.Id).Skip(already).Take(howMany).Include(e=>e.County).AsNoTracking().ToList();
+        }
+
     }
 }

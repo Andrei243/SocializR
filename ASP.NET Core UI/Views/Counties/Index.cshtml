@@ -19,20 +19,8 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a class="needConfirmation" data-id="@item.Id" href="#" onclick="return false">Delete</a>
-                </td>
-            </tr>
-        }
+    <tbody id="countyBody">
+        
     </tbody>
 </table>
 
@@ -42,8 +30,8 @@
                 {{name}}
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="{{id}}">Edit</a> |
-                <a asp-action="Details" asp-route-id="{{id}}">Details</a> |
+                <a href="/Counties/Edit/{{id}}" >Edit</a> |
+                <a href="/Counties/Details/{{id}}">Details</a> |
                 <a class="needConfirmation" data-id="{{id}}" href="#" onclick="return false">Delete</a>
             </td>
 
@@ -51,5 +39,7 @@
         </tr>
 
 </script>
+
+<button id="countyGetter">Load more counties</button>
 
 <script src="~/js/County.js"></script>

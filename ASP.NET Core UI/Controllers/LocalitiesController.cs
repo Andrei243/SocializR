@@ -109,6 +109,11 @@ namespace ASP.NET_Core_UI.Controllers
             return RedirectToAction("Index");
         }
 
+        public JsonResult GetLocalities(int already)
+        {
+            var result= localityService.GetLocalities(already, PageSize).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Locality>(e)).ToList();
+            return Json(result);
+        }
 
     }
 }

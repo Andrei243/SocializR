@@ -7,24 +7,24 @@
 <div>
     <img src="@Url.Action("Download","Photos",new { id= Model.PhotoId })" />
 
-  @if (Model.IsRequested)
-  {
-            @Html.ActionLink(
-          linkText: "Accept",
-          actionName: "Accept",
-          controllerName: "Profile",
-          routeValues:
-          new { id = Model.Id },
-          htmlAttributes: null);
+    @if (Model.IsRequested)
+    {
+        @Html.ActionLink(
+      linkText: "Accept",
+      actionName: "Accept",
+      controllerName: "Profile",
+      routeValues:
+      new { id = Model.Id },
+      htmlAttributes: null);
 
-            @Html.ActionLink(
-          linkText: "Refuse",
-          actionName: "Refuse",
-          controllerName: "Profile",
-          routeValues:
-          new { id = Model.Id },
-          htmlAttributes: null);
-  }
+        @Html.ActionLink(
+      linkText: "Refuse",
+      actionName: "Refuse",
+      controllerName: "Profile",
+      routeValues:
+      new { id = Model.Id },
+      htmlAttributes: null);
+    }
     @if (Model.CanSendRequest)
     {
         @Html.ActionLink(
@@ -44,38 +44,109 @@
 
 
 
-<div class="informatiiContact jumbotron">
-    <h2>Contact information</h2>
+    <div class="informatiiContact jumbotron">
+        <h2>Contact information</h2>
 
-    <h5>First Name  &nbsp;&nbsp; @Model.Name</h5>
-    <h5>Last Name  &nbsp;&nbsp; @Model.Surname</h5>
-    <h5>Birthday  &nbsp;&nbsp; @Model.Birthday.Year .@Model.Birthday.Month . @Model.Birthday.Day</h5>
-    @if (Model.Locality != null)
-    {
-    <h5>Locality  &nbsp;&nbsp; @Model.Locality</h5>
-    <h5>County  &nbsp;&nbsp; @Model.County</h5>
-    }
-    <h5>Gender  &nbsp;&nbsp; @Model.SexualIdentity</h5>
-</div>
+        <h5>First Name  &nbsp;&nbsp; @Model.Name</h5>
+        <h5>Last Name  &nbsp;&nbsp; @Model.Surname</h5>
+        <h5>Birthday  &nbsp;&nbsp; @Model.Birthday.Year .@Model.Birthday.Month . @Model.Birthday.Day</h5>
+        @if (Model.Locality != null)
+        {
+            <h5>Locality  &nbsp;&nbsp; @Model.Locality</h5>
+            <h5>County  &nbsp;&nbsp; @Model.County</h5>
+        }
+        <h5>Gender  &nbsp;&nbsp; @Model.SexualIdentity</h5>
+    </div>
 
-<div>
-    <h2 class="interestsDiv">Likes and interests</h2>
-    @foreach (var interest in Model.Interests)
-    {
-        <p>@interest</p>
-    }
+    <div>
+        <h2 class="interestsDiv">Likes and interests</h2>
+        @foreach (var interest in Model.Interests)
+        {
+            <p>@interest</p>
+        }
 
-</div>
+    </div>
 
-<div class="albumsDiv">
-    <h2>Albums</h2>
-    @foreach (var album in Model.Album)
-    {
-        <div>
-            <h5>@album.Name</h5>
-            <h6>@album.Count</h6>
+    <div class="albumsDiv">
+        <h2>Albums</h2>
+        @foreach (var album in Model.Album)
+        {
+            <div>
+                <h5>@album.Name</h5>
+                <h6>@album.Count</h6>
+            </div>
+        }
+
+    </div>
+
+    <div id="postBody">
+
+    </div>
+    <button id="postGetter" data-user="@Model.Id">Load more posts</button>
+    <script id="comment-template" type="text/x-handlebars-template">
+
+        <div class="comment">
+            <div class="profilComment">
+                <a class="linkProfilComment" href="/Profile/Profile?userId={{userId}}">
+                    <p>{{userName}}</p>
+                    {{#if profilePhoto}}
+                    <img src="/Photos/Download/{{profilePhoto}}" height="50" style="float:left" />
+                    {{else}}
+                    <img src="~/images/DefaultProfile.png" height="50" style="float:left" />
+                    {{/if}}
+                </a>
+
+            </div>
+            <p>{{text}}</p>
+            {{#if isMine}}
+            <button id="deleteComment{{id}}" class="btn buttonDeleteComment btn-danger btn-sm" data-comment="{{id}}">Delete this comment</button>
+            {{/if}}
         </div>
-    }
+        <br />
 
-</div>
+    </script>
+
+
+    <script id="post-template" type="text/x-handlebars-template">
+        <div class="post">
+            <div class="bodyPostare">
+                <a class="linkProfilPostare" href="/Profile/Profile/{{userId}}">
+                    <span>{{userName}}</span>
+                    <br />
+                    {{#if profilePhoto}}
+                    <img class="pozaProfilPostare" src="/Photos/Download/{{profilePhoto}}" height="75" />
+                    {{else}}
+                    <img class="pozaProfilPostare" src="images/DefaultProfile.png" height="75" />
+                    {{/if}}
+
+                </a>
+            </div>
+            <br />
+            <br />
+            <p>{{text}}</p>
+            <br />
+            {{#each photoId}}
+            <img src="/Photos/Download/{{this}}" height="50" />
+            <br />
+            {{/each}}
+            <br />
+            <div id="commentBody{{id}}">
+
+            </div>
+            <button id="commentGetter{{id}}" data-post="{{id}}">Load more comments</button>
+
+            <a id="like{{id}}" data-post="{{id}}">
+                {{#if liked}}
+                <img src="images/Liked.png" height="20" />
+                {{else}}
+                <img src="images/notLiked.png" height="20" />
+                {{/if}}
+            </a>
+            <p class="reactionCounter">{{noReactions}}</p>
+            <input type="text" class="addComment form-control" />
+            <button id="commentAdd{{id}}" class="btn buttonComment " data-post="{{id}}">Comment</button>
+        </div>
+
+    </script>
+    <script src="~/js/Profile.js"></script>
 }

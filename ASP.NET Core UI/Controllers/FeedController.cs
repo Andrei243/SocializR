@@ -54,79 +54,74 @@ namespace ASP.NET_Core_UI.Controllers
         }
         
         [HttpGet]
-        public IActionResult Index(int? page)
+        public IActionResult Index()
         {
             var feedModel = new FeedModel();
-            feedModel.CurrentPage = page ?? 0;
-            var postari = new List<Post>();
-            if (currentUser.IsAuthenticated)
-            {
-                postari = postService.GetNewsfeed(feedModel.CurrentPage);
-                    
-            }
-            else
-            {
-                postari = postService.GetPublicNewsfeed(feedModel.CurrentPage);
-
-            }
-            feedModel.Posts=postari.Select(e => 
-            new PostModel()
-            {
-                Id = e.Id,
-                Text = e.Text,
-                User = mapper.Map<PostUserModel>(e.User), 
-                Comments=commentService.GetComments(e.Id).Select(f=>mapper.Map<CommentModel>(f)).ToList(),
-                Reactions = e.Reaction.Select(f => f.UserId).ToList(),
-                PhotoId = photoService.getPhotos(e.Id, null).Select(f => f.Id).ToList()
-
-            }
-            
-            )
-            .ToList();
+            feedModel.PostAdd = new PostAddModel();
             return View(feedModel);
         }
 
         //refactor : remove duplicate code
         [HttpGet]
-        public IActionResult MyFeed(int? page)
+        public IActionResult MyFeed()
         {
             FeedModel feedModel = new FeedModel();
-            feedModel.CurrentPage = page ?? 0;
-            var postari = new List<Post>();
             
-                postari = postService.GetAllPersonalPost(feedModel.CurrentPage);
-
-            
-            feedModel.Posts = postari.Select(e =>
-              new PostModel()
-              {
-                  Id = e.Id,
-                  Text = e.Text,
-                  User = mapper.Map<PostUserModel>(e.User),
-                  Comments = commentService.GetComments(e.Id).Select(f => mapper.Map<CommentModel>(f)).ToList(),
-                  Reactions = e.Reaction.Select(f => f.UserId).ToList(),
-                  PhotoId = photoService.getPhotos(e.Id, null).Select(f => f.Id).ToList()
-
-              }
-
-            )
-            .ToList();
             return View(feedModel);
         }
+       
         [Authorize]
-        public IActionResult GetComments(int? postId,int page)
+        public JsonResult GetComments(int postId,int already)
         {
-            if (postId == null)
+            var comments = commentService.GetComments(already, PageSize, postId).Select(e =>
             {
-                return Json(null);
-            }
-            if (postService.CanSeePost(postId.Value))
-            {
-                //JsonResult result = new JsonResult(commentService.GetComments(page, postId.Value).Select(e => mapper.Map<CommentModel>(e)));
-                return Json(commentService.GetComments(page, postId.Value).Select(e => mapper.Map<CommentModel>(e)));
-            }
-            else return Json(null);
+                var comment = mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Comment>(e);
+                comment.IsMine = (currentUser.Id == comment.UserId);
+                return comment;
+            }).ToList();
+            return Json(comments);
+        }
 
+        public JsonResult GetPosts(int already)
+        {
+            
+            if (currentUser.IsAuthenticated)
+            {
+                var posts = postService.GetNewsfeed(already, PageSize).Select(e =>
+                {
+                    var post = mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Post>(e);
+                    post.Liked = e.Reaction.Select(f => f.UserId).Contains(currentUser.Id);
+                    post.IsMine = e.UserId == currentUser.Id;
+                    return post;
+
+                }).ToList();
+                return Json(posts);
+            }
+            else
+            {
+                var posts = postService.GetPublicNewsfeed(already, PageSize).Select(e =>
+                {
+                    var post = mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Post>(e);
+                    post.Liked = e.Reaction.Select(f => f.UserId).Contains(currentUser.Id);
+                    post.IsMine = false;
+                    return post;
+
+                }).ToList();
+                return Json(posts);
+            }
+        }
+        public JsonResult GetPersonPosts(int already,int userId)
+        {
+
+                var posts = postService.GetPersonPost(already, PageSize,userId).Select(e =>
+                {
+                    var post = mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Post>(e);
+                    post.Liked = e.Reaction.Select(f => f.UserId).Contains(currentUser.Id);
+                    post.IsMine = e.UserId == currentUser.Id;
+                    return post;
+                }).ToList();
+                return Json(posts);
+            
         }
 
         [HttpPost]
@@ -156,33 +151,7 @@ namespace ASP.NET_Core_UI.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            //return PartialView("PartialPostAdd", post);
             var feedModel = new FeedModel();
-            feedModel.CurrentPage = 0;
-            var postari = new List<Post>();
-            if (currentUser.IsAuthenticated)
-            {
-                postari = postService.GetNewsfeed(feedModel.CurrentPage);
-
-            }
-            else
-            {
-                postari = postService.GetPublicNewsfeed(feedModel.CurrentPage);
-
-            }
-            feedModel.Posts = postari.Select(e =>
-              new PostModel()
-              {
-                  Id = e.Id,
-                  Text = e.Text,
-                  User = mapper.Map<PostUserModel>(e.User),
-                  Comments = commentService.GetComments(e.Id).Select(f => mapper.Map<CommentModel>(f)).ToList(),
-                  Reactions = e.Reaction.Select(f => f.UserId).ToList(),
-                  PhotoId = photoService.getPhotos(e.Id, null).Select(f => f.Id).ToList()
-              }
-
-            )
-            .ToList();
             feedModel.PostAdd = post;
             return View("Index", feedModel);
         }
