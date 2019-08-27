@@ -15,8 +15,9 @@
 
 <script id="friend-template" type="text/x-handlebars-template">
     <div class="friendDiv">
-        <p>{{name}}</p>
         <a href="/Profile/Profile?userId={{id}}">
+            <p>{{name}}</p>
+
             {{#if profilePhoto}}
             <img src="/Photos/Download/{{profilePhoto}}" height="100" />
             {{else}}

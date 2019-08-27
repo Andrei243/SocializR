@@ -1,6 +1,7 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 /*https://coolors.co/faf3dd-c8d5b9-8fc0a9-68b0ab-696d7d for the color pcker2*/
+/*https://coolors.co/f7f0f5-8e7c89-63515e-5b5158-42323d*/
 
 a.navbar-brand {
   white-space: normal;
@@ -45,7 +46,7 @@ html {
 body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
-    background-color: #faf3dd;
+    background-color: #F7F0F5;
     font-family: 'Noto Sans', sans-serif;
     width: 100%;
 }
@@ -60,20 +61,20 @@ body {
 }
 
 header {
-    background-color: #696d7d;
+    background-color: #42323D;
 }
 nav div a {
-    background-color: #696d7d;
+    background-color: #42323D;
     border-radius: 10px;
-    color: #faf3dd;
+    color: #F7F0F5;
     padding: 1em;
     text-decoration: none;
 }
 
     nav div a:focus, nav a:hover {
-        background-color: #696d7d;
+        background-color: #42323D;
         text-decoration: none;
-        color: #8fc0a9;
+        color: #63515E;
     }
 
 .dropdownDiv {
@@ -91,7 +92,7 @@ nav div a {
     width: 50vw;
     margin-left: auto;
     margin-right: auto;
-    background-color: #696d7d;
+    background-color: #42323D;
 }
 dropdown *{
     margin-left:auto;
@@ -111,7 +112,7 @@ dropdown *{
     margin-left: 0;
 }
     #logo a, #logo a:focus, #logo a:hover {
-        background-color: #696d7d;
+        background-color: #42323D;
     }
 
 .input-dropdown{
@@ -186,18 +187,19 @@ a.linkProfilComment,a.linkProfilComment:hover{
 .comment {
     display: block;
     float: none;
-    border-color: #b9c6aa;
+    border-color: #9E8C99;
     border-radius: 5px;
     border-style: solid;
 }
 
 div.post {
-    background-color: #c8d5b9;
+    background-color: #8E7C89;
     border-radius: 25px;
 }
+
 .btn-danger {
-    background-color: #68b0ab;
-    border-color: #68b0ab;
+    background-color: #5B5158;
+    border-color: #5B5158;
 }
 
 #divSelection{
@@ -207,9 +209,43 @@ div.post {
 
 #butonAdaugarePoza {
     cursor: pointer;
-    background-color: #c8d5b9;
+    background-color: #8E7C89;
     border-radius: 25px;
     font-size: large;
     padding: 5px;
-    color: #696d7d;
+    color: #42323D;
+}
+
+.dropdownItem,.dropdownItem:hover,.dropdownItem:focus {
+    text-align: left;
+    text-decoration: none;
+    color: black;
+}
+
+.dropdownItem *{
+    margin-left:25px;
+}
+
+.dropdownResult{
+    border-bottom-left-radius:25px;
+    border-bottom-right-radius:25px;
+}
+
+.btn-primary {
+    background-color: #63515E;
+    border-color: #63515E;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary:active:focus {
+    background-color: #42323D !important;
+    border-color: #42323D !important;
+        
+}
+
+.btn-primary:focus, .btn-primary:hover, .btn-primary:active, .btn-primary:active:focus {
+    box-shadow: #52424D 0px 0px inset !important;
+}
+
+.dropdownItem p {
+    color: #F7F0F5;
 }

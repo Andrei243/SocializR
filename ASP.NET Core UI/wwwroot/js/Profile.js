@@ -9,11 +9,11 @@
             },
             success: function (response) {
                 if (response) {
-                    e.currentTarget.querySelector("img").src = "images/Liked.png";
+                    e.currentTarget.querySelector("img").src = "/images/Liked.png";
                     e.currentTarget.parentNode.querySelector(".reactionCounter").innerText = parseInt(e.currentTarget.parentNode.querySelector(".reactionCounter").innerText) + 1;
                 }
                 else {
-                    e.currentTarget.querySelector("img").src = "images/notLiked.png";
+                    e.currentTarget.querySelector("img").src = "/images/notLiked.png";
                     e.currentTarget.parentNode.querySelector(".reactionCounter").innerText = parseInt(e.currentTarget.parentNode.querySelector(".reactionCounter").innerText) - 1;
                 }
             },
@@ -93,7 +93,7 @@
         return () => {
             $.ajax({
                 type: 'GET',
-                url: 'Feed/GetComments',
+                url: '/Feed/GetComments',
                 data: {
                     already: noComments,
                     postId: idPost
@@ -119,7 +119,7 @@
         return () => {
             $.ajax({
                 type: 'GET',
-                url: 'Feed/GetPersonPosts',
+                url: '/Feed/GetPersonPosts',
                 data: {
                     already: noPosts,
                     userId: userId

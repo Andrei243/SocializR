@@ -147,9 +147,8 @@ namespace ASP.NET_Core_UI.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            var feedModel = new FeedModel();
-            feedModel.PostAdd = post;
-            return View("Index", feedModel);
+            
+            return View("Index", post);
         }
 
       

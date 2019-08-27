@@ -7,7 +7,7 @@
         return () => {
             $.ajax({
                 type: 'GET',
-                url: "Users/GetUsers",
+                url: "/Users/GetUsers",
                 data: {
                     already: noUsers
                 },

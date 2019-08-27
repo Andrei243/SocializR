@@ -45,5 +45,16 @@ namespace Services.InterestsUsers
 
         }
 
+        public bool ChangeInterests(int userId,List<int> interestId)
+        {
+            unitOfWork.InterestsUserss.RemoveRange(unitOfWork.InterestsUserss.Query.Where(e => e.UserId == userId));
+            unitOfWork.InterestsUserss.AddRange(interestId.Select(e => new Domain.InterestsUsers()
+            {
+                UserId = userId,
+                InterestId = e
+            }));
+            return unitOfWork.SaveChanges()!=0;
+        }
+
     }
 }

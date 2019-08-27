@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using ASP.NET_Core_UI.Models.JsonModels;
+using Domain;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,7 @@ namespace ASP.NET_Core_UI.Models.ProfileModels
         public EditUserModel()
         {
             Counties = new List<SelectListItem>();
-            InterestsId = new List<int>();
-            Interests = new List<SelectListItem>();
+            Interests = new List<InterestSelect>();
             Albume = new List<DomainModels.Album>();
         }
 
@@ -30,10 +30,10 @@ namespace ASP.NET_Core_UI.Models.ProfileModels
         [Required]
         public string Visibility { get; set; }
         public int? PhotoId { get; set; }
-        public List<int> InterestsId { get; set; }
         public List<SelectListItem> Counties { get; set; }
-        public List<SelectListItem> Interests { get; set; }
+        public List<InterestSelect> Interests { get; set; }
         public List<DomainModels.Album> Albume { get; set; }
         public AddAlbumModel AddAlbumModel { get; set; }
     }
+
 }

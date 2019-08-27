@@ -5,8 +5,23 @@
 }
 
 <div>
-    <img src="@Url.Action("Download","Photos",new { id= Model.PhotoId })" />
+    <div>
 
+
+        @if (Model.PhotoId.HasValue)
+        {
+            <a href="@Url.Action("Download", "Photos", new { id = Model.PhotoId })" data-lightbox="pozaprofil">
+                <img src="@Url.Action("Download", "Photos", new { id = Model.PhotoId })" height="100" />
+            </a>
+        }
+        else
+        {
+            <a href="/images/DefaultProfile.png" data-lightbox="pozaprofil">
+                <img src="/images/DefaultProfile.png" height="100" />
+            </a>
+        }
+
+    </div>
     @if (Model.IsRequested)
     {
         @Html.ActionLink(
@@ -59,17 +74,17 @@
 
                 <div class="row">
                     <div class="col-6">
-                        <h5>First Name  &nbsp;&nbsp; @currentUser.Name</h5>
-                        <h5>Last Name  &nbsp;&nbsp; @currentUser.Surname</h5>
-                        <h5>Birthday  &nbsp;&nbsp; @currentUser.BirthDay.Year . @currentUser.BirthDay.Month . @currentUser.BirthDay.Day</h5>
+                        <h5>First Name  &nbsp;&nbsp; @Model.Name</h5>
+                        <h5>Last Name  &nbsp;&nbsp; @Model.Surname</h5>
+                        <h5>Birthday  &nbsp;&nbsp; @Model.Birthday</h5>
                     </div>
                     <div class="col-6">
                         @if (currentUser.Locality != null)
                         {
-                            <h5>Locality  &nbsp;&nbsp; @currentUser.Locality.Name</h5>
-                            <h5>County  &nbsp;&nbsp; @currentUser.Locality.County.Name</h5>
+                            <h5>Locality  &nbsp;&nbsp; @Model.Locality</h5>
+                            <h5>County  &nbsp;&nbsp; @Model.County</h5>
                         }
-                        <h5>Gender  &nbsp;&nbsp; @currentUser.SexualIdentity</h5>
+                        <h5>Gender  &nbsp;&nbsp; @Model.SexualIdentity</h5>
                     </div>
                 </div>
             </div>
@@ -77,33 +92,128 @@
 
         <div id="interestsDiv" class="tab-pane fade">
             <h2>Likes and interests</h2>
-            @foreach (var interest in Model.Interests)
-            {
-                <p>@interest</p>
-            }
+            <div class="container-fluid">
+                <div class="row">
+                    @{int row = 0;}
+
+                    <div class="col-4">
+                        @foreach (var interest in Model.Interests)
+                        {
+                            if (row % 3 == 0)
+                            {
+                                <p>@interest</p>
+                            }
+                            row++;
+                        }
+                    </div>
+                    @{row = 0;}
+                    <div class="col-4">
+                        @foreach (var interest in Model.Interests)
+                        {
+                            if (row % 3 == 1)
+                            {
+                                <p>@interest</p>
+                            }
+                            row++;
+                        }
+                    </div>
+                    @{row = 0; }
+                    <div class="col-4">
+                        @foreach (var interest in Model.Interests)
+                        {
+                            if (row % 3 == 2)
+                            {
+                                <p>@interest</p>
+                            }
+                            row++;
+                        }
+                    </div>
+                </div>
+            </div>
 
         </div>
 
         <div id="albumsDiv" class="tab-pane fade">
             <h2>Albums</h2>
-            @foreach (var album in Model.Album)
-            {
-                <div>
-                    <h5>@album.Name</h5>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-4">
+                        @{ row = 0;}
+                        @foreach (var album in Model.Album)
+                        {
+                            @if (row % 3 == 0)
+                            {
+                                <div>
+                                    <h5>@album.Name</h5>
 
-                    <div class="poze" data-id="@album.Id">
-                        @if (album.CoverPhoto == -1)
-                        {
-                            <img src="~/images/genericAlbumCoverPhoto.jpg" height="40em" />
-                        }
-                        else
-                        {
-                            <img src="@Url.Action("Download","Photos",new {id=album.CoverPhoto })" height="40em" />
+                                    <div class="poze" data-id="@album.Id">
+                                        @if (album.CoverPhoto == -1)
+                                        {
+                                            <img src="~/images/genericAlbumCoverPhoto.jpg" height="40em" />
+                                        }
+                                        else
+                                        {
+                                            <img src="@Url.Action("Download", "Photos", new { id = album.CoverPhoto })" height="40em" />
+                                        }
+                                    </div>
+                                    <h6>@album.Count</h6>
+                                </div>
+                            }
+                            row++;
                         }
                     </div>
-                    <h6>@album.Count</h6>
+                    <div class="col-4">
+                        @{ row = 0;}
+                        @foreach (var album in Model.Album)
+                        {
+                            @if (row % 3 == 1)
+                            {
+                                <div>
+                                    <h5>@album.Name</h5>
+
+                                    <div class="poze" data-id="@album.Id">
+                                        @if (album.CoverPhoto == -1)
+                                        {
+                                            <img src="~/images/genericAlbumCoverPhoto.jpg" height="40em" />
+                                        }
+                                        else
+                                        {
+                                            <img src="@Url.Action("Download", "Photos", new { id = album.CoverPhoto })" height="40em" />
+                                        }
+                                    </div>
+                                    <h6>@album.Count</h6>
+                                </div>
+                            }
+                            row++;
+                        }
+                    </div>
+                    <div class="col-4">
+                        @{ row = 0;}
+                        @foreach (var album in Model.Album)
+                        {
+                            @if (row % 3 == 2)
+                            {
+                                <div>
+                                    <h5>@album.Name</h5>
+
+                                    <div class="poze" data-id="@album.Id">
+                                        @if (album.CoverPhoto == -1)
+                                        {
+                                            <img src="~/images/genericAlbumCoverPhoto.jpg" height="40em" />
+                                        }
+                                        else
+                                        {
+                                            <img src="@Url.Action("Download", "Photos", new { id = album.CoverPhoto })" height="40em" />
+                                        }
+                                    </div>
+                                    <h6>@album.Count</h6>
+                                </div>
+                            }
+                            row++;
+                        }
+                    </div>
                 </div>
-            }
+            </div>
 
 
         </div>
@@ -124,7 +234,7 @@
                     {{#if profilePhoto}}
                     <img src="/Photos/Download/{{profilePhoto}}" height="50" style="float:left" />
                     {{else}}
-                    <img src="~/images/DefaultProfile.png" height="50" style="float:left" />
+                    <img src="/images/DefaultProfile.png" height="50" style="float:left" />
                     {{/if}}
                 </a>
 
@@ -142,13 +252,13 @@
     <script id="post-template" type="text/x-handlebars-template">
         <div class="post">
             <div class="bodyPostare">
-                <a class="linkProfilPostare" href="/Profile/Profile/{{userId}}">
+                <a class="linkProfilPostare" href="/Profile/Profile?userId={{userId}}">
                     <span>{{userName}}</span>
                     <br />
                     {{#if profilePhoto}}
                     <img class="pozaProfilPostare" src="/Photos/Download/{{profilePhoto}}" height="75" />
                     {{else}}
-                    <img class="pozaProfilPostare" src="images/DefaultProfile.png" height="75" />
+                    <img class="pozaProfilPostare" src="/images/DefaultProfile.png" height="75" />
                     {{/if}}
 
                 </a>
@@ -169,9 +279,9 @@
 
             <a id="like{{id}}" data-post="{{id}}">
                 {{#if liked}}
-                <img src="images/Liked.png" height="20" />
+                <img src="/images/Liked.png" height="20" />
                 {{else}}
-                <img src="images/notLiked.png" height="20" />
+                <img src="/images/notLiked.png" height="20" />
                 {{/if}}
             </a>
             <p class="reactionCounter">{{noReactions}}</p>

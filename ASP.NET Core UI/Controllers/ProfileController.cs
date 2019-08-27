@@ -12,6 +12,7 @@ using ASP.NET_Core_UI.Models.DomainModels;
 using ASP.NET_Core_UI.Models.GeneralModels;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using ASP.NET_Core_UI.Models.JsonModels;
 
 namespace ASP.NET_Core_UI.Controllers
 {
@@ -48,6 +49,19 @@ namespace ASP.NET_Core_UI.Controllers
             this.friendService = friendshipService;
             this.albumService = albumService;
             this.photoService = photoService;
+        }
+
+        public JsonResult GetInterests()
+        {
+            var indexi = interestsUsersService.GetAllInterests(currentUser.Id).Select(e=>e.Id).ToList();
+            var interests = interestService.getAll().Select(e =>
+             {
+                 var item = mapper.Map<InterestSelect>(e);
+                 item.Selected = indexi.Contains(e.Id);
+                 return item;
+
+             }).ToList();
+            return Json(interests);
         }
 
         public bool ChangeDescription(int? photoId,string description)
@@ -199,8 +213,7 @@ namespace ASP.NET_Core_UI.Controllers
 
             var interests = interestService.getAll();
 
-            model.InterestsId = interestsUsersService.GetAllInterests(currentUser.Id).Select(e => e.Id).ToList();
-            model.Interests = interests.Select(c => mapper.Map<SelectListItem>(c)).ToList();
+            ///model.Interests = interestService.GetAllSelectListItems(currentUser.Id);
             model.Counties = counties.Select(c => mapper.Map<SelectListItem>(c)).ToList();
             model.Albume = albumService.GetAll(currentUser.Id).Select(e => mapper.Map<Album>(e)).ToList();
             return View(model);
@@ -213,28 +226,12 @@ namespace ASP.NET_Core_UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                user.InterestsId= interestsUsersService.GetAllInterests(currentUser.Id).Select(e => e.Id).ToList();
                 Microsoft.Extensions.Primitives.StringValues raspunsuri;
                 Request.Form.TryGetValue("Interests",
                                          out raspunsuri);
-                var interese = raspunsuri.Select(e => int.Parse(e));
-                foreach(int x in interese)
-                {
-                    if (!user.InterestsId.Contains(x))
-                    {
-                        interestsUsersService.AddInterest(x,currentUser.Id);
-                    }
-                   
-                }
-                foreach (int x in user.InterestsId)
-                {
-                    if (!interese.Contains(x))
-                    {
+                interestsUsersService.ChangeInterests(currentUser.Id, raspunsuri.Select(e => int.Parse(e)).ToList());
+               
 
-                        interestsUsersService.RemoveInterest(x,currentUser.Id);
-                    }
-                }
-                
                 var updateUser = mapper.Map<Domain.Users>(user);
                 userService.Update(updateUser);
 
@@ -275,6 +272,7 @@ namespace ASP.NET_Core_UI.Controllers
                 user.CanSendRequest = friendService.canSendRequest(userId.Value);
                 user.IsRequested = friendService.isFriendRequested(userId.Value);
                 user.Interests = interestsUsersService.GetAllInterests(domainUser.Id).Select(e => e.Name).ToList();
+                user.Album = albumService.GetAll(userId.Value).Select(e => mapper.Map<Album>(e)).ToList();
 
                 return View(user);
             }

@@ -3,6 +3,8 @@
 <h1>Album</h1>
 @foreach(var photoId in Model.Photos)
 {
-    <img src="@Url.Action("Download", "Photos", new {id=photoId})" />
+    <div class="divImagineAlbum">
+        <img src="@Url.Action("Download", "Photos", new {id=photoId})" height="40"/>
     @Html.ActionLink("Delete this photo", "DeletePhoto", "Users", new { photoId = photoId,albumId=Model.Id },new {@class="needConfirmation" });
+    </div>
 }

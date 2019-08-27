@@ -31,11 +31,15 @@ namespace ASP.NET_Core_UI.Code.Mappers
                 .ForMember(dest => dest.PhotoId, s => s.MapFrom(src => new List<int>() { src.Photo.Id }));
             CreateMap<Domain.Photo, ASP.NET_Core_UI.Models.JsonModels.Image>();
             CreateMap<Domain.Users, ASP.NET_Core_UI.Models.JsonModels.Friend>()
-                .ForMember(dest => dest.ProfilePhoto, s => s.MapFrom(src => src.PhotoId));
+                .ForMember(dest => dest.ProfilePhoto, s => s.MapFrom(src => src.PhotoId))
+                .ForMember(dest => dest.Name, s => s.MapFrom(src => src.Name + " " + src.Surname));
             CreateMap<Domain.Users, ASP.NET_Core_UI.Models.JsonModels.User>()
                 .ForMember(dest => dest.ProfilePhoto, s => s.MapFrom(src => src.PhotoId))
                 .ForMember(dest => dest.Name, s => s.MapFrom(src => src.Name + " " + src.Surname))
                 .ForMember(dest => dest.IsAdmin, s => s.MapFrom(src => src.RoleId==2));
+            CreateMap<Domain.Interest, ASP.NET_Core_UI.Models.JsonModels.InterestSelect>()
+                .ForMember(dest => dest.Text, s => s.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Id, s => s.MapFrom(src => src.Id));
                 
 
         }

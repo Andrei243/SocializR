@@ -5,6 +5,7 @@ using Domain;
 using DataAccess;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Services.Interest
 {
@@ -49,6 +50,22 @@ namespace Services.Interest
         public List<Domain.Interest> GetInterests(int already,int howMany)
         {
             return unitOfWork.Interests.Query.OrderBy(e => e.Id).Skip(already).Take(howMany).AsNoTracking().ToList();
+        }
+
+        public List<SelectListItem> GetAllSelectListItems(int userId)
+        {
+            var indexi = unitOfWork.InterestsUserss.Query.Where(e => e.UserId == userId).Select(e => e.InterestId).ToList();
+            var interests = getAll().Select(e =>
+            {
+                var item = new SelectListItem();
+                item.Text = e.Name;
+                item.Value = e.Id.ToString();
+                item.Selected = indexi.Contains(e.Id);
+                return item;
+
+            }).ToList();
+            return interests;
+
         }
     }
 }

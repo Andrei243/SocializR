@@ -12,6 +12,7 @@ using AutoMapper;
 using ASP.NET_Core_UI.Models.GeneralModels;
 using ASP.NET_Core_UI.Models.AdminModels;
 using ASP.NET_Core_UI.Models.ProfileModels;
+using ASP.NET_Core_UI.Models.JsonModels;
 
 namespace ASP.NET_Core_UI.Controllers
 {
@@ -60,8 +61,25 @@ namespace ASP.NET_Core_UI.Controllers
             return el;
         }
 
+        public JsonResult GetInterests(int? userId)
+        {
+            if (userId == null)
+            {
+                return Json(new List<InterestSelect>());
+            }
+            var indexi = interestsUsersService.GetAllInterests(userId.Value).Select(e => e.Id).ToList();
+            var interests = interestService.getAll().Select(e =>
+            {
+                var item = mapper.Map<InterestSelect>(e);
+                item.Selected = indexi.Contains(e.Id);
+                return item;
+
+            }).ToList();
+            return Json(interests);
+        }
+
         // GET: Users
-        
+
         public IActionResult Index()
         {
             return View();
@@ -94,6 +112,7 @@ namespace ASP.NET_Core_UI.Controllers
             }
         }
 
+       
 
         [HttpGet]
         public IActionResult Edit(int? userId)
@@ -104,10 +123,7 @@ namespace ASP.NET_Core_UI.Controllers
 
             var counties = countyService.GetAll();
 
-            var interests = interestService.getAll();
 
-            model.InterestsId = interestsUsersService.GetAllInterests(user.Id).Select(e => e.Id).ToList();
-            model.Interests = interests.Select(c => mapper.Map<SelectListItem>(c)).ToList();
             model.Counties = counties.Select(c => mapper.Map<SelectListItem>(c)).ToList();
             return View(model);
 
@@ -118,29 +134,13 @@ namespace ASP.NET_Core_UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                user.InterestsId = interestsUsersService.GetAllInterests(user.Id).Select(e => e.Id).ToList();
                 Microsoft.Extensions.Primitives.StringValues raspunsuri;
                 Request.Form.TryGetValue("Interests",
                                          out raspunsuri);
-                var interese = raspunsuri.Select(e => int.Parse(e));
-                foreach (int x in interese)
-                {
-                    if (!user.InterestsId.Contains(x))
-                    {
-                        interestsUsersService.AddInterest(x,user.Id);
-                    }
+                interestsUsersService.ChangeInterests(user.Id, raspunsuri.Select(e => int.Parse(e)).ToList());
 
-                }
-                foreach (int x in user.InterestsId)
-                {
-                    if (!interese.Contains(x))
-                    {
 
-                        interestsUsersService.RemoveInterest(x,user.Id);
-                    }
-                }
-                
-                var updateUser = mapper.Map<Domain.Users>(user);
+                var updateUser = mapper.Map<Users>(user);
                 userService.Update(updateUser);
 
                 return RedirectToAction("Index");

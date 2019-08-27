@@ -8,10 +8,21 @@
 
 <div>
 
-    <a href="@Url.Action("Download", "Photos", new { id = currentUser.ProfilePhoto })" data-lightbox="pozaprofil">
-        <img src="@Url.Action("Download", "Photos", new { id = currentUser.ProfilePhoto })" />
-    </a>
-</div>
+
+    @if (currentUser.ProfilePhoto.HasValue)
+    {
+        <a href="@Url.Action("Download", "Photos", new { id = currentUser.ProfilePhoto })" data-lightbox="pozaprofil">
+            <img src="@Url.Action("Download", "Photos", new { id = currentUser.ProfilePhoto })" height="100" />
+        </a>
+    }
+    else
+    {
+<a href="/images/DefaultProfile.png" data-lightbox="pozaprofil">
+    <img src="/images/DefaultProfile.png" height="100" />
+</a>
+            }
+
+    </div>
 
 <div class="container jumbotron">
     <ul class="nav nav-tabs nav-justified">
@@ -30,7 +41,7 @@
                     <div class="col-6">
                         <h5>First Name  &nbsp;&nbsp; @currentUser.Name</h5>
                         <h5>Last Name  &nbsp;&nbsp; @currentUser.Surname</h5>
-                        <h5>Birthday  &nbsp;&nbsp; @currentUser.BirthDay.Year . @currentUser.BirthDay.Month . @currentUser.BirthDay.Day</h5>
+                        <h5>Birthday  &nbsp;&nbsp; @Model.Birthday</h5>
                     </div>
                     <div class="col-6">
                         @if (currentUser.Locality != null)
@@ -207,7 +218,7 @@
 <script id="post-template" type="text/x-handlebars-template">
     <div class="post">
         <div class="bodyPostare">
-            <a class="linkProfilPostare" href="/Profile/Profile/{{userId}}">
+            <a class="linkProfilPostare" href="/Profile/Profile?userId={{userId}}">
                 <span>{{userName}}</span>
                 <br />
                 {{#if profilePhoto}}

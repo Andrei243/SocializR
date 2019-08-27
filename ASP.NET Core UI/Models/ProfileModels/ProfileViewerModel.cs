@@ -17,7 +17,7 @@ namespace ASP.NET_Core_UI.Models.ProfileModels
         public string Surname { get; set; }
         public string Email { get; set; }
         public string County { get; set; }
-        public DateTime Birthday { get; set; }
+        public string Birthday { get; set; }
         public string SexualIdentity { get; set; }
         public string Locality { get; set; }
         public List<string> Interests { get; set; }

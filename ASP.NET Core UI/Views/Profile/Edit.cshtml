@@ -57,24 +57,15 @@
                 <span asp-validation-for="Visibility" class="text-danger"></span>
             </div>
            
-        <div class="form-group">
-            @foreach (var el in Model.Interests)
-            {
-                @if (Model.InterestsId.Contains(int.Parse(el.Value)))
-                {
-                    <label>@el.Text</label>
-                    <input type="checkbox" value="@el.Value" name="Interests" checked />
-                }
-                else
-                {
-                    <label>@el.Text</label>
-                    <input type="checkbox" value="@el.Value" name="Interests" />
-                }
-            }
-
-        </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary needConfirmation" />
+                <label asp-for="Interests" class="control-label"></label>
+
+                <select asp-for="Interests" id="interestSelect" multiple="multiple">
+                </select>
+                <span asp-validation-for="Interests" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input id="submit" type="submit" value="Save" class="btn btn-primary needConfirmation" />
             </div>
         </form>
     </div>
@@ -106,4 +97,4 @@
 </div>
 
 <script src="~/js/Localities.js"></script>
-
+<script src="~/js/InterestSelect.js"></script>

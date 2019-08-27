@@ -55,6 +55,8 @@ namespace ASP.NET_Core_UI.Code.Mappers
                 .ForMember(dest => dest.Interests, s => s.MapFrom(src => new List<string>(src.InterestsUsers.Select(e => e.Interest.Name).ToList())))
                 .ForMember(dest=>dest.Locality,s=>s.MapFrom(src=>src.Locality.Name))
                 .ForMember(dest=>dest.County,s=>s.MapFrom(src=>src.Locality.County.Name))
+                .ForMember(dest=>dest.Birthday,s=>s.MapFrom(src=>src.BirthDay.Year+"."+src.BirthDay.Month+"."+src.BirthDay.Day))
+                .ForMember(dest=>dest.PhotoId,s=>s.MapFrom(src=>src.PhotoId))
                 ;
             
         }

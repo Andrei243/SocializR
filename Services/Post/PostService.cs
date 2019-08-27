@@ -47,6 +47,7 @@ namespace Services.Post
         {
             return GetFeed()
                 .Where(e => e.UserId == userId)
+                .OrderByDescending(e=>e.AddingMoment)
                 .Skip(already)
                 .Take(howMany)
                 .ToList();

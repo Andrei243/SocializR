@@ -6,6 +6,7 @@ using DataAccess;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using ASP.NET_Core_UI.Models.DomainModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ASP.NET_Core_UI.Controllers
 {
@@ -28,7 +29,6 @@ namespace ASP.NET_Core_UI.Controllers
             return View(interese);
         }
 
-        
 
         // GET: Interests/Create
         public IActionResult Create()
