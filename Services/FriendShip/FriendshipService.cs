@@ -82,7 +82,7 @@ namespace Services.FriendShip
         }
         public bool canSee(int receiver)
         {
-            return unitOfWork.Friendships.Query.Include(e => e.IdReceiverNavigation).Any(
+            return currentUser.IsAdmin|| unitOfWork.Friendships.Query.Include(e => e.IdReceiverNavigation).Any(
                 e => (e.IdSender == currentUser.Id && e.IdReceiver == receiver&&(e.Accepted??false) && !e.IdReceiverNavigation.IsBanned))
                 ||unitOfWork.Users.Query.Any(e=>e.Id==receiver&&e.Vizibility=="public"&&!e.IsBanned)
                 ;

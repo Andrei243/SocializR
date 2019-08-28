@@ -46,12 +46,14 @@ namespace ASP.NET_Core_UI.Controllers
             }
         }
         [Authorize]
-        public void RemovePost(int postId)
+        public bool RemovePost(int postId)
         {
             if (postService.CanDetelePost(postId))
             { 
                 postService.RemovePost(postId);
+                return true;
             }
+            return false;
         }
         
         [HttpGet]
@@ -90,6 +92,7 @@ namespace ASP.NET_Core_UI.Controllers
                     var post = mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Post>(e);
                     post.Liked = e.Reaction.Select(f => f.UserId).Contains(currentUser.Id);
                     post.IsMine = e.UserId == currentUser.Id;
+                    post.isAdmin = currentUser.IsAdmin;
                     return post;
 
                 }).ToList();

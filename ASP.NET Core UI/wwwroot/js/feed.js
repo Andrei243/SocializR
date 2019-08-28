@@ -12,11 +12,11 @@
             success: function (response) {
                 if (response) {
                     e.currentTarget.querySelector("img").src = "/images/Liked.png";
-                    e.currentTarget.parentNode.querySelector(".reactionCounter").innerText = parseInt(e.currentTarget.parentNode.querySelector(".reactionCounter").innerText) + 1;
+                    e.currentTarget.parentNode.querySelector(".reactionCounter").innerText = (parseInt(e.currentTarget.parentNode.querySelector(".reactionCounter").innerText) + 1) + " Likes";
                 }
                 else {
                     e.currentTarget.querySelector("img").src = "/images/notLiked.png";
-                    e.currentTarget.parentNode.querySelector(".reactionCounter").innerText = parseInt(e.currentTarget.parentNode.querySelector(".reactionCounter").innerText) - 1;
+                    e.currentTarget.parentNode.querySelector(".reactionCounter").innerText = (parseInt(e.currentTarget.parentNode.querySelector(".reactionCounter").innerText) - 1) + " Likes";
                 }
             },
             error: function (error) {
@@ -28,7 +28,8 @@
 
     };
     let eventDeleteComment = function (e) {
-        let com = $(this).parent();
+        let com = $(this).parent().parent();
+        console.log(com);
         $.ajax({
             type: "GET",
             url: '/Feed/RemoveComment',
@@ -37,7 +38,7 @@
 
             },
             success: function (response) {
-                console.log(com);
+                
                 com.parent().data("toskip", parseInt(com.parent().data("toskip")) - 1);
                 com.remove();
             },
@@ -91,7 +92,7 @@
    
 
     let eventDeletePost = function (e) {
-        let post = $(this);
+        let post = $(this).parent();
         $.ajax({
             type: "GET",
             url: '/Feed/RemovePost',
@@ -115,9 +116,9 @@
 
     
     let eventComment = (idPost) => {
+        
         let canGet = true;
         return () => {
-            
             if (canGet) {
                 canGet = false;
                 $.ajax({
@@ -137,6 +138,10 @@
 
                         }
                         canGet = true;
+
+                        if (result.length === 0) {
+                            $("#commentGetter" + idPost).remove();
+                        }
                     }
                 })
             }
@@ -150,7 +155,6 @@
         let noPosts = 0;
         let canGet = true;
         return () => {
-            this.console.log(canGet);
             if (canGet) {
                 canGet = false;
                 $.ajax({
@@ -216,7 +220,6 @@
         }
     }
     document.getElementById("Binar").addEventListener("change", function () {
-        console.log("hei");
         readURL(this);
     })
     

@@ -12,11 +12,11 @@
             success: function (response) {
                 if (response) {
                     e.currentTarget.querySelector("img").src = "/images/Liked.png";
-                    e.currentTarget.parentNode.querySelector(".reactionCounter").innerText = parseInt(e.currentTarget.parentNode.querySelector(".reactionCounter").innerText) + 1;
+                    e.currentTarget.parentNode.querySelector(".reactionCounter").innerText = (parseInt(e.currentTarget.parentNode.querySelector(".reactionCounter").innerText) + 1)+" Likes";
                 }
                 else {
                     e.currentTarget.querySelector("img").src = "/images/notLiked.png";
-                    e.currentTarget.parentNode.querySelector(".reactionCounter").innerText = parseInt(e.currentTarget.parentNode.querySelector(".reactionCounter").innerText) - 1;
+                    e.currentTarget.parentNode.querySelector(".reactionCounter").innerText = (parseInt(e.currentTarget.parentNode.querySelector(".reactionCounter").innerText) - 1)+" Likes";
                 }
             },
             error: function (error) {
@@ -29,7 +29,8 @@
     };
 
     let eventDeleteComment = function (e) {
-        let com = $(this).parent();
+        let com = $(this).parent().parent();
+        console.log(com);
         $.ajax({
             type: "GET",
             url: '/Feed/RemoveComment',
@@ -38,7 +39,7 @@
 
             },
             success: function (response) {
-                console.log(com);
+
                 com.parent().data("toskip", parseInt(com.parent().data("toskip")) - 1);
                 com.remove();
             },
@@ -92,7 +93,7 @@
 
     
     let eventDeletePost = function (e) {
-        let post = $(this);
+        let post = $(this).parent();
         $.ajax({
             type: "GET",
             url: '/Feed/RemovePost',
@@ -116,9 +117,9 @@
 
    
     let eventComment = (idPost) => {
+
         let canGet = true;
         return () => {
-
             if (canGet) {
                 canGet = false;
                 $.ajax({
@@ -138,6 +139,10 @@
 
                         }
                         canGet = true;
+
+                        if (result.length === 0) {
+                            $("#commentGetter" + idPost).remove();
+                        }
                     }
                 })
             }
@@ -145,35 +150,41 @@
 
     };
 
+    
     let eventPost = ((userId) => {
         var sourcePost = document.getElementById("post-template").innerHTML;
         var templatePost = Handlebars.compile(sourcePost);
         let noPosts = 0;
+        let canGet = true;
         return () => {
-            $.ajax({
-                type: 'GET',
-                url: '/Feed/GetPersonPosts',
-                data: {
-                    toSkip: noPosts,
-                    userId: userId
-                },
-                success: (result) => {
-                    for (let i = 0; i < result.length; i++) {
-                        let post = result[i];
-                        let html = templatePost(post);
-                        $("#postBody").append(html);
-                        let eventComentariu = eventComment(post.id);
-                        eventComentariu();
-                        $("#commentGetter" + post.id).click(eventComentariu);
-                        $("#like" + post.id).click(eventLike);
-                        $("#commentAdd" + post.id).click(eventAddComment);
-                        $("#deletePost" + post.Id).click(eventDeletePost);
+            if (canGet) {
+                canGet = false;
+                $.ajax({
+                    type: 'GET',
+                    url: '/Feed/GetPersonPosts',
+                    data: {
+                        toSkip: noPosts,
+                        userId:userId
+                    },
+                    success: (result) => {
+                        noPosts += result.length;
+                        for (let i = 0; i < result.length; i++) {
+                            let post = result[i];
+                            let html = templatePost(post);
+                            $("#postBody").append(html);
+                            let eventComentariu = eventComment(post.id);
+                            eventComentariu();
+                            $("#commentGetter" + post.id).click(eventComentariu);
+                            $("#like" + post.id).click(eventLike);
+                            $("#commentAdd" + post.id).click(eventAddComment);
+                            $("#postRemove" + post.id).click(eventDeletePost);
+                        }
+                        canGet = true;
                     }
-                    noPosts += result.length;
-                }
 
 
-            })
+                })
+            }
 
         }
 

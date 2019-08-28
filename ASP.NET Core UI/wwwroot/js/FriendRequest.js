@@ -15,7 +15,7 @@
                     for (let i = 0; i < result.length; i++) {
                         let friend = result[i];
                         var html = template(friend);
-                        $("#friendBody").append(html);
+                        $("#friendRequestBody").append(html);
                     }
                     noFriends += result.length;
                 }

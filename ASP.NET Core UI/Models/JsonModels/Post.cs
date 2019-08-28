@@ -16,5 +16,6 @@ namespace ASP.NET_Core_UI.Models.JsonModels
         public int NoReactions { get; set; }
         public List<int> PhotoId { get; set; }
         public bool IsMine { get; set; }
+        public bool isAdmin { get; set; }
     }
 }

@@ -12,7 +12,6 @@
             success: function (response) {
                 $("#users").empty();
                 html = '';
-                html = html.concat("<br/>")
                 for (let i = 0; i < response.length; i++) {
 
                     var redirect = '/Profile/Profile' + "?userId=" + response[i].id;
@@ -26,11 +25,11 @@
                     }
 
                 }
-                html = html.concat("<br/><br/>")
                 if (response.length === 0) {
                     html = '';
                 }
                 $("#users").append(html);
+                $("#divSelection .dropdownDiv").show();
             },
             error: function (error) {
 
@@ -40,7 +39,7 @@
     })
     $("#selection").blur(() => {        
             $("#users").empty();
-
+        $("#divSelection .dropdownDiv").hide();
     })
 
     $('#users').on('mousedown', function (event) {
@@ -50,6 +49,7 @@
     $("#selection").focus(() => {
         $("#users").empty();
         $("#users").append(html);
+        $("#divSelection .dropdownDiv").show();
     })
 
 

@@ -55,7 +55,7 @@ namespace Services.Post
 
         public bool CanDetelePost(int postId)
         {
-            return unitOfWork.Posts.Query.First(e => e.Id == postId).UserId == CurrentUser.Id;
+            return unitOfWork.Posts.Query.First(e => e.Id == postId).UserId == CurrentUser.Id || CurrentUser.IsAdmin;
         }
 
         private IEnumerable<Domain.Post> GetFeed()

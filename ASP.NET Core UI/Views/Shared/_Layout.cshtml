@@ -43,40 +43,45 @@
 </head>
 <body>
     <header class="main-header">
+        
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" align="center">
-            <div id="logo">
-                <a href="/"><img src="~/images/Titlu.png" height="40em" /></a>
+            <div class="container">
+                <div id="logo">
+                    <a href="/"><img src="~/images/logo.png" /></a>
+                </div>
+                <div id="divSelection" class="col-xs-3">
+                    <input type="text" id="selection" class="form-control" placeholder="Search user" />
+                    <div class="dropdownDiv" style="display: none;">
+                        <div class="dropdownResult" id="users">
+                        </div>
+                    </div>
+                </div>
+                <div id="login-register-links">
+
+
+
+
+                    @if (!currentUser.IsAuthenticated)
+                    {
+                        @Html.ActionLink("Login", "Login", "Account");
+                        @Html.ActionLink("Register", "Register", "Account");
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Logout", "Logout", "Account", null, new { @class = "needConfirmation" });
+                    }
+
+
+                </div>
             </div>
-            <div id="divSelection" class="col-xs-3">
-                <input type="text" id="selection" class="form-control" placeholder="Search user" />
-            </div>
-            <div id="login-register-links">
-
-
-
-
-                @if (!currentUser.IsAuthenticated)
-                {
-                    @Html.ActionLink("Login", "Login", "Account");
-                    @Html.ActionLink("Register", "Register", "Account");
-                }
-                else
-                {
-                    @Html.ActionLink("Logout", "Logout", "Account", null, new { @class = "needConfirmation" });
-                }
-
-
-            </div>
-
         </nav>
+        
+        
 
 
     </header>
-    <div class="dropdownDiv">
-        <div class="dropdownResult" id="users">
-        </div>
-    </div>
-    <div class="content">
+    
+    <div id="mainContent" class="content">
         <partial name="_CookieConsentPartial" />
         <main role="main" class="pb-3">
             @RenderBody()
