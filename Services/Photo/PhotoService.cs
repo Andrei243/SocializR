@@ -9,12 +9,46 @@ namespace Services.Photo
 {
     public class PhotoService : Base.BaseService
     {
+        private CurrentUser currentUser;
 
-
-        public PhotoService(SocializRUnitOfWork unitOfWork) : base(unitOfWork)
+        public PhotoService(SocializRUnitOfWork unitOfWork,CurrentUser currentUser) : base(unitOfWork)
         {
+            this.currentUser = currentUser;
         }
 
+        public bool CanSeePhoto(int photoId)
+        {
+            if (currentUser.IsAdmin)
+            {
+                return true;
+            }
+
+            var photo = unitOfWork.Photos.Query.Include(e=>e.Post).Include(e=>e.Album).First(e => e.Id == photoId);
+
+            Domain.Users user;
+            if (photo.Post != null)
+            {
+                if (photo.Post.UserId == currentUser.Id) return true;
+                if (photo.Post.Vizibilitate == "public") return true;
+                user = unitOfWork.Posts.Query.Where(e => e.Id == photo.PostId).Select(e => e.User).First(e => true);
+
+            }
+            else if (photo.Album != null)
+            {
+                user = unitOfWork.Albums.Query.Where(e => e.Id == photo.AlbumId).Select(e => e.User).First(e => true);
+            }
+            else
+            {
+                return false;
+            }
+            if (user.Vizibility == "public") return true;
+            else if (unitOfWork.Friendships.Query.Any(e => e.IdReceiver == currentUser.Id && e.IdSender == user.Id && (e.Accepted ?? false)))
+            {
+                return true;
+            }
+            return false;
+
+        }
         public void ChangeDescription(int photoId,string description)
         {
             var image = unitOfWork.Photos.Query.FirstOrDefault(e => e.Id == photoId);
@@ -94,9 +128,9 @@ namespace Services.Photo
             return unitOfWork.Photos.Query.FirstOrDefault(e => e.Id == id);
         }
 
-        public List<Domain.Photo> GetPhotos(int already,int howMany,int albumId)
+        public List<Domain.Photo> GetPhotos(int toSkip,int howMany,int albumId)
         {
-            return unitOfWork.Photos.Query.Where(e => e.AlbumId == albumId).OrderBy(e => e.Position).Skip(already).Take(howMany).ToList();
+            return unitOfWork.Photos.Query.Where(e => e.AlbumId == albumId).OrderBy(e => e.Position).Skip(toSkip).Take(howMany).ToList();
         }
 
     }

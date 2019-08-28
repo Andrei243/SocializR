@@ -9,7 +9,6 @@
             userId: $("#Id").attr("value")
         },
         success: (result) => {
-            debugger;
             $("#interestSelect").select2({
                 data: result,
                 multiple: true

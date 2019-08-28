@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Feed\Privacy.cshtml" />
     <Content Remove="wwwroot\css\lightgallery.css" />
   </ItemGroup>
 

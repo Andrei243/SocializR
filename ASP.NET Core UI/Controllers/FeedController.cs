@@ -35,6 +35,7 @@ namespace ASP.NET_Core_UI.Controllers
             this.currentUser = currentUser;
             this.photoService = photoService;
             this.reactionService = reactionService;
+            this.PageSize = 5;
         }
         [Authorize]
         public void RemoveComment(int commentId)
@@ -62,15 +63,16 @@ namespace ASP.NET_Core_UI.Controllers
 
         
        
-        [Authorize]
-        public JsonResult GetComments(int postId,int already)
+        [AllowAnonymous]
+        public JsonResult GetComments(int postId,int toSkip)
         {
             if (postService.CanSeePost(postId))
             {
-                var comments = commentService.GetComments(already, PageSize, postId).Select(e =>
+                var comments = commentService.GetComments(toSkip, PageSize, postId).Select(e =>
                 {
                     var comment = mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Comment>(e);
                     comment.IsMine = (currentUser.Id == comment.UserId);
+                    comment.isAdmin = currentUser.IsAdmin;
                     return comment;
                 }).ToList();
                 return Json(comments);
@@ -78,12 +80,12 @@ namespace ASP.NET_Core_UI.Controllers
             return Json(new List<int>());
         }
 
-        public JsonResult GetPosts(int already)
+        public JsonResult GetPosts(int toSkip)
         {
             
             if (currentUser.IsAuthenticated)
             {
-                var posts = postService.GetNewsfeed(already, PageSize).Select(e =>
+                var posts = postService.GetNewsfeed(toSkip, PageSize).Select(e =>
                 {
                     var post = mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Post>(e);
                     post.Liked = e.Reaction.Select(f => f.UserId).Contains(currentUser.Id);
@@ -95,7 +97,7 @@ namespace ASP.NET_Core_UI.Controllers
             }
             else
             {
-                var posts = postService.GetPublicNewsfeed(already, PageSize).Select(e =>
+                var posts = postService.GetPublicNewsfeed(toSkip, PageSize).Select(e =>
                 {
                     var post = mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Post>(e);
                     post.Liked = e.Reaction.Select(f => f.UserId).Contains(currentUser.Id);
@@ -106,10 +108,10 @@ namespace ASP.NET_Core_UI.Controllers
                 return Json(posts);
             }
         }
-        public JsonResult GetPersonPosts(int already,int userId)
+        public JsonResult GetPersonPosts(int toSkip,int userId)
         {
 
-                var posts = postService.GetPersonPost(already, PageSize,userId).Select(e =>
+                var posts = postService.GetPersonPost(toSkip, PageSize,userId).Select(e =>
                 {
                     var post = mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Post>(e);
                     post.Liked = e.Reaction.Select(f => f.UserId).Contains(currentUser.Id);
@@ -158,12 +160,15 @@ namespace ASP.NET_Core_UI.Controllers
             return false;
         }
 
-        public void Comment(int postId,string comentariu)
+        public int Comment(int postId,string comentariu)
         {
-            if (postService.CanSeePost(postId))
+            if (postService.CanSeePost(postId)&& !string.IsNullOrEmpty(comentariu))
             {
-                commentService.AddComment(comentariu, postId);
+                int id = commentService.AddComment(comentariu.Trim(), postId);
+                return id;
+
             }
+            return 0;
         }
 
         public IActionResult Privacy()

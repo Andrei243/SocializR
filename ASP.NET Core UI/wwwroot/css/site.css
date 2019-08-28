@@ -190,11 +190,14 @@ a.linkProfilComment,a.linkProfilComment:hover{
     border-color: #9E8C99;
     border-radius: 5px;
     border-style: solid;
+    margin-bottom:10px;
 }
 
 div.post {
     background-color: #8E7C89;
     border-radius: 25px;
+    padding:25px 25px 25px 25px;
+    margin-bottom:5px;
 }
 
 .btn-danger {
@@ -248,4 +251,64 @@ div.post {
 
 .dropdownItem p {
     color: #F7F0F5;
+}
+.addComment {
+    margin-left:25px;
+    
+    background-color: #F7F0F5;
+    width:750px;
+}
+
+#friendBody {
+    background-color: #63515E;
+    border-radius:25px;
+}
+
+.friendDiv {
+    margin-left: 50px;
+    margin-bottom: 25px;
+    margin-top: 0px;
+    border-color: #9E8C99;
+    border-radius: 5px;
+    border-style: solid;
+    display:block;
+    width:1000px;
+}
+
+.friendDiv a,.friendDiv a:hover,.friendDiv a:focus{
+    text-decoration:none;
+    color:black;
+}
+
+#friendRequestBody {
+    background-color: #63515E;
+    border-radius: 25px;
+}
+
+.friend {
+    margin-left: 50px;
+    margin-bottom: 25px;
+    margin-top: 0px;
+    border-color: #9E8C99;
+    border-radius: 5px;
+    border-style: solid;
+    display: block;
+    width: 1000px;
+}
+
+    .friend a, .friend a:hover, .friend a:focus {
+        text-decoration: none;
+        color: black;
+    }
+
+.post .imgPostare{
+    max-width:500px;
+}
+
+.albumPreview{
+    width:40px;
+}
+
+#imgPreview{
+    max-width:50px;
 }

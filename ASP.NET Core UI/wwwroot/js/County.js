@@ -1,32 +1,6 @@
-﻿window.addEventListener("load", () => {
-    $("a.needConfirmation").unbind("click").click((e) => {
-        var x = confirm("Esti sigur de actiunea ta?");
-        if (!x) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-        let val = e.currentTarget.dataset.id;
-        $.ajax({
-            type: "GET",
-            url: "/Counties/CanDelete",
-            data: {
-                countyId: val
-            },
-            success: (result) => {
-                if (!result) {
-                    alert("You can't delete this county");
-                    
-                }
-                else {
-                    
-                    alert("You deleted it");
-                    window.location.href="/Counties/Index"
-                }
-            }
-
-        })
-    })
-})
+﻿//window.addEventListener("load", () => {
+    
+//})
 
 
 window.addEventListener("load", () => {
@@ -37,24 +11,68 @@ window.addEventListener("load", () => {
         return () => {
             $.ajax({
                 type: 'GET',
-                url: "Counties/GetCounties",
+                url: "/Counties/GetCounties",
                 data: {
-                    already: noCounties
+                    toSkip: noCounties
                 },
                 success: (result) => {
-                    
+                    noCounties += result.length;
                     for (let i = 0; i < result.length; i++) {
                         let county = result[i];
                         var html = template(county);
                         $("#countyBody").append(html);
+
+                        $("a.needConfirmation").unbind("click").click((e) => {
+                            var x = confirm("Esti sigur de actiunea ta?");
+                            if (!x) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                            }
+                            let val = e.currentTarget.dataset.id;
+                            $.ajax({
+                                type: "GET",
+                                url: "/Counties/CanDelete",
+                                data: {
+                                    countyId: val
+                                },
+                                success: (result) => {
+                                    if (!result) {
+                                        alert("You can't delete this county");
+
+                                    }
+                                    else {
+
+                                        alert("You deleted it");
+                                        window.location.href = "/Counties/Index"
+                                    }
+                                }
+
+                            })
+                        })
+
+
                     }
-                    noCounties += result.length;
+                    
                 }
             })
 
         }
     })();
     event();
-    $("#countyGetter").click(event);
+    let copieFunctie = event;
+    event = () => { };
+    setTimeout(() => {
+        event = copieFunctie;
+    }, 1000);
+    $(window).scroll(() => {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+            event();
+            event = () => { }
+            this.setTimeout(() => {
+                event = copieFunctie;
+            }, 1000)
+        }
+
+    })
 
 })

@@ -17,7 +17,22 @@ namespace Services.User
             this.currentUser = currentUser;
         }
 
-       
+
+        public bool BanUser(int userId)
+        {
+            var user = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == userId);
+            user.IsBanned = true;
+            unitOfWork.Users.Update(user);
+            return unitOfWork.SaveChanges() != 0;
+        }
+
+        public bool UnbanUser(int userId)
+        {
+            var user = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == userId);
+            user.IsBanned = false;
+            unitOfWork.Users.Update(user);
+            return unitOfWork.SaveChanges() != 0;
+        }
 
         public Users GetCurrentUser()
         {
@@ -126,13 +141,13 @@ namespace Services.User
             unitOfWork.SaveChanges();
         }
 
-        public List<Users> GetUsers(int already,int howMany)
+        public List<Users> GetUsers(int toSkip,int toTake)
         {
             return unitOfWork.Users.Query
                 .Where(e=>e.Id!=currentUser.Id)
                 .OrderBy(e => e.BirthDay)
-                .Skip(already)
-                .Take(howMany)
+                .Skip(toSkip)
+                .Take(toTake)
                 .ToList();
         }
     }

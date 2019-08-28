@@ -24,6 +24,8 @@
 
     </div>
 
+<div id="currentUserInfo" hidden data-profile="@currentUser.ProfilePhoto" data-name="@currentUser.Name @currentUser.Surname" data-userid="@currentUser.Id"></div>
+
 <div class="container jumbotron">
     <ul class="nav nav-tabs nav-justified">
         <li class="active nav-item"><a data-toggle="tab" href="#contactDiv">Contact Information </a> </li>
@@ -115,11 +117,11 @@
                                     <div class="poze" data-id="@album.Id">
                                         @if (album.CoverPhoto == -1)
                                         {
-                                            <img src="~/images/genericAlbumCoverPhoto.jpg" height="40em" />
+                                            <img class="albumPreview" src="~/images/genericAlbumCoverPhoto.jpg"  />
                                         }
                                         else
                                         {
-                                            <img src="@Url.Action("Download", "Photos", new { id = album.CoverPhoto })" height="40em" />
+                                            <img class="albumPreview" src="@Url.Action("Download", "Photos", new { id = album.CoverPhoto })"  />
                                         }
                                     </div>
                                     <h6>@album.Count</h6>
@@ -140,11 +142,11 @@
                                     <div class="poze" data-id="@album.Id">
                                         @if (album.CoverPhoto == -1)
                                         {
-                                            <img src="~/images/genericAlbumCoverPhoto.jpg" height="40em" />
+                                            <img src="~/images/genericAlbumCoverPhoto.jpg" class="albumPreview" />
                                         }
                                         else
                                         {
-                                            <img src="@Url.Action("Download", "Photos", new { id = album.CoverPhoto })" height="40em" />
+                                            <img src="@Url.Action("Download", "Photos", new { id = album.CoverPhoto })" class="albumPreview" />
                                         }
                                     </div>
                                     <h6>@album.Count</h6>
@@ -165,11 +167,11 @@
                                     <div class="poze" data-id="@album.Id">
                                         @if (album.CoverPhoto == -1)
                                         {
-                                            <img src="~/images/genericAlbumCoverPhoto.jpg" height="40em" />
+                                            <img src="~/images/genericAlbumCoverPhoto.jpg" class="albumPreview" />
                                         }
                                         else
                                         {
-                                            <img src="@Url.Action("Download", "Photos", new { id = album.CoverPhoto })" height="40em" />
+                                            <img src="@Url.Action("Download", "Photos", new { id = album.CoverPhoto })" class="albumPreview" />
                                         }
                                     </div>
                                     <h6>@album.Count</h6>
@@ -190,7 +192,7 @@
 <div id="postBody">
 
 </div>
-<button id="postGetter" data-user="@currentUser.Id">Load more posts</button>
+<button id="postGetter" data-user="@currentUser.Id" hidden="hidden">Load more posts</button>
 <script id="comment-template" type="text/x-handlebars-template">
 
     <div class="comment">
@@ -200,7 +202,7 @@
                 {{#if profilePhoto}}
                 <img src="/Photos/Download/{{profilePhoto}}" height="50" style="float:left" />
                 {{else}}
-                <img src="~/images/DefaultProfile.png" height="50" style="float:left" />
+                <img src="/images/DefaultProfile.png" height="50" style="float:left" />
                 {{/if}}
             </a>
 
@@ -208,9 +210,12 @@
         <p>{{text}}</p>
         {{#if isMine}}
         <button id="deleteComment{{id}}" class="btn buttonDeleteComment btn-danger btn-sm" data-comment="{{id}}">Delete this comment</button>
+        {{else}}
+        {{#if isAdmin}}
+        <button id="deleteComment{{id}}" class="btn buttonDeleteComment btn-danger btn-sm" data-comment="{{id}}">Delete this comment</button>
+        {{/if}}
         {{/if}}
     </div>
-    <br />
 
 </script>
 
@@ -224,7 +229,7 @@
                 {{#if profilePhoto}}
                 <img class="pozaProfilPostare" src="/Photos/Download/{{profilePhoto}}" height="75" />
                 {{else}}
-                <img class="pozaProfilPostare" src="images/DefaultProfile.png" height="75" />
+                <img class="pozaProfilPostare" src="/images/DefaultProfile.png" height="75" />
                 {{/if}}
 
             </a>
@@ -234,14 +239,14 @@
         <p>{{text}}</p>
         <br />
         {{#each photoId}}
-        <img src="/Photos/Download/{{this}}" height="50" />
+        <img src="/Photos/Download/{{this}}" class="imgPostare" />
         <br />
         {{/each}}
         <br />
-        <div id="commentBody{{id}}">
+        <div id="commentBody{{id}}" data-toskip="0">
 
         </div>
-        <button id="commentGetter{{id}}" data-post="{{id}}">Load more comments</button>
+        <button id="commentGetter{{id}}" class="btn btn-primary" data-post="{{id}}">Load more comments</button>
 
         <a id="like{{id}}" data-post="{{id}}">
             {{#if liked}}
@@ -252,7 +257,14 @@
         </a>
         <p class="reactionCounter">{{noReactions}}</p>
         <input type="text" class="addComment form-control" />
-        <button id="commentAdd{{id}}" class="btn buttonComment " data-post="{{id}}">Comment</button>
+        <button id="commentAdd{{id}}" class="btn buttonComment btn-primary " data-post="{{id}}">Comment</button>
+        {{#if isMine}}
+        <button id="postRemove{{id}}" class="btn btn-primary buttonRemovePost" data-post="{{id}}">Remove Post</button>
+        {{else}}
+        {{#if isAdmin}}
+        <button id="postRemove{{id}}" class="btn btn-primary buttonRemovePost" data-post="{{id}}">Remove Post</button>
+        {{/if}}
+        {{/if}}
     </div>
 
 </script>

@@ -47,9 +47,9 @@ namespace Services.Interest
             return unitOfWork.Interests.Query.AsNoTracking().ToList();
         }
 
-        public List<Domain.Interest> GetInterests(int already,int howMany)
+        public List<Domain.Interest> GetInterests(int toSkip,int howMany)
         {
-            return unitOfWork.Interests.Query.OrderBy(e => e.Id).Skip(already).Take(howMany).AsNoTracking().ToList();
+            return unitOfWork.Interests.Query.OrderBy(e => e.Id).Skip(toSkip).Take(howMany).AsNoTracking().ToList();
         }
 
         public List<SelectListItem> GetAllSelectListItems(int userId)

@@ -11,5 +11,6 @@ namespace ASP.NET_Core_UI.Models.JsonModels
         public string Name { get; set; }
         public int ProfilePhoto { get; set; }
         public int IsAdmin { get; set; }
+        public bool IsBanned { get; set; }
     }
 }

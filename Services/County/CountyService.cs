@@ -65,11 +65,11 @@ namespace Services.County
             return unitOfWork.Localities.Query.Where(e => e.CountyId == id).AsNoTracking().ToList();
         }
 
-        public List<Domain.County> GetCounties(int already,int howMany)
+        public List<Domain.County> GetCounties(int toSkip,int howMany)
         {
             return unitOfWork.Counties.Query
                 .OrderBy(e => e.Name)
-                .Skip(already)
+                .Skip(toSkip)
                 .Take(howMany)
                 .AsNoTracking()
                 .ToList();

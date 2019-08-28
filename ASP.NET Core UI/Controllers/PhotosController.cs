@@ -27,9 +27,11 @@ namespace ASP.NET_Core_UI.Controllers
         public IActionResult Download(int? id)
         {
             if (id == null) return NotFound();
+            if (!photoService.CanSeePhoto(id.Value)) return Forbid();
             var photo = photoService.GetPhoto(id.Value);
 
             if (photo == null) return NotFound();
+
             return File(photo.Binar,photo.MIMEType);
 
         }

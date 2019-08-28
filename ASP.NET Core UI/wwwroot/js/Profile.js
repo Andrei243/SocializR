@@ -1,4 +1,6 @@
 ﻿window.addEventListener("load", function () {
+    var sourceComment = document.getElementById("comment-template").innerHTML;
+    var templateComment = Handlebars.compile(sourceComment);
     let eventLike = function (e) {
 
         $.ajax({
@@ -26,27 +28,8 @@
 
     };
 
-    let eventAddComment = function (e) {
-        $.ajax({
-            type: "GET",
-            url: '/Feed/Comment',
-            data: {
-                postId: e.currentTarget.dataset.post,
-                comentariu: e.currentTarget.parentNode.querySelector("input").value
-            },
-            success: function (response) {
-                location.reload(true);
-            },
-            error: function (error) {
-                console.log(error);
-            }
-
-
-        })
-
-    };
-
     let eventDeleteComment = function (e) {
+        let com = $(this).parent();
         $.ajax({
             type: "GET",
             url: '/Feed/RemoveComment',
@@ -55,7 +38,9 @@
 
             },
             success: function (response) {
-                location.reload(true);
+                console.log(com);
+                com.parent().data("toskip", parseInt(com.parent().data("toskip")) - 1);
+                com.remove();
             },
             error: function (error) {
                 console.log(error);
@@ -66,16 +51,35 @@
 
     };
 
-    $(".buttonDeletePost").click(function (e) {
+    let eventAddComment = function (e) {
+        let postId = e.currentTarget.dataset.post;
         $.ajax({
             type: "GET",
-            url: '/Feed/RemovePost',
+            url: '/Feed/Comment',
             data: {
-                postId: e.currentTarget.dataset.post,
-
+                postId: postId,
+                comentariu: e.currentTarget.parentNode.querySelector("input").value
             },
             success: function (response) {
-                location.reload(true);
+                if (response) {
+                    let obj = {
+                        text: e.currentTarget.parentNode.querySelector("input").value,
+                        id: response,
+                        isMine: true,
+                        userId: $("#currentUserInfo").data("userid"),
+                        profilePhoto: $("#currentUserInfo").data("profile"),
+                        userName: $("#currentUserInfo").data("name")
+                    }
+                    let html = templateComment(obj);
+                    $("#commentBody" + postId).prepend(html);
+                    $("#commentBody" + postId).data("toskip", parseInt($("#commentBody" + postId).data("toskip")) + 1);
+                    $("#deleteComment" + response).click(eventDeleteComment);
+                    e.currentTarget.parentNode.querySelector("input").value = "";
+
+                }
+                else {
+                    alert("The comment wasn't added");
+                }
             },
             error: function (error) {
                 console.log(error);
@@ -84,30 +88,59 @@
 
         })
 
-    });
+    };
 
-    var sourceComment = document.getElementById("comment-template").innerHTML;
-    var templateComment = Handlebars.compile(sourceComment);
+    
+    let eventDeletePost = function (e) {
+        let post = $(this);
+        $.ajax({
+            type: "GET",
+            url: '/Feed/RemovePost',
+            data: {
+                postId: e.currentTarget.dataset.post,
+
+            },
+            success: function (response) {
+                post.remove();
+            },
+            error: function (error) {
+                console.log(error);
+            }
+
+
+        })
+
+    }
+
+    
+
+   
     let eventComment = (idPost) => {
-        let noComments = 0;
+        let canGet = true;
         return () => {
-            $.ajax({
-                type: 'GET',
-                url: '/Feed/GetComments',
-                data: {
-                    already: noComments,
-                    postId: idPost
-                },
-                success: (result) => {
-                    for (let i = 0; i < result.length; i++) {
-                        let comment = result[i];
-                        let html = templateComment(comment);
-                        $("#commentBody" + idPost).append(html);
-                        $("#deleteComment" + comment.id).click(eventDeleteComment);
+
+            if (canGet) {
+                canGet = false;
+                $.ajax({
+                    type: 'GET',
+                    url: '/Feed/GetComments',
+                    data: {
+                        toSkip: $("#commentBody" + idPost).data("toskip"),
+                        postId: idPost
+                    },
+                    success: (result) => {
+                        $("#commentBody" + idPost).data("toskip", parseInt($("#commentBody" + idPost).data("toskip")) + result.length);
+                        for (let i = 0; i < result.length; i++) {
+                            let comment = result[i];
+                            let html = templateComment(comment);
+                            $("#commentBody" + idPost).append(html);
+                            $("#deleteComment" + comment.id).click(eventDeleteComment);
+
+                        }
+                        canGet = true;
                     }
-                    noComments += result.length;
-                }
-            })
+                })
+            }
         }
 
     };
@@ -121,7 +154,7 @@
                 type: 'GET',
                 url: '/Feed/GetPersonPosts',
                 data: {
-                    already: noPosts,
+                    toSkip: noPosts,
                     userId: userId
                 },
                 success: (result) => {
@@ -134,6 +167,7 @@
                         $("#commentGetter" + post.id).click(eventComentariu);
                         $("#like" + post.id).click(eventLike);
                         $("#commentAdd" + post.id).click(eventAddComment);
+                        $("#deletePost" + post.Id).click(eventDeletePost);
                     }
                     noPosts += result.length;
                 }
@@ -145,6 +179,20 @@
 
     })(document.getElementById("postGetter").dataset.user);
     eventPost();
-    $("#postGetter").click(eventPost);
+    let copieFunctie = eventPost;
+    eventPost = () => { }
+    this.setTimeout(() => {
+        eventPost = copieFunctie;
+    }, 1000);
+    $(window).scroll(() => {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+            eventPost();
+            eventPost = () => { }
+            this.setTimeout(() => {
+                eventPost = copieFunctie;
+            }, 1000)
+        }
+
+    })
 
 });

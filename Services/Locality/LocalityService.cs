@@ -14,6 +14,11 @@ namespace Services.Locality
         {
         }
 
+
+        public bool CityAlreadyExistsInCounty(string locality,int countyId)
+        {
+            return unitOfWork.Localities.Query.Any(e => e.Name == locality && e.CountyId == countyId);
+        }
         public Domain.Locality GetLocality(int id)
         {
             return unitOfWork.Localities.Query.FirstOrDefault(e => e.Id == id);
@@ -65,9 +70,9 @@ namespace Services.Locality
             return unitOfWork.Localities.Query.Include(e=>e.County).AsNoTracking().ToList();
         }
 
-        public List<Domain.Locality> GetLocalities(int already,int howMany)
+        public List<Domain.Locality> GetLocalities(int toSkip,int howMany)
         {
-            return unitOfWork.Localities.Query.OrderBy(e => e.Id).Skip(already).Take(howMany).Include(e=>e.County).AsNoTracking().ToList();
+            return unitOfWork.Localities.Query.OrderBy(e => e.Id).Skip(toSkip).Take(howMany).Include(e=>e.County).AsNoTracking().ToList();
         }
 
     }

@@ -8,9 +8,9 @@ namespace ASP.NET_Core_UI.Models.ProfileModels
 {
     public class AlbumViewerModel
     {
+        
         public int Id { get; set; }
         public PhotoModel PhotoModel { get; set; }
-        public List<Photo> poze { get; set; }
         public bool HasThisAlbum { get; set; }
     }
 }

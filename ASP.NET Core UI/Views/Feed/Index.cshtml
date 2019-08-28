@@ -5,14 +5,13 @@
 }
 
 <div class="formularPostare">@Html.Partial("PartialPostAdd", Model)</div>
-
+<div id="currentUserInfo" hidden data-profile="@currentUser.ProfilePhoto" data-name="@currentUser.Name @currentUser.Surname" data-userid="@currentUser.Id"></div>
 
 <div id="postBody" class="containerPostari">
     
 </div>
 
 
-<button class="btn btn-primary" id="postGetter">Load more posts</button>
 
 <script id="comment-template" type="text/x-handlebars-template">
 
@@ -31,9 +30,13 @@
         <p>{{text}}</p>
         {{#if isMine}}
         <button id="deleteComment{{id}}" class="btn buttonDeleteComment btn-danger btn-sm" data-comment="{{id}}">Delete this comment</button>
+        {{else}}
+        {{#if isAdmin}}
+        <button id="deleteComment{{id}}" class="btn buttonDeleteComment btn-danger btn-sm" data-comment="{{id}}">Delete this comment</button>
+        {{/if}}
         {{/if}}
     </div>
-    <br />
+    
 
 </script>
 
@@ -57,25 +60,39 @@
         <p>{{text}}</p>
         <br />
         {{#each photoId}}
-        <img src="/Photos/Download/{{this}}" height="50" />
+        <img src="/Photos/Download/{{this}}" class="imgPostare" />
         <br />
         {{/each}}
         <br />
-        <div id="commentBody{{id}}">
+        <div id="commentBody{{id}}" data-toskip="0">
 
         </div>
         <button id="commentGetter{{id}}" class="btn btn-primary" data-post="{{id}}">Load more comments</button>
+        @if (currentUser.IsAuthenticated)
+        {
+            <a id="like{{id}}" data-post="{{id}}">
+                {{#if liked}}
+                <img src="/images/Liked.png" height="20" />
+                {{else}}
+                <img src="/images/notLiked.png" height="20" />
+                {{/if}}
+            </a>
+        }
 
-        <a id="like{{id}}"  data-post="{{id}}">
-            {{#if liked}}
-            <img src="/images/Liked.png" height="20" />
-            {{else}}
-            <img src="/images/notLiked.png" height="20" />
-            {{/if}}
-        </a>
-        <p class="reactionCounter">{{noReactions}}</p>
-        <input type="text" class="addComment form-control" />
-        <button id="commentAdd{{id}}" class="btn buttonComment btn-primary " data-post="{{id}}">Comment</button>
+        <p class="reactionCounter">{{noReactions}} Likes</p>
+        @if (currentUser.IsAuthenticated)
+        {
+            <input type="text" class="addComment form-control" />
+            <button id="commentAdd{{id}}" class="btn buttonComment btn-primary " data-post="{{id}}">Comment</button>
+        }
+
+        {{#if isMine}}
+        <button id="postRemove{{id}}" class="btn btn-primary buttonRemovePost" data-post="{{id}}">Remove Post</button>
+        {{else}}
+        {{#if isAdmin}}
+        <button id="postRemove{{id}}" class="btn btn-primary buttonRemovePost" data-post="{{id}}">Remove Post</button>
+        {{/if}}
+        {{/if}}
     </div>
 
 </script>

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<UserIndex>
+﻿
 
 @{
     ViewData["Title"] = "Index";
@@ -12,10 +12,10 @@
     <thead>
         <tr>
             <th>
-                Profile Photo
+                Full Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FullName)
+                Profile Photo
             </th>
          
             <th></th>
@@ -26,8 +26,6 @@
 
     </tbody>
 </table>
-
-<button id="userGetter">Load more users</button>
 
 <script id="user-template" type="text/x-handlebars-template">
     <tr>
@@ -44,8 +42,12 @@
         <td>
             <a href="/Users/Edit?userId={{id}}">Edit</a>|
             <a href="/Users/Details?userId={{id}}">Details</a>|
-            <a class="needConfirmation" href="/Users/Delete/{{id}}">Delete</a>|
-            <a class="needConfirmation" href="/Users/Ban?userId={{id}}">Ban</a>|
+            <a class="needConfirmation" href="/Users/Delete?userId={{id}}">Delete</a>|
+            {{#if isBanned}}
+            <a class="needConfirmation" href="/Users/Unban?userId={{id}}">Unban</a>
+            {{else}}
+            <a class="needConfirmation" href="/Users/Ban?userId={{id}}">Ban</a>
+            {{/if}}|
             {{#if isAdmin}}
             <a class="needConfirmation" href="/Users/MakeAdmin?userId={{id}}">Make admin</a>
             {{else}}

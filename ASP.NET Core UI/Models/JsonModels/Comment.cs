@@ -12,7 +12,7 @@ namespace ASP.NET_Core_UI.Models.JsonModels
         public string UserName { get; set; }
         public int? ProfilePhoto { get; set; }
         public string Text { get; set; }
-
+        public bool isAdmin { get; set; }
         public bool IsMine { get; set; }
     }
 }

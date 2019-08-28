@@ -8,7 +8,7 @@
                 type: 'GET',
                 url: "/Profile/GetFriends",
                 data: {
-                    already: noFriends
+                    toSkip: noFriends
                 },
                 success: (result) => {
 
@@ -24,6 +24,20 @@
         }
     })();
     event();
-    $("#friendGetter").click(event);
+    let copieFunctie = event;
+    event = () => { };
+    setTimeout(() => {
+        event = copieFunctie;
+    }, 1000);
+    $(window).scroll(() => {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+            event();
+            event = () => { }
+            this.setTimeout(() => {
+                event = copieFunctie;
+            }, 1000)
+        }
+
+    })
 
 })

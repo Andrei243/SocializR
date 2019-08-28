@@ -43,12 +43,12 @@ namespace Services.Post
 
         
 
-        public List<Domain.Post> GetPersonPost(int already,int howMany,int userId)
+        public List<Domain.Post> GetPersonPost(int toSkip,int howMany,int userId)
         {
             return GetFeed()
                 .Where(e => e.UserId == userId)
                 .OrderByDescending(e=>e.AddingMoment)
-                .Skip(already)
+                .Skip(toSkip)
                 .Take(howMany)
                 .ToList();
         }
@@ -73,17 +73,17 @@ namespace Services.Post
                             ;
         }
 
-        public List<Domain.Post> GetPublicNewsfeed(int already,int howMany)
+        public List<Domain.Post> GetPublicNewsfeed(int toSkip,int howMany)
         {
             return GetFeed()
                 .Where(e=>e.Vizibilitate == "public")
                 .OrderByDescending(e => e.AddingMoment)
-                .Skip(already)
+                .Skip(toSkip)
                 .Take(howMany)
                 .ToList();
         }
 
-        public List<Domain.Post> GetNewsfeed(int already,int howMany)
+        public List<Domain.Post> GetNewsfeed(int toSkip,int howMany)
         {
             var friends = unitOfWork.Friendships.Query.AsNoTracking().Where(e => e.IdReceiver == CurrentUser.Id && (e.Accepted??false)).Select(e=>e.IdSender).ToList();
 
@@ -95,7 +95,7 @@ namespace Services.Post
                 (friends.Contains(e.UserId) && e.Vizibilitate == "friends")
                 )
                 .OrderByDescending(e => e.AddingMoment)
-                .Skip(already)
+                .Skip(toSkip)
                 .Take(howMany)
                 .ToList();
             return posts;

@@ -12,7 +12,8 @@
         </div>
         <div class="form-group">
             <label asp-for="Binar" id="butonAdaugarePoza">Adauga o poza</label>
-            <input type="file" asp-for="Binar" class="form-control" hidden />
+            <input  type="file" asp-for="Binar" class="form-control" hidden />
+            <img src="#" id="imgPreview" />
             <span asp-validation-for="Binar" class="text-danger"></span>
         </div>
 

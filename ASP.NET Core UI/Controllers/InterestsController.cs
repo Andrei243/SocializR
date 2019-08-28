@@ -94,9 +94,9 @@ namespace ASP.NET_Core_UI.Controllers
             return RedirectToAction("Index", "Interests");
         }
 
-       public JsonResult GetInterests(int already)
+       public JsonResult GetInterests(int toSkip)
         {
-            var interests = interestService.GetInterests(already, PageSize).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Interest>(e)).ToList();
+            var interests = interestService.GetInterests(toSkip, PageSize).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Interest>(e)).ToList();
             return Json(interests);
         }
 

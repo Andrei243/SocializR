@@ -52,6 +52,10 @@ namespace ASP.NET_Core_UI.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(AddLocalityModel model)
         {
+            if (localityService.CityAlreadyExistsInCounty(model.Name, model.CountyId))
+            {
+                ModelState.AddModelError(nameof(model.Name), "Locality already exists");
+            }
             if (ModelState.IsValid)
             {
                 localityService.AddLocality(model.Name, model.CountyId);
@@ -109,9 +113,9 @@ namespace ASP.NET_Core_UI.Controllers
             return RedirectToAction("Index");
         }
 
-        public JsonResult GetLocalities(int already)
+        public JsonResult GetLocalities(int toSkip)
         {
-            var result= localityService.GetLocalities(already, PageSize).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Locality>(e)).ToList();
+            var result= localityService.GetLocalities(toSkip, PageSize).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Locality>(e)).ToList();
             return Json(result);
         }
 

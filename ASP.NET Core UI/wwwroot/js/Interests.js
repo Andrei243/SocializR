@@ -8,7 +8,7 @@
                 type: 'GET',
                 url: "/Interests/GetInterests",
                 data: {
-                    already: noInterests
+                    toSkip: noInterests
                 },
                 success: (result) => {
 
@@ -24,6 +24,20 @@
         }
     })();
     event();
-    $("#interestGetter").click(event);
+    let copieFunctie = event;
+    event = () => { };
+    setTimeout(() => {
+        event = copieFunctie;
+    }, 1000);
+    $(window).scroll(() => {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+            event();
+            event = () => { }
+            this.setTimeout(() => {
+                event = copieFunctie;
+            }, 1000)
+        }
+
+    })
 
 })

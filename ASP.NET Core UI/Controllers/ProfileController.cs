@@ -74,15 +74,15 @@ namespace ASP.NET_Core_UI.Controllers
             return true;
         }
 
-        public JsonResult GetPhotosJson(int? already,int? albumId)
+        public JsonResult GetPhotosJson(int? toSkip,int? albumId)
         {
-            if (already == null || albumId == null)
+            if (toSkip == null || albumId == null)
             {
                 return Json(new List<int>());
             }
             if (albumService.CanSeeAlbum(albumId.Value))
             {
-                var photos = photoService.GetPhotos(already.Value, PageSize, albumId.Value).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Image>(e)).ToList();
+                var photos = photoService.GetPhotos(toSkip.Value, PageSize, albumId.Value).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Image>(e)).ToList();
                 return Json(photos);
             }
             else return Json(new List<int>());
@@ -141,7 +141,6 @@ namespace ASP.NET_Core_UI.Controllers
 
             AlbumViewerModel albumViewerModel = new AlbumViewerModel()
             {
-                poze = photoService.getPhotos(null, albumId).Select(e => mapper.Map<Photo>(e)).ToList(),
                 PhotoModel = new PhotoModel() { AlbumId = albumId },
                 HasThisAlbum = albumService.HasThisAlbum(albumId.Value),
                 Id=albumId.Value
@@ -194,7 +193,6 @@ namespace ASP.NET_Core_UI.Controllers
             }
             AlbumViewerModel albumViewerModel = new AlbumViewerModel()
             {
-                poze = photoService.getPhotos(null, albumId).Select(e => mapper.Map<Photo>(e)).ToList(),
                 PhotoModel = model,
                 HasThisAlbum = albumService.HasThisAlbum(albumId.Value),
                 Id = albumId.Value
@@ -213,14 +211,12 @@ namespace ASP.NET_Core_UI.Controllers
 
             var interests = interestService.getAll();
 
-            ///model.Interests = interestService.GetAllSelectListItems(currentUser.Id);
             model.Counties = counties.Select(c => mapper.Map<SelectListItem>(c)).ToList();
             model.Albume = albumService.GetAll(currentUser.Id).Select(e => mapper.Map<Album>(e)).ToList();
             return View(model);
 
         }
 
-        //refactor
         [HttpPost]
         public IActionResult Edit(EditUserModel user)
         {
@@ -250,7 +246,17 @@ namespace ASP.NET_Core_UI.Controllers
                 int albumId= albumService.AddAlbum(model.Name);
                 return RedirectToAction("Album", "Profile",new {albumId });
             }
-            return PartialView("PartialAddAlbum", model);
+            var user = userService.GetCurrentUser();
+            var modelEdit = mapper.Map<EditUserModel>(user);
+
+            var counties = countyService.GetAll();
+
+            var interests = interestService.getAll();
+
+            modelEdit.Counties = counties.Select(c => mapper.Map<SelectListItem>(c)).ToList();
+            modelEdit.Albume = albumService.GetAll(currentUser.Id).Select(e => mapper.Map<Album>(e)).ToList();
+            modelEdit.AddAlbumModel = model;
+            return View("Edit", modelEdit);
         }
 
         public IActionResult Profile(int? userId)
@@ -320,16 +326,16 @@ namespace ASP.NET_Core_UI.Controllers
             return RedirectToAction("Profile", "Profile", new {userId=id });
         }
         [Authorize]
-        public JsonResult GetFriends(int already)
+        public JsonResult GetFriends(int toSkip)
         {
-            var friends = friendService.GetFriends(already, PageSize).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Friend>(e)).ToList();
+            var friends = friendService.GetFriends(toSkip, PageSize).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Friend>(e)).ToList();
             return Json(friends);
 
         }
         [Authorize]
-        public JsonResult GetRequesters(int already)
+        public JsonResult GetRequesters(int toSkip)
         {
-            var friends = friendService.GetRequesters(already, PageSize).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Friend>(e)).ToList();
+            var friends = friendService.GetRequesters(toSkip, PageSize).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Friend>(e)).ToList();
             return Json(friends);
 
         }

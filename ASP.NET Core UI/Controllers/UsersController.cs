@@ -189,7 +189,7 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            //TBC
+            userService.RemoveUser(userId.Value);
             return RedirectToAction("Index");
         }
 
@@ -197,7 +197,16 @@ namespace ASP.NET_Core_UI.Controllers
         {
             if (userId == null) { return NotFound(); }
 
-            userService.RemoveUser(userId.Value);
+            userService.BanUser(userId.Value);
+            
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Unban(int? userId)
+        {
+            if (userId == null) { return NotFound(); }
+
+            userService.UnbanUser(userId.Value);
 
             return RedirectToAction("Index");
         }
@@ -223,9 +232,9 @@ namespace ASP.NET_Core_UI.Controllers
 
         }
 
-        public JsonResult GetUsers(int already)
+        public JsonResult GetUsers(int toSkip)
         {
-            var users = userService.GetUsers(already, PageSize).Select(mapper.Map<ASP.NET_Core_UI.Models.JsonModels.User>).ToList();
+            var users = userService.GetUsers(toSkip, PageSize).Select(mapper.Map<ASP.NET_Core_UI.Models.JsonModels.User>).ToList();
             return Json(users);
 
         }

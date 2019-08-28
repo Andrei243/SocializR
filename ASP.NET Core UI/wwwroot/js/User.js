@@ -1,7 +1,6 @@
 ﻿window.addEventListener("load", () => {
     let event = (() => {
         var source = document.getElementById("user-template").innerHTML;
-        console.log(document.getElementById("user-template").innerHTML)
         var template = Handlebars.compile(source);
         let noUsers = 0;
         return () => {
@@ -9,12 +8,11 @@
                 type: 'GET',
                 url: "/Users/GetUsers",
                 data: {
-                    already: noUsers
+                    toSkip: noUsers
                 },
                 success: (result) => {
 
                     for (let i = 0; i < result.length; i++) {
-                        debugger;
                         let user = result[i];
                         var html = template(user);
                         $("#userBody").append(html);
@@ -26,6 +24,20 @@
         }
     })();
     event();
-    $("#userGetter").click(event);
+    let copieFunctie = event;
+    event = () => { };
+    setTimeout(() => {
+        event = copieFunctie;
+    }, 1000);
+    $(window).scroll(() => {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+            event();
+            event = () => { }
+            this.setTimeout(() => {
+                event = copieFunctie;
+            }, 1000)
+        }
+
+    })
 
 })
