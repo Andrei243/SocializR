@@ -16,42 +16,54 @@ namespace Services.Reaction
             CurrentUser = currentUser;
         }
 
-        public bool AddReaction(int postId)
-        {
-            //if (unitOfWork.Reactions.Query.Any(e => e.PostId == postId && e.UserId == CurrentUser.Id)) return false;
-            var reaction = new Domain.Reaction()
-            {
-                PostId = postId,
-                UserId = CurrentUser.Id
-            };
-            unitOfWork.Reactions.Add(reaction);
-            unitOfWork.SaveChanges();
-            return true;
+        //public bool AddReaction(int postId)
+        //{
+        //    //if (unitOfWork.Reactions.Query.Any(e => e.PostId == postId && e.UserId == CurrentUser.Id)) return false;
+        //    var reaction = new Domain.Reaction()
+        //    {
+        //        PostId = postId,
+        //        UserId = CurrentUser.Id
+        //    };
+        //    unitOfWork.Reactions.Add(reaction);
+        //    unitOfWork.SaveChanges();
+        //    return true;
 
-        }
+        //}
 
-        public bool RemoveReaction(int postId)
-        {
-            unitOfWork.Reactions.RemoveRange(unitOfWork.Reactions.Query.Where(e => e.PostId == postId && e.UserId == CurrentUser.Id));
-            unitOfWork.SaveChanges();
-            return false;
-        }
+        //public bool RemoveReaction(int postId)
+        //{
+        //    unitOfWork.Reactions.RemoveRange(unitOfWork.Reactions.Query.Where(e => e.PostId == postId && e.UserId == CurrentUser.Id));
+        //    unitOfWork.SaveChanges();
+        //    return false;
+        //}
 
-        public bool isLiked(int postId)
+        public bool IsLiked(int postId)
         {
             return unitOfWork.Reactions.Query.Any(e => e.PostId == postId && e.UserId == CurrentUser.Id);
         }
 
-        public bool changeReaction(int postId)
+        public bool ChangeReaction(int postId)
         {
-            if(unitOfWork.Reactions.Query.FirstOrDefault(e=>e.PostId==postId && e.UserId == CurrentUser.Id) != null)
+            var reaction = unitOfWork.Reactions.Query.FirstOrDefault(e => e.PostId == postId && e.UserId == CurrentUser.Id);
+            if (reaction == null)
             {
-                return RemoveReaction(postId);
+                var reaction2 = new Domain.Reaction()
+                {
+                    PostId = postId,
+                    UserId = CurrentUser.Id
+                };
+                unitOfWork.Reactions.Add(reaction2);
+                unitOfWork.SaveChanges();
+                return true;
             }
             else
             {
-                return AddReaction(postId);
+                unitOfWork.Reactions.Remove(reaction);
+                unitOfWork.SaveChanges();
+                return false;
             }
+
+            
         }
 
        

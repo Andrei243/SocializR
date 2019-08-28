@@ -26,14 +26,15 @@ namespace Services.County
             return unitOfWork.Counties.Query.AsNoTracking().FirstOrDefault(e => e.Id == id);
         }
 
-        public void Add(string name)
+        public bool Add(string name)
         {
+            if (unitOfWork.Counties.Query.Any(e => e.Name == name)) return false;
             Domain.County county = new Domain.County()
             {
                 Name = name
             };
             unitOfWork.Counties.Add(county);
-            unitOfWork.SaveChanges();
+            return unitOfWork.SaveChanges()!=0;
         }
 
         public void Update(int id, string name)
@@ -45,9 +46,11 @@ namespace Services.County
             unitOfWork.SaveChanges();
         }
 
-        public void Remove(int countyId)
+        public bool Remove(int countyId)
         {
-            unitOfWork.Counties.Remove(unitOfWork.Counties.Query.FirstOrDefault(e=>e.Id==countyId));
+            var county = unitOfWork.Counties.Query.FirstOrDefault(e => e.Id == countyId);
+            if (county == null) return false;
+            unitOfWork.Counties.Remove(county);
             var localitiesIds = unitOfWork.Localities.Query.Where(e => e.CountyId == countyId).Select(e => e.Id).ToList();
 
             unitOfWork.Localities.RemoveRange(unitOfWork.Localities.Query.Where(e => e.CountyId == countyId));
@@ -57,7 +60,7 @@ namespace Services.County
                 user.LocalityId = null;
                 unitOfWork.Users.Update(user);
             }
-            unitOfWork.SaveChanges();
+            return unitOfWork.SaveChanges()!=0;
         }
 
         public List<Domain.Locality> GetLocalities(int id)

@@ -21,6 +21,7 @@ namespace Services.User
         public bool BanUser(int userId)
         {
             var user = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == userId);
+            if (user.IsBanned) return false;
             user.IsBanned = true;
             unitOfWork.Users.Update(user);
             return unitOfWork.SaveChanges() != 0;
@@ -29,6 +30,7 @@ namespace Services.User
         public bool UnbanUser(int userId)
         {
             var user = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == userId);
+            if (!user.IsBanned) return false;
             user.IsBanned = false;
             unitOfWork.Users.Update(user);
             return unitOfWork.SaveChanges() != 0;
@@ -52,10 +54,7 @@ namespace Services.User
                 .AsNoTracking()
                 .FirstOrDefault(e => e.Id == id);
         }
-        //public IEnumerable<Users> GetAll()
-        //{
-        //    return unitOfWork.Users.Query.AsNoTracking().Include(e => e.Locality).AsNoTracking().Include(e => e.Role).AsNoTracking();
-        //}
+        
 
         public IEnumerable<Users> GetUsersByName(string name)
         {
@@ -81,19 +80,19 @@ namespace Services.User
             unitOfWork.SaveChanges();
         }
 
-        public bool HasThisPhoto(int photoId)
-        {
-            var poza = unitOfWork.Photos.Query.Include(e => e.Album).Include(e => e.Post).FirstOrDefault(e => e.Id == photoId);
+        //public bool HasThisPhoto(int photoId)
+        //{
+        //    var poza = unitOfWork.Photos.Query.Include(e => e.Album).Include(e => e.Post).FirstOrDefault(e => e.Id == photoId);
 
-            if (poza.Album != null)
-            {
-                return poza.Album.UserId == currentUser.Id;
-            }
-            else
-            {
-                return poza.Post.UserId == currentUser.Id;
-            }
-        }
+        //    if (poza.Album != null)
+        //    {
+        //        return poza.Album.UserId == currentUser.Id;
+        //    }
+        //    else
+        //    {
+        //        return poza.Post.UserId == currentUser.Id;
+        //    }
+        //}
 
         public void UpdateProfilePhoto(int photoId)
         {
@@ -121,8 +120,11 @@ namespace Services.User
 
         }
 
-        public void RemoveUser(int userId)
+        public bool RemoveUser(int userId)
         {
+            var user = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == userId);
+            if (user == null) return false;
+
             var albums = unitOfWork.Albums.Query.Where(e => e.UserId == userId);
             var posts = unitOfWork.Posts.Query.Where(e => e.UserId == userId);
             var comments = unitOfWork.Comments.Query.Where(e => e.UserId == userId || posts.Select(f => f.Id).Contains(e.PostId));
@@ -137,8 +139,8 @@ namespace Services.User
             unitOfWork.Comments.RemoveRange(comments);
             unitOfWork.Posts.RemoveRange(posts);
             unitOfWork.Albums.RemoveRange(albums);
-            unitOfWork.Users.Remove(unitOfWork.Users.Query.First(e => e.Id == userId));
-            unitOfWork.SaveChanges();
+            unitOfWork.Users.Remove(user);
+            return unitOfWork.SaveChanges()!=0;
         }
 
         public List<Users> GetUsers(int toSkip,int toTake)

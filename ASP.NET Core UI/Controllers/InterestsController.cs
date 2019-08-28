@@ -24,7 +24,7 @@ namespace ASP.NET_Core_UI.Controllers
         // GET: Interests
         public IActionResult Index()
         {
-            var interese = interestService.getAll().Select(e =>mapper.Map<Interest>(e));
+            var interese = interestService.GetAll().Select(e =>mapper.Map<Interest>(e));
 
             return View(interese);
         }

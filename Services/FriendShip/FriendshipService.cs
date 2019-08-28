@@ -18,7 +18,7 @@ namespace Services.FriendShip
             this.currentUser = currentUser;
         }
 
-        public bool isFriendWith(int with)
+        public bool IsFriendWith(int with)
         {
             return unitOfWork.Friendships.Query.AsNoTracking().Any(e => e.IdSender == currentUser.Id && e.IdReceiver == with && (e.Accepted??false));
         }
@@ -51,36 +51,40 @@ namespace Services.FriendShip
         }
         public bool AcceptFriendRequest(int from)
         {
-            var friendRequest = unitOfWork.Friendships.Query.Where(e => e.IdSender == from && e.IdReceiver == currentUser.Id).ToList()[0];
-            friendRequest.Accepted = true;
-            var friendRequest2 = new Friendship()
+            var friendRequest = unitOfWork.Friendships.Query.First(e => e.IdSender == from && e.IdReceiver == currentUser.Id);
+            if (friendRequest.Accepted != true)
             {
-                IdReceiver = friendRequest.IdSender,
-                IdSender = friendRequest.IdReceiver,
-                CreatedOn = friendRequest.CreatedOn,
-                Accepted = true
-            };
-            unitOfWork.Friendships.Update(friendRequest);
-            unitOfWork.Friendships.Add(friendRequest2);
-            return unitOfWork.SaveChanges() != 0;
+                friendRequest.Accepted = true;
+                var friendRequest2 = new Friendship()
+                {
+                    IdReceiver = friendRequest.IdSender,
+                    IdSender = friendRequest.IdReceiver,
+                    CreatedOn = friendRequest.CreatedOn,
+                    Accepted = true
+                };
+                unitOfWork.Friendships.Update(friendRequest);
+                unitOfWork.Friendships.Add(friendRequest2);
+                return unitOfWork.SaveChanges() != 0;
+            }
+            else return true;
         }
 
-        public List<Users> getAllFriends()
+        public List<Users> GetAllFriends()
         {
             return unitOfWork.Friendships.Query.AsNoTracking().Include(e => e.IdReceiverNavigation).Where(e => e.IdSender == currentUser.Id && (e.Accepted ?? false)).Select(e => e.IdReceiverNavigation).ToList();
 
         }
 
-        public List<Users> getRequesters()
+        public List<Users> GetRequesters()
         {
             return unitOfWork.Friendships.Query.Where(e => e.IdReceiver == currentUser.Id && !e.Accepted.HasValue).Include(e=>e.IdSenderNavigation).Select(e => e.IdSenderNavigation).AsNoTracking().ToList();
         }
 
-        public bool isFriendRequested(int by)
+        public bool IsFriendRequested(int by)
         {
             return unitOfWork.Friendships.Query.AsNoTracking().Any(e => e.IdSender == by && e.IdReceiver == currentUser.Id && !e.Accepted.HasValue);
         }
-        public bool canSee(int receiver)
+        public bool CanSee(int receiver)
         {
             return currentUser.IsAdmin|| unitOfWork.Friendships.Query.Include(e => e.IdReceiverNavigation).Any(
                 e => (e.IdSender == currentUser.Id && e.IdReceiver == receiver&&(e.Accepted??false) && !e.IdReceiverNavigation.IsBanned))
@@ -88,16 +92,16 @@ namespace Services.FriendShip
                 ;
         }
 
-        public bool canSendRequest(int receiver)
+        public bool CanSendRequest(int receiver)
         {
-            return !isRefused(receiver) && !isAlreadySent(receiver) && !isFriendWith(receiver)&&currentUser.IsAuthenticated;
+            return !IsRefused(receiver) && !IsAlreadySent(receiver) && !IsFriendWith(receiver)&&currentUser.IsAuthenticated;
         }
-        public bool isRefused(int by)
+        public bool IsRefused(int by)
         {
             return unitOfWork.Friendships.Query.AsNoTracking().Any(e => e.IdSender == currentUser.Id && e.IdReceiver == by && e.Accepted.Value == false);
         }
 
-        public bool isAlreadySent(int to)
+        public bool IsAlreadySent(int to)
         {
             return unitOfWork.Friendships.Query.AsNoTracking().Any(e => e.IdSender == currentUser.Id && e.IdReceiver == to && !e.Accepted.HasValue);
         }

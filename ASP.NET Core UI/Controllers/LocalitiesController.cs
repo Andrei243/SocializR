@@ -35,15 +35,17 @@ namespace ASP.NET_Core_UI.Controllers
         // GET: Localities
         public IActionResult Index()
         {
-            var localities = localityService.getAll().Select(e =>mapper.Map<Locality>(e));
+            var localities = localityService.GetAll().Select(e =>mapper.Map<Locality>(e));
             return View(localities);
-        }     
+        }
 
         // GET: Localities/Create
         public IActionResult Create()
         {
-            var model = new AddLocalityModel();
-            model.CountyIds = countyService.GetAll().Select(e => mapper.Map<SelectListItem>(e)).ToList();
+            var model = new AddLocalityModel()
+            {
+                CountyIds = countyService.GetAll().Select(e => mapper.Map<SelectListItem>(e)).ToList()
+            };
             return View(model);
         }
 

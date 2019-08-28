@@ -54,7 +54,7 @@ namespace ASP.NET_Core_UI.Controllers
         public JsonResult GetInterests()
         {
             var indexi = interestsUsersService.GetAllInterests(currentUser.Id).Select(e=>e.Id).ToList();
-            var interests = interestService.getAll().Select(e =>
+            var interests = interestService.GetAll().Select(e =>
              {
                  var item = mapper.Map<InterestSelect>(e);
                  item.Selected = indexi.Contains(e.Id);
@@ -119,7 +119,7 @@ namespace ASP.NET_Core_UI.Controllers
             {
                 return NotFound();
             }
-            if (!userService.HasThisPhoto(photoId.Value))
+            if (!photoService.HasThisPhoto(photoId.Value,currentUser.Id))
             {
                 return RedirectToAction("Index", "Profile");
             }
@@ -160,7 +160,7 @@ namespace ASP.NET_Core_UI.Controllers
                 return ForbidView();
             }
 
-            photoService.RemovePhoto(photoId.Value,null,albumId.Value);
+            photoService.RemovePhoto(photoId.Value);
 
             return RedirectToAction("Album", new { albumId = albumId.Value });
         }
@@ -209,7 +209,7 @@ namespace ASP.NET_Core_UI.Controllers
 
             var counties = countyService.GetAll();
 
-            var interests = interestService.getAll();
+            var interests = interestService.GetAll();
 
             model.Counties = counties.Select(c => mapper.Map<SelectListItem>(c)).ToList();
             model.Albume = albumService.GetAll(currentUser.Id).Select(e => mapper.Map<Album>(e)).ToList();
@@ -222,9 +222,8 @@ namespace ASP.NET_Core_UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                Microsoft.Extensions.Primitives.StringValues raspunsuri;
                 Request.Form.TryGetValue("Interests",
-                                         out raspunsuri);
+                                         out var raspunsuri);
                 interestsUsersService.ChangeInterests(currentUser.Id, raspunsuri.Select(e => int.Parse(e)).ToList());
                
 
@@ -251,7 +250,7 @@ namespace ASP.NET_Core_UI.Controllers
 
             var counties = countyService.GetAll();
 
-            var interests = interestService.getAll();
+            var interests = interestService.GetAll();
 
             modelEdit.Counties = counties.Select(c => mapper.Map<SelectListItem>(c)).ToList();
             modelEdit.Albume = albumService.GetAll(currentUser.Id).Select(e => mapper.Map<Album>(e)).ToList();
@@ -274,9 +273,9 @@ namespace ASP.NET_Core_UI.Controllers
 
                 var domainUser = userService.GetUserById(userId);
                 ProfileViewerModel user = mapper.Map<ProfileViewerModel>(domainUser);
-                user.CanSee = friendService.canSee(userId.Value);
-                user.CanSendRequest = friendService.canSendRequest(userId.Value);
-                user.IsRequested = friendService.isFriendRequested(userId.Value);
+                user.CanSee = friendService.CanSee(userId.Value);
+                user.CanSendRequest = friendService.CanSendRequest(userId.Value);
+                user.IsRequested = friendService.IsFriendRequested(userId.Value);
                 user.Interests = interestsUsersService.GetAllInterests(domainUser.Id).Select(e => e.Name).ToList();
                 user.Album = albumService.GetAll(userId.Value).Select(e => mapper.Map<Album>(e)).ToList();
 

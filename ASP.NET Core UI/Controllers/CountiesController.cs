@@ -51,7 +51,7 @@ namespace ASP.NET_Core_UI.Controllers
             }
            
             var model = mapper.Map<DetailsCountyModel>(county);
-            model.Localities = localityService.getAll(county.Id).Select(e => e.Name).ToList();
+            model.Localities = localityService.GetAll(county.Id).Select(e => e.Name).ToList();
             return View(model);
         }
 

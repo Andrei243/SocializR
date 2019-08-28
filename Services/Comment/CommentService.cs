@@ -62,7 +62,9 @@ namespace Services.Comment
 
         public bool RemoveComment(int commentId)
         {
-            unitOfWork.Comments.Remove(unitOfWork.Comments.Query.FirstOrDefault(e => e.Id == commentId));
+            var comment = unitOfWork.Comments.Query.FirstOrDefault(e => e.Id == commentId);
+            if (comment == null) return false;
+            unitOfWork.Comments.Remove(comment);
             return unitOfWork.SaveChanges() != 0;
         }
 

@@ -68,7 +68,7 @@ namespace ASP.NET_Core_UI.Controllers
                 return Json(new List<InterestSelect>());
             }
             var indexi = interestsUsersService.GetAllInterests(userId.Value).Select(e => e.Id).ToList();
-            var interests = interestService.getAll().Select(e =>
+            var interests = interestService.GetAll().Select(e =>
             {
                 var item = mapper.Map<InterestSelect>(e);
                 item.Selected = indexi.Contains(e.Id);
@@ -102,9 +102,9 @@ namespace ASP.NET_Core_UI.Controllers
 
                 var domainUser = userService.GetUserById(userId);
                 ProfileViewerModel user = mapper.Map<ProfileViewerModel>(domainUser);
-                user.CanSee = friendshipService.canSee(userId.Value);
-                user.CanSendRequest = friendshipService.canSendRequest(userId.Value);
-                user.IsRequested = friendshipService.isFriendRequested(userId.Value);
+                user.CanSee = friendshipService.CanSee(userId.Value);
+                user.CanSendRequest = friendshipService.CanSendRequest(userId.Value);
+                user.IsRequested = friendshipService.IsFriendRequested(userId.Value);
                 user.Interests = interestsUsersService.GetAllInterests(domainUser.Id).Select(e => e.Name).ToList();
                 user.Album = albumService.GetAll(userId.Value).Select(e => mapper.Map<ASP.NET_Core_UI.Models.DomainModels.Album>(e)).ToList();
 
@@ -134,9 +134,8 @@ namespace ASP.NET_Core_UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                Microsoft.Extensions.Primitives.StringValues raspunsuri;
                 Request.Form.TryGetValue("Interests",
-                                         out raspunsuri);
+                                         out var raspunsuri);
                 interestsUsersService.ChangeInterests(user.Id, raspunsuri.Select(e => int.Parse(e)).ToList());
 
 
@@ -176,7 +175,7 @@ namespace ASP.NET_Core_UI.Controllers
             {
                 return NotFound();
             }
-            photoService.RemovePhoto(photoId.Value, null, albumId);
+            photoService.RemovePhoto(photoId.Value);
             return RedirectToAction("Album", new { albumId });
 
         }

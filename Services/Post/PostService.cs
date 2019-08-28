@@ -104,13 +104,16 @@ namespace Services.Post
 
         public bool RemovePost(int postId)
         {
+            var post = unitOfWork.Posts.Query.FirstOrDefault(e => e.Id == postId);
+            if (post == null) return false;
+
             var reactions = unitOfWork.Reactions.Query.Where(e => e.PostId == postId);
             var comments = unitOfWork.Comments.Query.Where(e => e.PostId == postId);
             var photos = unitOfWork.Photos.Query.Where(e => e.PostId == postId);
             unitOfWork.Reactions.RemoveRange(reactions);
             unitOfWork.Comments.RemoveRange(comments);
             unitOfWork.Photos.RemoveRange(photos);
-            unitOfWork.Posts.Remove(unitOfWork.Posts.Query.FirstOrDefault(e => e.Id == postId));
+            unitOfWork.Posts.Remove(post);
             return unitOfWork.SaveChanges() != 0;
         }
 

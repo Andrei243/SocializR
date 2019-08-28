@@ -47,8 +47,9 @@ namespace Services.Locality
 
         public bool RemoveLocality(int id)
         {
-            if (!unitOfWork.Localities.Query.Any(e => e.Id == id)) return false;
-            unitOfWork.Localities.Remove(unitOfWork.Localities.Query.FirstOrDefault(e=>e.Id==id));
+            var locality = unitOfWork.Localities.Query.FirstOrDefault(e => e.Id == id);
+            if (locality==null) return false;
+            unitOfWork.Localities.Remove(locality);
             var users = unitOfWork.Users.Query.Where(e => e.LocalityId == id);
             foreach(var user in users)
             {
@@ -60,12 +61,12 @@ namespace Services.Locality
 
         }
 
-        public List<Domain.Locality> getAll(int countyId)
+        public List<Domain.Locality> GetAll(int countyId)
         {
             return unitOfWork.Localities.Query.AsNoTracking().Where(e=>e.CountyId==countyId).ToList();
         }
 
-        public List<Domain.Locality> getAll()
+        public List<Domain.Locality> GetAll()
         {
             return unitOfWork.Localities.Query.Include(e=>e.County).AsNoTracking().ToList();
         }

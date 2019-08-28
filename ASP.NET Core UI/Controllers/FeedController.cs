@@ -159,7 +159,7 @@ namespace ASP.NET_Core_UI.Controllers
       
         public bool Reaction(int postId)
         {
-            if(postService.CanSeePost(postId)) return reactionService.changeReaction(postId);
+            if(postService.CanSeePost(postId)) return reactionService.ChangeReaction(postId);
             return false;
         }
 

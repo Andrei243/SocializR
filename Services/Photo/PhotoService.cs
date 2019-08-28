@@ -9,7 +9,7 @@ namespace Services.Photo
 {
     public class PhotoService : Base.BaseService
     {
-        private CurrentUser currentUser;
+        private readonly CurrentUser currentUser;
 
         public PhotoService(SocializRUnitOfWork unitOfWork,CurrentUser currentUser) : base(unitOfWork)
         {
@@ -70,19 +70,19 @@ namespace Services.Photo
             unitOfWork.Photos.Add(photo);
             if (photo.PostId.HasValue)
             {
-                var post = unitOfWork.Posts.Query.FirstOrDefault(e => e.Id == photo.PostId);
+                var post = unitOfWork.Posts.Query.Include(e=>e.Photo).FirstOrDefault(e => e.Id == photo.PostId);
+                
                 post.Photo = photo;
                 unitOfWork.Posts.Update(post);
             }
             else
             {
-                photo.Position = unitOfWork.Photos.Query.Where(e => e.AlbumId == photo.AlbumId).Select(e => e.Position).OrderBy(e => e).LastOrDefault() ?? 0;
-                photo.Position++;
+                photo.Position = unitOfWork.Photos.Query.Where(e => e.AlbumId == photo.AlbumId).Count() + 1;
             }
             unitOfWork.SaveChanges();
         }
 
-        public List<Domain.Photo> getPhotos(int? postId,int? albumId)
+        public List<Domain.Photo> GetPhotos(int? postId,int? albumId)
         {
             IQueryable<Domain.Photo> listaPoze ;
             if(postId!= null)
@@ -96,10 +96,12 @@ namespace Services.Photo
             return listaPoze.OrderBy(e => e.Position).ToList();
         }
 
-        public bool RemovePhoto(int photoId,int? postId,int? albumId)
+        public bool RemovePhoto(int photoId)
         {
-            postId = unitOfWork.Photos.Query.AsNoTracking().Where(e => e.Id == photoId).Select(e => e.PostId).FirstOrDefault();
-            albumId= unitOfWork.Photos.Query.AsNoTracking().Where(e => e.Id == photoId).Select(e => e.AlbumId).FirstOrDefault();
+            var photo = unitOfWork.Photos.Query.AsNoTracking().First(e => e.Id == photoId);
+            if (photo == null) return false;
+            int? postId = photo.PostId;
+            int? albumId= photo.AlbumId;
             IQueryable<Domain.Photo> listaPoze;
             if (postId != null)
             {

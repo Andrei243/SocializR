@@ -48,10 +48,12 @@ namespace Services.Album
             return unitOfWork.Albums.Query.Any(e => e.Id == albumId && e.UserId == CurrentUser.Id);
         }
 
-        public void RemoveAlbum(int albumId, int userId)
+        public bool RemoveAlbum(int albumId, int userId)
         {
-            var profilePhoto = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == userId).PhotoId;
             var album = unitOfWork.Albums.Query.FirstOrDefault(e => e.Id == albumId);
+            if (album == null) return false; ;
+
+            var profilePhoto = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == userId).PhotoId;
             if (profilePhoto != null)
             {
                 var photo = unitOfWork.Photos.Query.FirstOrDefault(e => e.Id == profilePhoto);
@@ -64,7 +66,7 @@ namespace Services.Album
             }
             unitOfWork.Photos.RemoveRange(unitOfWork.Photos.Query.Where(e => e.AlbumId == albumId));
             unitOfWork.Albums.Remove(album);
-            unitOfWork.SaveChanges();
+            return unitOfWork.SaveChanges()!=0;
 
         }
 

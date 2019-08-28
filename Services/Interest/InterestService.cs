@@ -37,12 +37,15 @@ namespace Services.Interest
 
         public bool RemoveInterest(int interestId)
         {
+            var interest = GetInterest(interestId);
+            if (interest == null) return false;
+
             unitOfWork.InterestsUserss.RemoveRange(unitOfWork.InterestsUserss.Query.Where(e => e.InterestId == interestId).ToList());
             unitOfWork.Interests.Remove(GetInterest(interestId));
             return unitOfWork.SaveChanges() != 0;
         }
 
-        public List<Domain.Interest> getAll()
+        public List<Domain.Interest> GetAll()
         {
             return unitOfWork.Interests.Query.AsNoTracking().ToList();
         }
@@ -55,15 +58,18 @@ namespace Services.Interest
         public List<SelectListItem> GetAllSelectListItems(int userId)
         {
             var indexi = unitOfWork.InterestsUserss.Query.Where(e => e.UserId == userId).Select(e => e.InterestId).ToList();
-            var interests = getAll().Select(e =>
-            {
-                var item = new SelectListItem();
-                item.Text = e.Name;
-                item.Value = e.Id.ToString();
-                item.Selected = indexi.Contains(e.Id);
-                return item;
+            var interests = GetAll().Select(e =>
+            
+                new SelectListItem()
+                {
+                    Text = e.Name,
+                    Value = e.Id.ToString(),
+                    Selected = indexi.Contains(e.Id)
+                }
+               
+                
 
-            }).ToList();
+            ).ToList();
             return interests;
 
         }

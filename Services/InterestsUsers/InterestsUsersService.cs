@@ -10,11 +10,11 @@ namespace Services.InterestsUsers
 {
     public class InterestsUsersService : Base.BaseService
     {
-        private readonly CurrentUser CurrentUser;
+       // private readonly CurrentUser CurrentUser;
 
-        public InterestsUsersService(CurrentUser currentUser, SocializRUnitOfWork unitOfWork) : base(unitOfWork)
+        public InterestsUsersService( SocializRUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            CurrentUser = currentUser;
+            //CurrentUser = currentUser;
         }
 
         public List<Domain.Interest> GetAllInterests(int idUser)
@@ -23,27 +23,28 @@ namespace Services.InterestsUsers
 
         }
 
-        public bool AddInterest(int interestId,int userId)
-        {
-            if (unitOfWork.InterestsUserss.Query.Any(e => e.InterestId == interestId && e.UserId == userId)) return false;
-            var legatura = new Domain.InterestsUsers()
-            {
-                InterestId = interestId,
-                UserId = userId
-            };
-            unitOfWork.InterestsUserss.Add(legatura);
-            return unitOfWork.SaveChanges() != 0;
+        //public bool AddInterest(int interestId,int userId)
+        //{
+        //    if (unitOfWork.InterestsUserss.Query.Any(e => e.InterestId == interestId && e.UserId == userId)) return false;
+        //    var legatura = new Domain.InterestsUsers()
+        //    {
+        //        InterestId = interestId,
+        //        UserId = userId
+        //    };
+        //    unitOfWork.InterestsUserss.Add(legatura);
+        //    return unitOfWork.SaveChanges() != 0;
 
-        }
+        //}
 
-        public bool RemoveInterest(int interestId,int userId)
-        {
-            if (!unitOfWork.InterestsUserss.Query.Any(e => e.InterestId == interestId && e.UserId == userId)) return false;
+        //public bool RemoveInterest(int interestId,int userId)
+        //{
+        //    var interest = unitOfWork.InterestsUserss.Query.FirstOrDefault(e => e.InterestId == interestId && e.UserId == userId);
+        //    if (interest==null) return false;
             
-            unitOfWork.InterestsUserss.Remove(unitOfWork.InterestsUserss.Query.First(e => e.InterestId == interestId && e.UserId == userId));
-            return unitOfWork.SaveChanges() != 0;
+        //    unitOfWork.InterestsUserss.Remove(interest);
+        //    return unitOfWork.SaveChanges() != 0;
 
-        }
+        //}
 
         public bool ChangeInterests(int userId,List<int> interestId)
         {
