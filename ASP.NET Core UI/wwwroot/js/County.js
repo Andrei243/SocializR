@@ -23,7 +23,7 @@ window.addEventListener("load", () => {
                         $("#countyBody").append(html);
 
                         $("a.needConfirmation").unbind("click").click((e) => {
-                            var x = confirm("Esti sigur de actiunea ta?");
+                            var x = confirm("Are you sure of your action?");
                             if (!x) {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -59,17 +59,17 @@ window.addEventListener("load", () => {
         }
     })();
     event();
-    let copieFunctie = event;
+    let functionCopy = event;
     event = () => { };
     setTimeout(() => {
-        event = copieFunctie;
+        event = functionCopy;
     }, 1000);
     $(window).scroll(() => {
         if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
             event();
             event = () => { }
             this.setTimeout(() => {
-                event = copieFunctie;
+                event = functionCopy;
             }, 1000)
         }
 

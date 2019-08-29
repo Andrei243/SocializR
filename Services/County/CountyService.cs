@@ -14,16 +14,20 @@ namespace Services.County
 
         public List<Domain.County> GetAll()
         {
-            return unitOfWork.Counties.Query.AsNoTracking().Include(e=>e.Locality).AsNoTracking().ToList();
+            return unitOfWork.Counties.Query
+                .AsNoTracking().Include(e=>e.Locality)
+                .AsNoTracking().ToList();
         }
 
         public bool CanBeDeleted(int countyId)
         {
-            return !unitOfWork.Localities.Query.Any(e => e.CountyId == countyId);
+            return !unitOfWork.Localities.Query
+                .Any(e => e.CountyId == countyId);
         }
         public Domain.County GetCountyById(int? id)
         {
-            return unitOfWork.Counties.Query.AsNoTracking().FirstOrDefault(e => e.Id == id);
+            return unitOfWork.Counties.Query
+                .AsNoTracking().FirstOrDefault(e => e.Id == id);
         }
 
         public bool Add(string name)
@@ -37,21 +41,25 @@ namespace Services.County
             return unitOfWork.SaveChanges()!=0;
         }
 
-        public void Update(int id, string name)
+        public bool Update(int id, string name)
         {
-            var county = unitOfWork.Counties.Query.FirstOrDefault(e => e.Id == id);
-            if (county == null) return;
+            var county = unitOfWork.Counties.Query
+                .FirstOrDefault(e => e.Id == id);
+            if (county == null) return false;
             county.Name = name;
             unitOfWork.Counties.Update(county);
-            unitOfWork.SaveChanges();
+            return unitOfWork.SaveChanges()!=0;
         }
 
         public bool Remove(int countyId)
         {
-            var county = unitOfWork.Counties.Query.FirstOrDefault(e => e.Id == countyId);
+            var county = unitOfWork.Counties.Query
+                .FirstOrDefault(e => e.Id == countyId);
             if (county == null) return false;
             unitOfWork.Counties.Remove(county);
-            var localitiesIds = unitOfWork.Localities.Query.Where(e => e.CountyId == countyId).Select(e => e.Id).ToList();
+            var localitiesIds = unitOfWork.Localities.Query
+                .Where(e => e.CountyId == countyId)
+                .Select(e => e.Id).ToList();
 
             unitOfWork.Localities.RemoveRange(unitOfWork.Localities.Query.Where(e => e.CountyId == countyId));
             var users = unitOfWork.Users.Query.Where(e => localitiesIds.Contains(e.Id));
@@ -65,7 +73,9 @@ namespace Services.County
 
         public List<Domain.Locality> GetLocalities(int id)
         {
-            return unitOfWork.Localities.Query.Where(e => e.CountyId == id).AsNoTracking().ToList();
+            return unitOfWork.Localities.Query
+                .Where(e => e.CountyId == id)
+                .AsNoTracking().ToList();
         }
 
         public List<Domain.County> GetCounties(int toSkip,int howMany)

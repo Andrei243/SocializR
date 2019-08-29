@@ -30,7 +30,6 @@
 
     let eventDeleteComment = function (e) {
         let com = $(this).parent().parent();
-        console.log(com);
         $.ajax({
             type: "GET",
             url: '/Feed/RemoveComment',
@@ -190,17 +189,17 @@
 
     })(document.getElementById("postGetter").dataset.user);
     eventPost();
-    let copieFunctie = eventPost;
+    let functionCopy = eventPost;
     eventPost = () => { }
     this.setTimeout(() => {
-        eventPost = copieFunctie;
+        eventPost = functionCopy;
     }, 1000);
     $(window).scroll(() => {
         if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
             eventPost();
             eventPost = () => { }
             this.setTimeout(() => {
-                eventPost = copieFunctie;
+                eventPost = functionCopy;
             }, 1000)
         }
 

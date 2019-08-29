@@ -29,7 +29,6 @@
     };
     let eventDeleteComment = function (e) {
         let com = $(this).parent().parent();
-        console.log(com);
         $.ajax({
             type: "GET",
             url: '/Feed/RemoveComment',
@@ -73,6 +72,7 @@
                     let html = templateComment(obj);
                     $("#commentBody" + postId).prepend(html);
                     $("#commentBody" + postId).data("toskip", parseInt($("#commentBody" + postId).data("toskip")) + 1);
+                    $("#deleteComment" + response).click(prevent);
                     $("#deleteComment" + response).click(eventDeleteComment);
                     e.currentTarget.parentNode.querySelector("input").value = "";
                 }
@@ -134,6 +134,7 @@
                             let comment = result[i];
                             let html = templateComment(comment);
                             $("#commentBody" + idPost).append(html);
+                            $("#deleteComment" + comment.id).click(prevent);
                             $("#deleteComment" + comment.id).click(eventDeleteComment);
 
                         }
@@ -174,6 +175,7 @@
                             $("#commentGetter" + post.id).click(eventComentariu);
                             $("#like" + post.id).click(eventLike);
                             $("#commentAdd" + post.id).click(eventAddComment);
+                            $("#postRemove" + post.id).click(prevent);
                             $("#postRemove" + post.id).click(eventDeletePost);
                         }
                         canGet = true;
@@ -187,10 +189,10 @@
 
     })();
     eventPost();
-    let copieFunctie = eventPost;
+    let functionCopy = eventPost;
     eventPost = () => { }
     this.setTimeout(() => {
-        eventPost = copieFunctie;
+        eventPost = functionCopy;
     }, 1000);
 
 
@@ -199,7 +201,7 @@
             eventPost();
             eventPost = () => { }
             this.setTimeout(() => {
-                eventPost = copieFunctie;
+                eventPost = functionCopy;
             },1000)
         }
 

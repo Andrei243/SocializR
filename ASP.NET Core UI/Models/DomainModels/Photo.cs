@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ASP.NET_Core_UI.Models.DomainModels
 {
-    public class Photo
+    public class PhotoDomainModel
     {
         public int Id { get; set; }
         public string Description { get; set; }

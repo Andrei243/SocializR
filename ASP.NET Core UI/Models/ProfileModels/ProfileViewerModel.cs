@@ -21,7 +21,7 @@ namespace ASP.NET_Core_UI.Models.ProfileModels
         public string SexualIdentity { get; set; }
         public string Locality { get; set; }
         public List<string> Interests { get; set; }
-        public List<Album> Album { get; set; }
+        public List<AlbumDomainModel> Album { get; set; }
         public int? PhotoId { get; set; }
         public AddAlbumModel AddAlbumModel { get; set; }
     }

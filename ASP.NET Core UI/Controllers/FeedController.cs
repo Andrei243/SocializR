@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using ASP.NET_Core_UI.Models.FeedModels;
 using Domain;
 using Newtonsoft.Json;
+using ASP.NET_Core_UI.Models.JsonModels;
 
 namespace ASP.NET_Core_UI.Controllers
 {
@@ -72,9 +73,9 @@ namespace ASP.NET_Core_UI.Controllers
             {
                 var comments = commentService.GetComments(toSkip, PageSize, postId).Select(e =>
                 {
-                    var comment = mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Comment>(e);
+                    var comment = mapper.Map<CommentJsonModel>(e);
                     comment.IsMine = (currentUser.Id == comment.UserId);
-                    comment.isAdmin = currentUser.IsAdmin;
+                    comment.IsAdmin = currentUser.IsAdmin;
                     return comment;
                 }).ToList();
                 return Json(comments);
@@ -89,10 +90,10 @@ namespace ASP.NET_Core_UI.Controllers
             {
                 var posts = postService.GetNewsfeed(toSkip, PageSize).Select(e =>
                 {
-                    var post = mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Post>(e);
+                    var post = mapper.Map<PostJsonModel>(e);
                     post.Liked = e.Reaction.Select(f => f.UserId).Contains(currentUser.Id);
                     post.IsMine = e.UserId == currentUser.Id;
-                    post.isAdmin = currentUser.IsAdmin;
+                    post.IsAdmin = currentUser.IsAdmin;
                     return post;
 
                 }).ToList();
@@ -102,7 +103,7 @@ namespace ASP.NET_Core_UI.Controllers
             {
                 var posts = postService.GetPublicNewsfeed(toSkip, PageSize).Select(e =>
                 {
-                    var post = mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Post>(e);
+                    var post = mapper.Map<PostJsonModel>(e);
                     post.Liked = e.Reaction.Select(f => f.UserId).Contains(currentUser.Id);
                     post.IsMine = false;
                     return post;
@@ -116,7 +117,7 @@ namespace ASP.NET_Core_UI.Controllers
 
                 var posts = postService.GetPersonPost(toSkip, PageSize,userId).Select(e =>
                 {
-                    var post = mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Post>(e);
+                    var post = mapper.Map<PostJsonModel>(e);
                     post.Liked = e.Reaction.Select(f => f.UserId).Contains(currentUser.Id);
                     post.IsMine = e.UserId == currentUser.Id;
                     return post;

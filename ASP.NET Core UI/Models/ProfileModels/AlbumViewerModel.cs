@@ -12,5 +12,6 @@ namespace ASP.NET_Core_UI.Models.ProfileModels
         public int Id { get; set; }
         public PhotoModel PhotoModel { get; set; }
         public bool HasThisAlbum { get; set; }
+        public string Name { get; set; }
     }
 }

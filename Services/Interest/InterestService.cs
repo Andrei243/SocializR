@@ -50,28 +50,9 @@ namespace Services.Interest
             return unitOfWork.Interests.Query.AsNoTracking().ToList();
         }
 
-        public List<Domain.Interest> GetInterests(int toSkip,int howMany)
+        public List<Domain.Interest> GetInterests(int toSkip, int howMany)
         {
             return unitOfWork.Interests.Query.OrderBy(e => e.Id).Skip(toSkip).Take(howMany).AsNoTracking().ToList();
-        }
-
-        public List<SelectListItem> GetAllSelectListItems(int userId)
-        {
-            var indexi = unitOfWork.InterestsUserss.Query.Where(e => e.UserId == userId).Select(e => e.InterestId).ToList();
-            var interests = GetAll().Select(e =>
-            
-                new SelectListItem()
-                {
-                    Text = e.Name,
-                    Value = e.Id.ToString(),
-                    Selected = indexi.Contains(e.Id)
-                }
-               
-                
-
-            ).ToList();
-            return interests;
-
         }
     }
 }

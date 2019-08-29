@@ -43,7 +43,9 @@ namespace Services.FriendShip
 
        public bool RefuseFriendRequest(int from)
         {
-            var friendRequest = unitOfWork.Friendships.Query.Where(e => e.IdSender == from && e.IdReceiver == currentUser.Id).ToList()[0];
+            var friendRequest = unitOfWork.Friendships.Query
+                .FirstOrDefault(e => e.IdSender == from && e.IdReceiver == currentUser.Id);
+            if (friendRequest == null) return false;
             friendRequest.Accepted = false;
             unitOfWork.Friendships.Update(friendRequest);
             return unitOfWork.SaveChanges() != 0;
@@ -51,43 +53,49 @@ namespace Services.FriendShip
         }
         public bool AcceptFriendRequest(int from)
         {
-            var friendRequest = unitOfWork.Friendships.Query.First(e => e.IdSender == from && e.IdReceiver == currentUser.Id);
+            var friendRequest = unitOfWork.Friendships.Query
+                .FirstOrDefault(e => e.IdSender == from && e.IdReceiver == currentUser.Id);
+            if (friendRequest == null) return false;
             if (friendRequest.Accepted != true)
             {
                 friendRequest.Accepted = true;
-                var friendRequest2 = new Friendship()
+                var friendRequest2 = unitOfWork.Friendships.Query
+                .FirstOrDefault(e => currentUser.Id == from && e.IdReceiver == from);
+                if (friendRequest2 == null)
                 {
-                    IdReceiver = friendRequest.IdSender,
-                    IdSender = friendRequest.IdReceiver,
-                    CreatedOn = friendRequest.CreatedOn,
-                    Accepted = true
-                };
+                    friendRequest2 = new Friendship()
+                    {
+                        IdReceiver = friendRequest.IdSender,
+                        IdSender = friendRequest.IdReceiver,
+                        CreatedOn = friendRequest.CreatedOn,
+                        Accepted = true
+                    };
+                    unitOfWork.Friendships.Add(friendRequest2);
+                }
+                else
+                {
+                    friendRequest2.Accepted = true;
+                    unitOfWork.Friendships.Update(friendRequest2);
+                }
                 unitOfWork.Friendships.Update(friendRequest);
-                unitOfWork.Friendships.Add(friendRequest2);
+
                 return unitOfWork.SaveChanges() != 0;
             }
             else return true;
         }
 
-        public List<Users> GetAllFriends()
-        {
-            return unitOfWork.Friendships.Query.AsNoTracking().Include(e => e.IdReceiverNavigation).Where(e => e.IdSender == currentUser.Id && (e.Accepted ?? false)).Select(e => e.IdReceiverNavigation).ToList();
-
-        }
-
-        public List<Users> GetRequesters()
-        {
-            return unitOfWork.Friendships.Query.Where(e => e.IdReceiver == currentUser.Id && !e.Accepted.HasValue).Include(e=>e.IdSenderNavigation).Select(e => e.IdSenderNavigation).AsNoTracking().ToList();
-        }
-
         public bool IsFriendRequested(int by)
         {
-            return unitOfWork.Friendships.Query.AsNoTracking().Any(e => e.IdSender == by && e.IdReceiver == currentUser.Id && !e.Accepted.HasValue);
+            return unitOfWork.Friendships.Query
+                .AsNoTracking()
+                .Any(e => e.IdSender == by && e.IdReceiver == currentUser.Id && !e.Accepted.HasValue);
         }
         public bool CanSee(int receiver)
         {
-            return currentUser.IsAdmin|| unitOfWork.Friendships.Query.Include(e => e.IdReceiverNavigation).Any(
-                e => (e.IdSender == currentUser.Id && e.IdReceiver == receiver&&(e.Accepted??false) && !e.IdReceiverNavigation.IsBanned))
+            return currentUser.IsAdmin|| unitOfWork.Friendships.Query
+                .Include(e => e.IdReceiverNavigation)
+                .Any(e => 
+                (e.IdSender == currentUser.Id && e.IdReceiver == receiver&&(e.Accepted??false) && !e.IdReceiverNavigation.IsBanned))
                 ||unitOfWork.Users.Query.Any(e=>e.Id==receiver&&e.Vizibility=="public"&&!e.IsBanned)
                 ;
         }
@@ -98,12 +106,16 @@ namespace Services.FriendShip
         }
         public bool IsRefused(int by)
         {
-            return unitOfWork.Friendships.Query.AsNoTracking().Any(e => e.IdSender == currentUser.Id && e.IdReceiver == by && e.Accepted.Value == false);
+            return unitOfWork.Friendships.Query
+                .AsNoTracking()
+                .Any(e => e.IdSender == currentUser.Id && e.IdReceiver == by && e.Accepted.Value == false);
         }
 
         public bool IsAlreadySent(int to)
         {
-            return unitOfWork.Friendships.Query.AsNoTracking().Any(e => e.IdSender == currentUser.Id && e.IdReceiver == to && !e.Accepted.HasValue);
+            return unitOfWork.Friendships.Query
+                .AsNoTracking()
+                .Any(e => e.IdSender == currentUser.Id && e.IdReceiver == to && !e.Accepted.HasValue);
         }
 
         public List<Users> GetFriends(int toSkip,int howMany)

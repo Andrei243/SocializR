@@ -12,6 +12,7 @@ using ASP.NET_Core_UI.Models.DomainModels;
 using ASP.NET_Core_UI.Models.AdminModels;
 using ASP.NET_Core_UI.Code.Base;
 using AutoMapper;
+using ASP.NET_Core_UI.Models.JsonModels;
 
 namespace ASP.NET_Core_UI.Controllers
 {
@@ -35,7 +36,7 @@ namespace ASP.NET_Core_UI.Controllers
         // GET: Localities
         public IActionResult Index()
         {
-            var localities = localityService.GetAll().Select(e =>mapper.Map<Locality>(e));
+            var localities = localityService.GetAll().Select(e =>mapper.Map<LocalityDomainModel>(e));
             return View(localities);
         }
 
@@ -64,7 +65,7 @@ namespace ASP.NET_Core_UI.Controllers
                 return RedirectToAction("Index","Localities");
             }
 
-            model.CountyIds = countyService.GetAll().Select(e => new SelectListItem { Value = e.Id.ToString(), Text = e.Name }).ToList();
+            model.CountyIds = countyService.GetAll().Select(e => mapper.Map<SelectListItem>(e)).ToList();
 
             return View(model);
         }
@@ -84,7 +85,11 @@ namespace ASP.NET_Core_UI.Controllers
             }
             
             var model = mapper.Map<EditLocalityModel>(locality);
-            model.CountyIds = countyService.GetAll().Select(e => { var item = mapper.Map<SelectListItem>(e); item.Selected = e.Id == locality.Id; return item; }).ToList();
+            model.CountyIds = countyService.GetAll().Select(e => 
+            { var item = mapper.Map<SelectListItem>(e);
+                item.Selected = e.Id == locality.Id;
+                return item; })
+                .ToList();
             return View(model);
         }
 
@@ -98,7 +103,11 @@ namespace ASP.NET_Core_UI.Controllers
                 localityService.EditLocality(model.Id, model.Name, model.CountyId);
                 return RedirectToAction(nameof(Index));
             }
-            model.CountyIds = countyService.GetAll().Select(e => { var item = mapper.Map<SelectListItem>(e); item.Selected = e.Id == model.Id; return item; }).ToList();
+            model.CountyIds = countyService.GetAll().Select(e => {
+                var item = mapper.Map<SelectListItem>(e);
+                item.Selected = e.Id == model.Id;
+                return item; })
+                .ToList();
             return View(model);
         }
 
@@ -117,7 +126,10 @@ namespace ASP.NET_Core_UI.Controllers
 
         public JsonResult GetLocalities(int toSkip)
         {
-            var result= localityService.GetLocalities(toSkip, PageSize).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Locality>(e)).ToList();
+            var result= localityService
+                .GetLocalities(toSkip, PageSize)
+                .Select(e => mapper.Map<LocalityJsonModel>(e))
+                .ToList();
             return Json(result);
         }
 

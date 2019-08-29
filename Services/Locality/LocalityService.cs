@@ -17,11 +17,13 @@ namespace Services.Locality
 
         public bool CityAlreadyExistsInCounty(string locality,int countyId)
         {
-            return unitOfWork.Localities.Query.Any(e => e.Name == locality && e.CountyId == countyId);
+            return unitOfWork.Localities.Query
+                .Any(e => e.Name == locality && e.CountyId == countyId);
         }
         public Domain.Locality GetLocality(int id)
         {
-            return unitOfWork.Localities.Query.FirstOrDefault(e => e.Id == id);
+            return unitOfWork.Localities.Query
+                .FirstOrDefault(e => e.Id == id);
         }
 
         public bool AddLocality(string denumire,int countyId)
@@ -38,7 +40,8 @@ namespace Services.Locality
 
         public void EditLocality(int id,string name,int countyId)
         {
-            var locality = unitOfWork.Localities.Query.FirstOrDefault(e => e.Id == id);
+            var locality = unitOfWork.Localities.Query
+                .FirstOrDefault(e => e.Id == id);
             locality.Name = name;
             locality.CountyId = countyId;
             unitOfWork.Localities.Update(locality);
@@ -47,10 +50,12 @@ namespace Services.Locality
 
         public bool RemoveLocality(int id)
         {
-            var locality = unitOfWork.Localities.Query.FirstOrDefault(e => e.Id == id);
+            var locality = unitOfWork.Localities.Query
+                .FirstOrDefault(e => e.Id == id);
             if (locality==null) return false;
             unitOfWork.Localities.Remove(locality);
-            var users = unitOfWork.Users.Query.Where(e => e.LocalityId == id);
+            var users = unitOfWork.Users.Query
+                .Where(e => e.LocalityId == id);
             foreach(var user in users)
             {
                 user.LocalityId = null;
@@ -63,17 +68,27 @@ namespace Services.Locality
 
         public List<Domain.Locality> GetAll(int countyId)
         {
-            return unitOfWork.Localities.Query.AsNoTracking().Where(e=>e.CountyId==countyId).ToList();
+            return unitOfWork.Localities.Query
+                .AsNoTracking().Where(e=>e.CountyId==countyId)
+                .ToList();
         }
 
         public List<Domain.Locality> GetAll()
         {
-            return unitOfWork.Localities.Query.Include(e=>e.County).AsNoTracking().ToList();
+            return unitOfWork.Localities.Query
+                .Include(e=>e.County).AsNoTracking()
+                .ToList();
         }
 
         public List<Domain.Locality> GetLocalities(int toSkip,int howMany)
         {
-            return unitOfWork.Localities.Query.OrderBy(e => e.Id).Skip(toSkip).Take(howMany).Include(e=>e.County).AsNoTracking().ToList();
+            return unitOfWork.Localities.Query
+                .OrderBy(e => e.Id)
+                .Skip(toSkip)
+                .Take(howMany)
+                .Include(e=>e.County)
+                .AsNoTracking()
+                .ToList();
         }
 
     }

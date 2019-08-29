@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ASP.NET_Core_UI.Models.JsonModels
 {
-    public class Post
+    public class PostJsonModel
     {
         public int Id { get; set; }
         public int UserId { get; set; }
@@ -16,6 +16,6 @@ namespace ASP.NET_Core_UI.Models.JsonModels
         public int NoReactions { get; set; }
         public List<int> PhotoId { get; set; }
         public bool IsMine { get; set; }
-        public bool isAdmin { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }

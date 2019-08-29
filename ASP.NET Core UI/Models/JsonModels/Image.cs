@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ASP.NET_Core_UI.Models.JsonModels
 {
-    public class Image
+    public class ImageJsonModel
     {
         public int Id { get; set; }
         public int AlbumId { get; set; }

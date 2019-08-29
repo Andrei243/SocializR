@@ -20,19 +20,28 @@ namespace Services.Album
         public bool CanSeeAlbum(int albumId)
         {
             if (CurrentUser.IsAdmin) return true;
-            var album = unitOfWork.Albums.Query.AsNoTracking().First(e => e.Id == albumId);
+            var album = unitOfWork.Albums.Query
+                .AsNoTracking().First(e => e.Id == albumId);
+
             if (album.UserId == CurrentUser.Id) return true;
-            return unitOfWork.Friendships.Query.Any(e => e.IdReceiver == CurrentUser.Id && e.IdSender == album.UserId);
+            return unitOfWork.Friendships.Query
+                .Any(e => e.IdReceiver == CurrentUser.Id && e.IdSender == album.UserId);
         }
 
         public List<Domain.Album> GetAll(int idUser)
         {
-            return unitOfWork.Albums.Query.Where(e => e.UserId == idUser).AsNoTracking().Include(e => e.Photo).AsNoTracking().OrderBy(e => e.Id).ToList();
+            return unitOfWork.Albums.Query
+                .Where(e => e.UserId == idUser).AsNoTracking()
+                .Include(e => e.Photo).AsNoTracking()
+                .OrderBy(e => e.Id)
+                .ToList();
         }
 
         public List<Domain.Photo> GetPhotos(int albumId)
         {
-            return unitOfWork.Photos.Query.Where(e => e.AlbumId == albumId).ToList();
+            return unitOfWork.Photos.Query
+                .Where(e => e.AlbumId == albumId)
+                .ToList();
         }
 
         public int AddAlbum(string denumire)
@@ -45,7 +54,8 @@ namespace Services.Album
         public bool CanDeleteAlbum(int albumId)
         {
             if (CurrentUser.IsAdmin) return true;
-            return unitOfWork.Albums.Query.Any(e => e.Id == albumId && e.UserId == CurrentUser.Id);
+            return unitOfWork.Albums.Query
+                .Any(e => e.Id == albumId && e.UserId == CurrentUser.Id);
         }
 
         public bool RemoveAlbum(int albumId, int userId)
@@ -72,12 +82,15 @@ namespace Services.Album
 
         public bool HasThisAlbum(int albumId)
         {
-            return unitOfWork.Albums.Query.Any(e => e.Id == albumId && e.UserId == CurrentUser.Id);
+            return unitOfWork.Albums.Query
+                .Any(e => e.Id == albumId && e.UserId == CurrentUser.Id);
         }
 
         public Domain.Album GetAlbum(int albumId)
         {
-            return unitOfWork.Albums.Query.Include(e => e.Photo).FirstOrDefault(e => e.Id == albumId);
+            return unitOfWork.Albums.Query
+                .Include(e => e.Photo)
+                .FirstOrDefault(e => e.Id == albumId);
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ASP.NET_Core_UI.Models.JsonModels
 {
-    public class Friend
+    public class FriendJsonModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

@@ -11,6 +11,7 @@ using ASP.NET_Core_UI.Models.DomainModels;
 using ASP.NET_Core_UI.Models.AdminModels;
 using ASP.NET_Core_UI.Code.Base;
 using AutoMapper;
+using ASP.NET_Core_UI.Models.JsonModels;
 
 namespace ASP.NET_Core_UI.Controllers
 {
@@ -33,7 +34,8 @@ namespace ASP.NET_Core_UI.Controllers
         // GET: Counties
         public IActionResult Index()
         {
-            return View(countyService.GetAll().Select(e=>new County() {Id=e.Id,Name=e.Name }));
+            var counties = countyService.GetAll().Select(e => mapper.Map<CountyDomainModel>(e));
+            return View(counties);
         }
 
         // GET: Counties/Details/5
@@ -66,7 +68,7 @@ namespace ASP.NET_Core_UI.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(County model)
+        public IActionResult Create(CountyDomainModel model)
         {
             if (ModelState.IsValid)
             {
@@ -118,12 +120,12 @@ namespace ASP.NET_Core_UI.Controllers
             {
                 return true;
             }
-            bool x = countyService.CanBeDeleted(countyId.Value);
-            if (x)
+            var canBeDeleted = countyService.CanBeDeleted(countyId.Value);
+            if (canBeDeleted)
             {
                 countyService.Remove(countyId.Value);
             }
-            return x;
+            return canBeDeleted;
         }
 
         // GET: Counties/Delete/5
@@ -141,7 +143,7 @@ namespace ASP.NET_Core_UI.Controllers
 
         public JsonResult GetCounties(int toSkip)
         {
-            var counties = countyService.GetCounties(toSkip, PageSize).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.County>(e)).ToList();
+            var counties = countyService.GetCounties(toSkip, PageSize).Select(e => mapper.Map<CountyJsonModel>(e)).ToList();
 
             return Json(counties);
 

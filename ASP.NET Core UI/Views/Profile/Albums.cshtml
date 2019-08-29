@@ -1,0 +1,27 @@
+﻿@model  AlbumsViewModel
+@{
+    ViewData["Title"] = "Albums";
+    Layout = "~/Views/Shared/GeneralLayout.cshtml";
+}
+
+<h1>Albums</h1>
+<div>
+    @foreach (var album in Model.Album)
+    {
+        <div>
+            <h6>@album.Name</h6>
+            <a href="@Url.Action("Album","Profile",new {albumId=album.Id })">
+                @if (album.CoverPhoto != -1)
+                {
+                    <img src="@Url.Action("Download", "Photos", new {id=album.CoverPhoto})" height="40" />
+                }
+                else
+                {
+                    <img src="~/images/genericAlbumCoverPhoto.jpg" height="40" />
+                }
+            </a>
+        </div>
+
+    }
+    @Html.Partial("PartialAddAlbum", Model.AddAlbumModel)
+</div>

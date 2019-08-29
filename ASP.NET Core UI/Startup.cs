@@ -65,7 +65,6 @@ namespace ASP.NET_Core_UI
             );
 
             services.AddScoped<IAuthorizationHandler, Authorization.AdminHandler>();
-            Code.Mappers.WebMapper.Run();
             
 
             //services.AddRouteJs();

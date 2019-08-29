@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace ASP.NET_Core_UI.Models.DomainModels
 {
-    public class County
+    public class CountyDomainModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public List<Locality> Localities { get; set; }
+        public List<LocalityDomainModel> Localities { get; set; }
     }
 }

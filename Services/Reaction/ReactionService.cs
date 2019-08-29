@@ -16,30 +16,11 @@ namespace Services.Reaction
             CurrentUser = currentUser;
         }
 
-        //public bool AddReaction(int postId)
-        //{
-        //    //if (unitOfWork.Reactions.Query.Any(e => e.PostId == postId && e.UserId == CurrentUser.Id)) return false;
-        //    var reaction = new Domain.Reaction()
-        //    {
-        //        PostId = postId,
-        //        UserId = CurrentUser.Id
-        //    };
-        //    unitOfWork.Reactions.Add(reaction);
-        //    unitOfWork.SaveChanges();
-        //    return true;
-
-        //}
-
-        //public bool RemoveReaction(int postId)
-        //{
-        //    unitOfWork.Reactions.RemoveRange(unitOfWork.Reactions.Query.Where(e => e.PostId == postId && e.UserId == CurrentUser.Id));
-        //    unitOfWork.SaveChanges();
-        //    return false;
-        //}
 
         public bool IsLiked(int postId)
         {
-            return unitOfWork.Reactions.Query.Any(e => e.PostId == postId && e.UserId == CurrentUser.Id);
+            return unitOfWork.Reactions.Query
+                .Any(e => e.PostId == postId && e.UserId == CurrentUser.Id);
         }
 
         public bool ChangeReaction(int postId)

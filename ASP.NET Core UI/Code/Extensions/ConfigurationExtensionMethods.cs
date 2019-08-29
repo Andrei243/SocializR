@@ -28,7 +28,6 @@ namespace ASP.NET_Core_UI.Code.Extensions
             services.AddScoped<Services.InterestsUsers.InterestsUsersService>();
             services.AddScoped<Services.Photo.PhotoService>();
             services.AddScoped<Services.Reaction.ReactionService>();
-            //services.AddScoped<Services.Role.RoleService>();
             services.AddScoped<Services.User.UserService>();
 
 

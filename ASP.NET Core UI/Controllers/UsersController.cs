@@ -65,13 +65,15 @@ namespace ASP.NET_Core_UI.Controllers
         {
             if (userId == null)
             {
-                return Json(new List<InterestSelect>());
+                return Json(new List<InterestSelectJsonModel>());
             }
-            var indexi = interestsUsersService.GetAllInterests(userId.Value).Select(e => e.Id).ToList();
+            var indexes = interestsUsersService.GetAllInterests(userId.Value)
+                .Select(e => e.Id)
+                .ToList();
             var interests = interestService.GetAll().Select(e =>
             {
-                var item = mapper.Map<InterestSelect>(e);
-                item.Selected = indexi.Contains(e.Id);
+                var item = mapper.Map<InterestSelectJsonModel>(e);
+                item.Selected = indexes.Contains(e.Id);
                 return item;
 
             }).ToList();
@@ -105,8 +107,10 @@ namespace ASP.NET_Core_UI.Controllers
                 user.CanSee = friendshipService.CanSee(userId.Value);
                 user.CanSendRequest = friendshipService.CanSendRequest(userId.Value);
                 user.IsRequested = friendshipService.IsFriendRequested(userId.Value);
-                user.Interests = interestsUsersService.GetAllInterests(domainUser.Id).Select(e => e.Name).ToList();
-                user.Album = albumService.GetAll(userId.Value).Select(e => mapper.Map<ASP.NET_Core_UI.Models.DomainModels.Album>(e)).ToList();
+                user.Interests = interestsUsersService.GetAllInterests(domainUser.Id)
+                    .Select(e => e.Name)
+                    .ToList();
+                user.Album = albumService.GetAll(userId.Value).Select(e => mapper.Map<Models.DomainModels.AlbumDomainModel>(e)).ToList();
 
                 return View(user);
             }
@@ -233,7 +237,7 @@ namespace ASP.NET_Core_UI.Controllers
 
         public JsonResult GetUsers(int toSkip)
         {
-            var users = userService.GetUsers(toSkip, PageSize).Select(mapper.Map<ASP.NET_Core_UI.Models.JsonModels.User>).ToList();
+            var users = userService.GetUsers(toSkip, PageSize).Select(mapper.Map<UserJsonModel>).ToList();
             return Json(users);
 
         }

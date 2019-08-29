@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using ASP.NET_Core_UI.Models.DomainModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ASP.NET_Core_UI.Models.JsonModels;
 
 namespace ASP.NET_Core_UI.Controllers
 {
@@ -24,7 +25,7 @@ namespace ASP.NET_Core_UI.Controllers
         // GET: Interests
         public IActionResult Index()
         {
-            var interese = interestService.GetAll().Select(e =>mapper.Map<Interest>(e));
+            var interese = interestService.GetAll().Select(e =>mapper.Map<InterestDomainModel>(e));
 
             return View(interese);
         }
@@ -41,7 +42,7 @@ namespace ASP.NET_Core_UI.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create( Interest interest)
+        public IActionResult Create( InterestDomainModel interest)
         {
             if (ModelState.IsValid)
             {
@@ -61,7 +62,7 @@ namespace ASP.NET_Core_UI.Controllers
 
             var interest = interestService.GetInterest(id.Value);
            
-            var model = mapper.Map<Interest>(interest);
+            var model = mapper.Map<InterestDomainModel>(interest);
             return View(model);
         }
 
@@ -70,7 +71,7 @@ namespace ASP.NET_Core_UI.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit( Interest interest)
+        public IActionResult Edit( InterestDomainModel interest)
         {
             if (ModelState.IsValid)
             {
@@ -96,7 +97,7 @@ namespace ASP.NET_Core_UI.Controllers
 
        public JsonResult GetInterests(int toSkip)
         {
-            var interests = interestService.GetInterests(toSkip, PageSize).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Interest>(e)).ToList();
+            var interests = interestService.GetInterests(toSkip, PageSize).Select(e => mapper.Map<InterestJsonModel>(e)).ToList();
             return Json(interests);
         }
 

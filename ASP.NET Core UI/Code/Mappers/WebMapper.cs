@@ -10,43 +10,38 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using ASP.NET_Core_UI.Models.ProfileModels;
 using ASP.NET_Core_UI.Models.FeedModels;
 using ASP.NET_Core_UI.Models.GeneralModels;
+using ASP.NET_Core_UI.Models.DomainModels;
 
 namespace ASP.NET_Core_UI.Code.Mappers
 {
     public class WebMapper:Profile
     {
 
-        public static void Run()
-        {
-            Mapper.Initialize(
-                a =>
-                {
-                    a.AddProfile<WebMapper>();
-                }
-                );
-
-        }
-
         public WebMapper()
         {
             CreateMap<Users, LoginModel>();
             CreateMap<LoginModel, Users>();
+
             CreateMap<Users, UserDropdownModel>();
             CreateMap<UserDropdownModel, Users>();
+
             CreateMap<Users, RegisterModel>();
             CreateMap<RegisterModel, Users>();
+
             CreateMap<County, SelectListItem>()
                 .ForMember(dest => dest.Value, s => s.MapFrom(src => src.Id.ToString()))
                 .ForMember(dest => dest.Text, s => s.MapFrom(src => src.Name));
+
             CreateMap<Interest, SelectListItem>()
                 .ForMember(dest => dest.Value, s => s.MapFrom(src => src.Id.ToString()))
                 .ForMember(dest => dest.Text, s => s.MapFrom(src => src.Name));
+
             CreateMap<Locality, SelectListItem>()
                 .ForMember(dest => dest.Value, s => s.MapFrom(src => src.Id.ToString()))
                 .ForMember(dest => dest.Text, s => s.MapFrom(src => src.Name));
 
             CreateMap<Users, ProfileViewerModel>()
-                .ForMember(dest => dest.Album, s => s.MapFrom(src => new List<Models.DomainModels.Album>(src.Album.Select(e => new Models.DomainModels.Album()
+                .ForMember(dest => dest.Album, s => s.MapFrom(src => new List<AlbumDomainModel>(src.Album.Select(e => new AlbumDomainModel()
                 {
                     Id = e.Id,
                     Count = e.Photo.Count,

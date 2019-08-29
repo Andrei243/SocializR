@@ -85,7 +85,11 @@ namespace Services.Post
 
         public List<Domain.Post> GetNewsfeed(int toSkip,int howMany)
         {
-            var friends = unitOfWork.Friendships.Query.AsNoTracking().Where(e => e.IdReceiver == CurrentUser.Id && (e.Accepted??false)).Select(e=>e.IdSender).ToList();
+            var friends = unitOfWork.Friendships.Query
+                .AsNoTracking()
+                .Where(e => e.IdReceiver == CurrentUser.Id && (e.Accepted??false))
+                .Select(e=>e.IdSender)
+                .ToList();
 
             
             var posts = GetFeed()
@@ -104,7 +108,8 @@ namespace Services.Post
 
         public bool RemovePost(int postId)
         {
-            var post = unitOfWork.Posts.Query.FirstOrDefault(e => e.Id == postId);
+            var post = unitOfWork.Posts.Query
+                .FirstOrDefault(e => e.Id == postId);
             if (post == null) return false;
 
             var reactions = unitOfWork.Reactions.Query.Where(e => e.PostId == postId);
@@ -122,7 +127,8 @@ namespace Services.Post
             if (CurrentUser.IsAdmin) return true;
             var post = unitOfWork.Posts.Query.First(e => e.Id == postId);
             if (post.UserId == CurrentUser.Id || post.Vizibilitate == "public") return true;
-            var suntPrieteni = unitOfWork.Friendships.Query.Any(e => e.IdReceiver == post.UserId && e.IdSender == CurrentUser.Id && (e.Accepted ?? false));
+            var suntPrieteni = unitOfWork.Friendships.Query
+                .Any(e => e.IdReceiver == post.UserId && e.IdSender == CurrentUser.Id && (e.Accepted ?? false));
             if (suntPrieteni) return post.Vizibilitate == "friends";
             else return false;
         }

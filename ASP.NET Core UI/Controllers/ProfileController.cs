@@ -51,13 +51,28 @@ namespace ASP.NET_Core_UI.Controllers
             this.photoService = photoService;
         }
 
+        public IActionResult Albums(int? userId)
+        {
+            if (userId == null)
+                userId = currentUser.Id;
+            var albums = albumService.GetAll(userId.Value);
+            AlbumsViewModel model = new AlbumsViewModel()
+            {
+                CanEdit = true,
+                Album = albums.Select(e => mapper.Map<AlbumDomainModel>(e)).ToList(),
+                AddAlbumModel = new AddAlbumModel()
+
+            };
+            return View(model);
+        }
+
         public JsonResult GetInterests()
         {
-            var indexi = interestsUsersService.GetAllInterests(currentUser.Id).Select(e=>e.Id).ToList();
+            var indexes = interestsUsersService.GetAllInterests(currentUser.Id).Select(e=>e.Id).ToList();
             var interests = interestService.GetAll().Select(e =>
              {
-                 var item = mapper.Map<InterestSelect>(e);
-                 item.Selected = indexi.Contains(e.Id);
+                 var item = mapper.Map<InterestSelectJsonModel>(e);
+                 item.Selected = indexes.Contains(e.Id);
                  return item;
 
              }).ToList();
@@ -82,7 +97,7 @@ namespace ASP.NET_Core_UI.Controllers
             }
             if (albumService.CanSeeAlbum(albumId.Value))
             {
-                var photos = photoService.GetPhotos(toSkip.Value, PageSize, albumId.Value).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Image>(e)).ToList();
+                var photos = photoService.GetPhotos(toSkip.Value, PageSize, albumId.Value).Select(e => mapper.Map<ImageJsonModel>(e)).ToList();
                 return Json(photos);
             }
             else return Json(new List<int>());
@@ -93,24 +108,32 @@ namespace ASP.NET_Core_UI.Controllers
         {
             var domainUser = userService.GetUserById(currentUser.Id);
             var user = mapper.Map<ProfileViewerModel>(domainUser);
-            user.Interests = interestsUsersService.GetAllInterests(domainUser.Id).Select(e => e.Name).ToList();
-            user.Album = albumService.GetAll(currentUser.Id).Select(
-                e=>mapper.Map<Album>(e)
+            user.Interests = interestsUsersService
+                .GetAllInterests(domainUser.Id)
+                .Select(e => e.Name)
+                .ToList();
+            user.Album = albumService
+                .GetAll(currentUser.Id)
+                .Select(
+                e=>mapper.Map<AlbumDomainModel>(e)
                 ).ToList();
             return View(user);
         }
 
-        public List<Photo> GetPhotos(int? albumId)
+        public List<PhotoDomainModel> GetPhotos(int? albumId)
         {
             if (albumId == null)
             {
-                return new List<Photo>();
+                return new List<PhotoDomainModel>();
             }
             if (albumService.CanSeeAlbum(albumId.Value))
             {
-                return albumService.GetPhotos(albumId.Value).Select(e => mapper.Map<Photo>(e)).ToList();
+                return albumService
+                    .GetPhotos(albumId.Value)
+                    .Select(e => mapper.Map<PhotoDomainModel>(e))
+                    .ToList();
             }
-            return new List<Photo>();
+            return new List<PhotoDomainModel>();
         }
 
         public IActionResult MakeProfilePhoto(int? photoId)
@@ -143,7 +166,8 @@ namespace ASP.NET_Core_UI.Controllers
             {
                 PhotoModel = new PhotoModel() { AlbumId = albumId },
                 HasThisAlbum = albumService.HasThisAlbum(albumId.Value),
-                Id=albumId.Value
+                Id=albumId.Value,
+                Name = albumService.GetAlbum(albumId.Value).Name
             };
 
             return View(albumViewerModel);
@@ -195,7 +219,8 @@ namespace ASP.NET_Core_UI.Controllers
             {
                 PhotoModel = model,
                 HasThisAlbum = albumService.HasThisAlbum(albumId.Value),
-                Id = albumId.Value
+                Id = albumId.Value,
+                Name=albumService.GetAlbum(albumId.Value).Name
             };
             return View("Album", albumViewerModel);
         }
@@ -211,8 +236,13 @@ namespace ASP.NET_Core_UI.Controllers
 
             var interests = interestService.GetAll();
 
-            model.Counties = counties.Select(c => mapper.Map<SelectListItem>(c)).ToList();
-            model.Albume = albumService.GetAll(currentUser.Id).Select(e => mapper.Map<Album>(e)).ToList();
+            model.Counties = counties
+                .Select(c => mapper.Map<SelectListItem>(c))
+                .ToList();
+            model.Albume = albumService
+                .GetAll(currentUser.Id)
+                .Select(e => mapper.Map<AlbumDomainModel>(e))
+                .ToList();
             return View(model);
 
         }
@@ -232,7 +262,10 @@ namespace ASP.NET_Core_UI.Controllers
 
                 return RedirectToAction("Index");
             }
-            user.Albume = albumService.GetAll(user.Id).Select(e => mapper.Map<Album>(e)).ToList();
+            user.Albume = albumService
+                .GetAll(user.Id)
+                .Select(e => mapper.Map<AlbumDomainModel>(e))
+                .ToList();
             return View(user);
 
         }
@@ -247,13 +280,14 @@ namespace ASP.NET_Core_UI.Controllers
             }
             var user = userService.GetCurrentUser();
             var modelEdit = mapper.Map<EditUserModel>(user);
+            modelEdit.Counties = countyService.GetAll()
+                .Select(c => mapper.Map<SelectListItem>(c))
+                .ToList();
 
-            var counties = countyService.GetAll();
+            modelEdit.Albume = albumService.GetAll(currentUser.Id)
+                .Select(e => mapper.Map<AlbumDomainModel>(e))
+                .ToList();
 
-            var interests = interestService.GetAll();
-
-            modelEdit.Counties = counties.Select(c => mapper.Map<SelectListItem>(c)).ToList();
-            modelEdit.Albume = albumService.GetAll(currentUser.Id).Select(e => mapper.Map<Album>(e)).ToList();
             modelEdit.AddAlbumModel = model;
             return View("Edit", modelEdit);
         }
@@ -276,8 +310,10 @@ namespace ASP.NET_Core_UI.Controllers
                 user.CanSee = friendService.CanSee(userId.Value);
                 user.CanSendRequest = friendService.CanSendRequest(userId.Value);
                 user.IsRequested = friendService.IsFriendRequested(userId.Value);
-                user.Interests = interestsUsersService.GetAllInterests(domainUser.Id).Select(e => e.Name).ToList();
-                user.Album = albumService.GetAll(userId.Value).Select(e => mapper.Map<Album>(e)).ToList();
+                user.Interests = interestsUsersService.GetAllInterests(domainUser.Id)
+                    .Select(e => e.Name)
+                    .ToList();
+                user.Album = albumService.GetAll(userId.Value).Select(e => mapper.Map<AlbumDomainModel>(e)).ToList();
 
                 return View(user);
             }
@@ -327,14 +363,14 @@ namespace ASP.NET_Core_UI.Controllers
         [Authorize]
         public JsonResult GetFriends(int toSkip)
         {
-            var friends = friendService.GetFriends(toSkip, PageSize).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Friend>(e)).ToList();
+            var friends = friendService.GetFriends(toSkip, PageSize).Select(e => mapper.Map<FriendJsonModel>(e)).ToList();
             return Json(friends);
 
         }
         [Authorize]
         public JsonResult GetRequesters(int toSkip)
         {
-            var friends = friendService.GetRequesters(toSkip, PageSize).Select(e => mapper.Map<ASP.NET_Core_UI.Models.JsonModels.Friend>(e)).ToList();
+            var friends = friendService.GetRequesters(toSkip, PageSize).Select(e => mapper.Map<FriendJsonModel>(e)).ToList();
             return Json(friends);
 
         }
