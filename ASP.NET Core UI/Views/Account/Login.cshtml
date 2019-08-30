@@ -19,14 +19,14 @@
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="Password" class="control-label">Parola</label>
+                            <label asp-for="Password" class="control-label">Password</label>
                             <input type="password" asp-for="Password" class="form-control" />
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
 
                         @if (Model.AreCredentialsInvalid)
                         {
-                            <span class="text-danger">Email sau parola incorecte</span>
+                            <span class="text-danger">Email or password is incorrect</span>
                         }
 
                         <div class="form-group">

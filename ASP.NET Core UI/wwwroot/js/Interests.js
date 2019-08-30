@@ -16,6 +16,7 @@
                         let interest = result[i];
                         var html = template(interest);
                         $("#interestBody").append(html);
+                        $("#interestBody tr:last-child a.needConfirmation").click(prevent);
                     }
                     noInterests += result.length;
                 }

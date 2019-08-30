@@ -51,11 +51,9 @@ namespace ASP.NET_Core_UI.Controllers
             this.photoService = photoService;
         }
 
-        public IActionResult Albums(int? userId)
+        public IActionResult Albums()
         {
-            if (userId == null)
-                userId = currentUser.Id;
-            var albums = albumService.GetAll(userId.Value);
+            var albums = albumService.GetAll(currentUser.Id);
             AlbumsViewModel model = new AlbumsViewModel()
             {
                 CanEdit = true,
@@ -278,18 +276,15 @@ namespace ASP.NET_Core_UI.Controllers
                 int albumId= albumService.AddAlbum(model.Name);
                 return RedirectToAction("Album", "Profile",new {albumId });
             }
-            var user = userService.GetCurrentUser();
-            var modelEdit = mapper.Map<EditUserModel>(user);
-            modelEdit.Counties = countyService.GetAll()
-                .Select(c => mapper.Map<SelectListItem>(c))
-                .ToList();
+            var albums = albumService.GetAll(currentUser.Id);
+            AlbumsViewModel modelEdit = new AlbumsViewModel()
+            {
+                CanEdit = true,
+                Album = albums.Select(e => mapper.Map<AlbumDomainModel>(e)).ToList(),
+                AddAlbumModel = model
 
-            modelEdit.Albume = albumService.GetAll(currentUser.Id)
-                .Select(e => mapper.Map<AlbumDomainModel>(e))
-                .ToList();
-
-            modelEdit.AddAlbumModel = model;
-            return View("Edit", modelEdit);
+            };
+            return View("Albums", modelEdit);
         }
 
         public IActionResult Profile(int? userId)

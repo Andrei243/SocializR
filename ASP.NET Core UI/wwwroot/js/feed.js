@@ -197,7 +197,7 @@
 
 
     $(window).scroll(() => {
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight-3000) {
             eventPost();
             eventPost = () => { }
             this.setTimeout(() => {
@@ -219,6 +219,11 @@
             }
 
             reader.readAsDataURL(input.files[0]);
+            $("#butonAdaugarePoza").text("Change the photo");
+        }
+        else {
+            $("#imgPreview").attr("hidden", true);
+            $("#butonAdaugarePoza").text("Add photo");
         }
     }
     document.getElementById("Binar").addEventListener("change", function () {

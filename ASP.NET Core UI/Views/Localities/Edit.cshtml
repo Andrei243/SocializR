@@ -16,11 +16,7 @@
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="CountyId" class="control-label"></label>
-                <select asp-for="CountyId" class="form-control">
-                    @foreach (var county in Model.CountyIds)
-                    {
-                        <option value="@county.Value" selected="@county.Selected">@county.Text</option>
-                    }
+                <select asp-for="CountyId" class="form-control" asp-items="Model.CountyIds">
                 </select>
                 <span asp-validation-for="CountyId" class="text-danger"></span>
             </div>

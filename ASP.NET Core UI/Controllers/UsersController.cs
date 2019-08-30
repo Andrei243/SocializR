@@ -48,6 +48,7 @@ namespace ASP.NET_Core_UI.Controllers
             this.interestService = interestService;
             this.albumService = albumService;
             this.photoService = photoService;
+            PageSize = 500;
         }
         [AllowAnonymous]
         public List<UserDropdownModel> GetUsersByName(string name)

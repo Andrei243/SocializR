@@ -16,6 +16,7 @@
                         let locality = result[i];
                         var html = template(locality);
                         $("#localityBody").append(html);
+                        $("#localityBody tr:last-child a.needConfirmation").click(prevent);
                     }
                     noLocalities += result.length;
                 }

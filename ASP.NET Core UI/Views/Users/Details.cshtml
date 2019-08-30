@@ -54,11 +54,11 @@
 
 </div>
 
-<div class="container jumbotron">
-    <ul class="nav nav-tabs nav-justified">
-        <li class="active nav-item"><a data-toggle="tab" href="#contactDiv">Contact Information </a> </li>
-        <li class="nav-item"><a data-toggle="tab" href="#interestsDiv">Likes and Interests</a></li>
-        <li class="nav-item"><a data-toggle="tab" href="#albumsDiv">Albums</a></li>
+<div class="container profileInfo">
+    <ul class="nav nav-tabs nav-justified infoTabs" role="tablist">
+        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#contactDiv">Contact Information </a> </li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#interestsDiv">Likes and Interests</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#albumsDiv">Albums</a></li>
     </ul>
 
     <div class="tab-content">
@@ -79,7 +79,25 @@
                             <h5>Locality  &nbsp;&nbsp; @Model.Locality</h5>
                             <h5>County  &nbsp;&nbsp; @Model.County</h5>
                         }
-                        <h5>Gender  &nbsp;&nbsp; @currentUser.SexualIdentity</h5>
+                    <h5>
+                        Gender  &nbsp;&nbsp; @{
+                            var sex = "";
+                            switch (Model.SexualIdentity)
+                            {
+                                case "masculin":
+                                    sex = "Man";
+                                    break;
+                                case "feminin":
+                                    sex = "Woman";
+                                    break;
+                                case "nespecificat":
+                                    sex = "Unspecified";
+                                    break;
+
+
+                            }
+                        } @sex
+                    </h5>
                     </div>
                 </div>
             </div>
@@ -139,20 +157,31 @@
                         {
                             @if (row % 3 == 0)
                             {
-                        <div>
+                        <div class="albumProfilPreview">
                             <h5>@album.Name</h5>
-                            <h6>@album.Count</h6>
+
                             <a class="needConfirmation" href="@Url.Action("DeleteAlbum","Users",new {userId=Model.Id,albumId=album.Id })">Delete this album</a>
                             <a href="@Url.Action("Album", "Users", new {albumId=album.Id})">
                                 @if (album.CoverPhoto != -1)
                                 {
-                                    <img class="albumPreview" src="@Url.Action("Download", "Photos", new {id=album.CoverPhoto})"  />
+                                    <img class="albumPreview" src="@Url.Action("Download", "Photos", new {id=album.CoverPhoto})" />
                                 }
                                 else
                                 {
-                                    <img class="albumPreview" src="~/images/genericAlbumCoverPhoto.jpg"  />
+                                    <img class="albumPreview" src="~/images/genericAlbumCoverPhoto.jpg" />
                                 }
                             </a>
+                            <h6>
+                                @album.Count
+                                                        @if (album.Count != 1)
+                                                        {
+                                                            <span>Photos</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>Photo</span>
+                                                        }
+                                                    </h6>
                         </div>
                             }
                             row++;
@@ -164,19 +193,30 @@
                         {
                             @if (row % 3 == 1)
                             {
-                        <div>
+                        <div class="albumProfilPreview">
                             <h5>@album.Name</h5>
-                            <h6>@album.Count</h6>
+                            
                             <a class="needConfirmation" href="@Url.Action("DeleteAlbum","Users",new {userId=Model.Id,albumId=album.Id })">Delete this album</a>
                             <a href="@Url.Action("Album", "Users", new {albumId=album.Id})">
                                 @if (album.CoverPhoto != -1)
                                 {
-                                    <img class="albumPreview" src="@Url.Action("Download", "Photos", new {id=album.CoverPhoto})"  />
+                                    <img class="albumPreview" src="@Url.Action("Download", "Photos", new {id=album.CoverPhoto})" />
                                 }
                                 else
                                 {
-                                    <img class="albumPreview" src="~/images/genericAlbumCoverPhoto.jpg"  />
+                                    <img class="albumPreview" src="~/images/genericAlbumCoverPhoto.jpg" />
                                 }
+                            <h6>
+                                @album.Count
+                                                            @if (album.Count != 1)
+                                                            {
+                                                                <span>Photos</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span>Photo</span>
+                                                            }
+                                                        </h6>
                             </a>
                         </div>
                             }
@@ -189,19 +229,30 @@
                         {
                             @if (row % 3 == 2)
                             {
-                        <div>
+                        <div class="albumProfilPreview">
                             <h5>@album.Name</h5>
-                            <h6>@album.Count</h6>
+                            
                             <a class="needConfirmation" href="@Url.Action("DeleteAlbum","Users",new {userId=Model.Id,albumId=album.Id })">Delete this album</a>
                             <a href="@Url.Action("Album", "Users", new {albumId=album.Id})">
                                 @if (album.CoverPhoto != -1)
                                 {
-                                    <img class="albumPreview" src="@Url.Action("Download", "Photos", new {id=album.CoverPhoto})"  />
+                                    <img class="albumPreview" src="@Url.Action("Download", "Photos", new {id=album.CoverPhoto})" />
                                 }
                                 else
                                 {
-                                    <img class="albumPreview" src="~/images/genericAlbumCoverPhoto.jpg"  />
+                                    <img class="albumPreview" src="~/images/genericAlbumCoverPhoto.jpg" />
                                 }
+                            <h6>
+                                @album.Count
+                                                            @if (album.Count != 1)
+                                                            {
+                                                                <span>Photos</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span>Photo</span>
+                                                            }
+                                                        </h6>
                             </a>
                         </div>
                             }
@@ -292,7 +343,7 @@
         
 
        
-        <button id="postRemove{{id}}" class="btn btn-primary buttonRemovePost btn-sm" data-post="{{id}}">Remove Post</button>
+        <button id="postRemove{{id}}" class="btn  btn-danger buttonRemovePost btn-sm" data-post="{{id}}">Remove Post</button>
         
     </div>
 

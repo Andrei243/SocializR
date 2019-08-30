@@ -12,8 +12,8 @@
             },
             success: (response) => {
                 if (response) {
-                    nod.parentNode.querySelector("p").innerText = text;
-                    nod.parentNode.querySelector(".description").value = "";
+                    nod.parentNode.parentNode.querySelector("p").innerText = text;
+                    nod.parentNode.parentNode.querySelector(".description").value = "";
                 }
             }
 
@@ -41,6 +41,9 @@
                         var html = template(image);
                         $("#imageBody").append(html);
                         $("#changeDescription" + image.id).click(changeDescription);
+                        $("#changeDescription" + image.id).click(prevent);
+                        $("#makeProfile" + image.id).click(prevent);
+                        $("#removePhoto" + image.id).click(prevent);
                     }
                     noImages += result.length;
                 }
@@ -65,5 +68,24 @@
         }
 
     })
+    $("#imgPreview").attr("hidden", true);
 
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgPreview').attr('src', e.target.result);
+                $("#imgPreview").attr("hidden", false);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+        else {
+            $("#imgPreview").attr("hidden", true);
+        }
+    }
+    document.getElementById("Binar").addEventListener("change", function () {
+        readURL(this);
+    })
 })

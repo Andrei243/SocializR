@@ -1,9 +1,4 @@
-﻿//window.addEventListener("load", () => {
-    
-//})
-
-
-window.addEventListener("load", () => {
+﻿window.addEventListener("load", () => {
     let event = (() => {
         var source = document.getElementById("county-template").innerHTML;
         var template = Handlebars.compile(source);
@@ -27,6 +22,8 @@ window.addEventListener("load", () => {
                             if (!x) {
                                 e.preventDefault();
                                 e.stopPropagation();
+                                e.stopImmediatePropagation();
+                                return;
                             }
                             let val = e.currentTarget.dataset.id;
                             $.ajax({

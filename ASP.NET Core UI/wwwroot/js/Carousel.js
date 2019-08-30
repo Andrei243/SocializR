@@ -19,7 +19,7 @@ window.addEventListener("load", () => {
                     else {
                         beginAnchor = beginAnchor + " hidden>";
                     }
-                    let photo = `<img src="/Photos/Download/${response[i].id}" height="40em"/>`
+                    let photo = `<img class="albumPreview" src="/Photos/Download/${response[i].id}"/>`
                     let finishAnchor = "</a>";
                     photosHtml = photosHtml + '\n' + beginAnchor + '\n' + photo + '\n' + finishAnchor;
                 }

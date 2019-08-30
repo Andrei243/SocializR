@@ -121,17 +121,32 @@ namespace Services.Photo
                 .OrderBy(e => e.Position)
                 .ToList();
 
-            foreach(var poza in poze)
+           
+
+            if(albumId!= null)
             {
-                if (poza.Id == photoId) {
+                var user = unitOfWork.Albums.Query.Where(e => e.Id == albumId).Select(e => e.User).FirstOrDefault();
+                if (user.PhotoId == photo.Id)
+                {
+                    user.PhotoId = null;
+                    unitOfWork.Users.Update(user);
+                }
+            }
+
+            foreach (var poza in poze)
+            {
+                if (poza.Id == photoId)
+                {
                     unitOfWork.Photos
-                        .Remove(poza); }
-                else if (poza.Position > photoId)
+                        .Remove(poza);
+                }
+                else if (poza.Position > photo.Position)
                 {
                     poza.Position -= 1;
                     unitOfWork.Photos.Update(poza);
                 }
             }
+
             return unitOfWork.SaveChanges() != 0;
         }
 

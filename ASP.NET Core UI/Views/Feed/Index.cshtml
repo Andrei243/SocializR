@@ -68,7 +68,7 @@
             
         </div>
         
-        <div id="commentBody{{id}}" data-toskip="0">
+        <div id="commentBody{{id}}" class="commentBody" data-toskip="0">
 
         </div>
         <button id="commentGetter{{id}}" class="btn btn-primary btn-sm" data-post="{{id}}">Load more comments</button>
@@ -91,10 +91,10 @@
         }
 
         {{#if isMine}}
-        <button id="postRemove{{id}}" class="btn btn-primary buttonRemovePost btn-sm" data-post="{{id}}">Remove Post</button>
+        <button id="postRemove{{id}}" class="btn  buttonRemovePost btn-danger btn-sm" data-post="{{id}}">Remove Post</button>
         {{else}}
         {{#if isAdmin}}
-        <button id="postRemove{{id}}" class="btn btn-primary buttonRemovePost btn-sm" data-post="{{id}}">Remove Post</button>
+        <button id="postRemove{{id}}" class="btn  buttonRemovePost btn-danger btn-sm" data-post="{{id}}">Remove Post</button>
         {{/if}}
         {{/if}}
     </div>

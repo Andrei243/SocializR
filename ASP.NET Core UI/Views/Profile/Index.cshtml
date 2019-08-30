@@ -4,21 +4,21 @@
     Layout = "~/Views/Shared/GeneralLayout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>@Model.Name @Model.Surname</h1>
 
-<div>
+<div class="profilProfil">
 
 
     @if (currentUser.ProfilePhoto.HasValue)
     {
         <a href="@Url.Action("Download", "Photos", new { id = currentUser.ProfilePhoto })" data-lightbox="pozaprofil">
-            <img src="@Url.Action("Download", "Photos", new { id = currentUser.ProfilePhoto })" height="100" />
+            <img src="@Url.Action("Download", "Photos", new { id = currentUser.ProfilePhoto })"  />
         </a>
     }
     else
     {
 <a href="/images/DefaultProfile.png" data-lightbox="pozaprofil">
-    <img src="/images/DefaultProfile.png" height="100" />
+    <img src="/images/DefaultProfile.png"  />
 </a>
             }
 
@@ -26,18 +26,17 @@
 
 <div id="currentUserInfo" hidden data-profile="@currentUser.ProfilePhoto" data-name="@currentUser.Name @currentUser.Surname" data-userid="@currentUser.Id"></div>
 
-<div class="container jumbotron">
-    <ul class="nav nav-tabs nav-justified">
-        <li class="active nav-item"><a data-toggle="tab" href="#contactDiv">Contact Information </a> </li>
-        <li class="nav-item"><a data-toggle="tab" href="#interestsDiv">Likes and Interests</a></li>
-        <li class="nav-item"><a data-toggle="tab" href="#albumsDiv">Albums</a></li>
+<div class="container profileInfo">
+    <ul class="nav nav-tabs nav-justified infoTabs" role="tablist">
+        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#contactDiv">Contact Information </a> </li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#interestsDiv">Likes and Interests</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#albumsDiv">Albums</a></li>
     </ul>
 
     <div class="tab-content">
 
         <div id="contactDiv" class=" tab-pane fade show active">
             <div class="container-fluid">
-                <h2>Contact information</h2>
 
                 <div class="row">
                     <div class="col-6">
@@ -51,14 +50,31 @@
                             <h5>Locality  &nbsp;&nbsp; @currentUser.Locality.Name</h5>
                             <h5>County  &nbsp;&nbsp; @currentUser.Locality.County.Name</h5>
 }
-                        <h5>Gender  &nbsp;&nbsp; @currentUser.SexualIdentity</h5>
+                    <h5>
+                        Gender  &nbsp;&nbsp; @{
+                            var sex = "";
+                            switch (Model.SexualIdentity)
+                            {
+                                case "masculin":
+                                    sex = "Man";
+                                    break;
+                                case "feminin":
+                                    sex = "Woman";
+                                    break;
+                                case "nespecificat":
+                                    sex = "Unspecified";
+                                    break;
+
+
+                            }
+                        } @sex
+                    </h5>
                     </div>
                 </div>
             </div>
         </div>
 
         <div id="interestsDiv" class="tab-pane fade">
-            <h2>Likes and interests</h2>
             <div class="container-fluid">
                 <div class="row">
                     @{int row = 0;}
@@ -101,7 +117,6 @@
         </div>
 
         <div id="albumsDiv" class="tab-pane fade">
-            <h2>Albums</h2>
 
             <div class="container-fluid">
                 <div class="row">
@@ -111,7 +126,7 @@
                         {
                             @if (row % 3 == 0)
                             {
-                                <div>
+                                <div class="albumProfilPreview">
                                     <h5>@album.Name</h5>
 
                                     <div class="poze" data-id="@album.Id">
@@ -124,7 +139,17 @@
                                             <img class="albumPreview" src="@Url.Action("Download", "Photos", new { id = album.CoverPhoto })"  />
                                         }
                                     </div>
-                                    <h6>@album.Count</h6>
+                                    <h6>
+                                        @album.Count
+                                                                        @if (album.Count != 1)
+                                                                        {
+                                                                            <span>Photos</span>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span>Photo</span>
+                                                                        }
+                                                                    </h6>
                                 </div>
                             }
                             row++;
@@ -136,7 +161,7 @@
                         {
                             @if (row % 3 == 1)
                             {
-                                <div>
+                                <div class="albumProfilPreview">
                                     <h5>@album.Name</h5>
 
                                     <div class="poze" data-id="@album.Id">
@@ -149,7 +174,17 @@
                                             <img src="@Url.Action("Download", "Photos", new { id = album.CoverPhoto })" class="albumPreview" />
                                         }
                                     </div>
-                                    <h6>@album.Count</h6>
+                                    <h6>
+                                        @album.Count
+                                                                        @if (album.Count != 1)
+                                                                        {
+                                                                            <span>Photos</span>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span>Photo</span>
+                                                                        }
+                                                                    </h6>
                                 </div>
                             }
                             row++;
@@ -161,7 +196,7 @@
                         {
                             @if (row % 3 == 2)
                             {
-                                <div>
+                                <div class="albumProfilPreview">
                                     <h5>@album.Name</h5>
 
                                     <div class="poze" data-id="@album.Id">
@@ -174,7 +209,17 @@
                                             <img src="@Url.Action("Download", "Photos", new { id = album.CoverPhoto })" class="albumPreview" />
                                         }
                                     </div>
-                                    <h6>@album.Count</h6>
+                                    <h6>
+                                        @album.Count
+                                                                        @if (album.Count != 1)
+                                                                        {
+                                                                            <span>Photos</span>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span>Photo</span>
+                                                                        }
+                                                                    </h6>
                                 </div>
                             }
                             row++;
@@ -268,7 +313,7 @@
         
 
         
-        <button id="postRemove{{id}}" class="btn btn-primary buttonRemovePost btn-sm" data-post="{{id}}">Remove Post</button>
+        <button id="postRemove{{id}}" class="btn  buttonRemovePost btn-danger btn-sm" data-post="{{id}}">Remove Post</button>
         
     </div>
 

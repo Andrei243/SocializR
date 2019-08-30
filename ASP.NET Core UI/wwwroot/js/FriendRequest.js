@@ -16,6 +16,7 @@
                         let friend = result[i];
                         var html = template(friend);
                         $("#friendRequestBody").append(html);
+                        $("#friendRequestBody div:last-child a.needConfirmation").click(prevent);
                     }
                     noFriends += result.length;
                 }

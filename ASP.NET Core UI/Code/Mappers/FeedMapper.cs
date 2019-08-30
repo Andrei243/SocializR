@@ -44,7 +44,8 @@ namespace ASP.NET_Core_UI.Code.Mappers
                 .ForMember(dest => dest.CoverPhoto, s => s.MapFrom(
                        src => src.Photo.Count > 0 ?
                          src.Photo.OrderBy(f => f.Position).FirstOrDefault(f => f.AlbumId == src.Id).Id :
-                   -1));
+                   -1))
+                .ForMember(dest => dest.Id, s => s.MapFrom(src => src.Id));
 
             CreateMap<PhotoModel, Domain.Photo>()
                 .ForMember(dest => dest.MIMEType, s => s.MapFrom(src => src.Binar.ContentType));

@@ -7,7 +7,7 @@ var prevent = (e) => {
     var x = confirm("Are you sure of your action?");
     if (!x) {
         e.preventDefault();
-        e.stopPropagation();
+        e.stopImmediatePropagation();
     }
 }
 window.addEventListener("load", () => {

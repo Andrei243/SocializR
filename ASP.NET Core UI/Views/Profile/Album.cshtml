@@ -3,7 +3,7 @@
     Layout = "~/Views/Shared/GeneralLayout.cshtml";
     ViewData["Title"] = Model.Name + " Album";
 }
-<h1>Album</h1>
+<h1>@Model.Name</h1>
 <div id="imageBody">
    
 </div>
@@ -17,13 +17,16 @@
     <script id="image-template" type="text/x-handlebars-template">
 
         <div class="imagine">
-            <img src="/Photos/Download/{{id}}" height="40" />
-            <p>{{description}}</p>
+
+            <div class="bodyImagine">
+                <img src="/Photos/Download/{{id}}" />
+                <p>{{description}}</p>
+            </div>
             <div class="photoActions">
-                <a class="needConfirmation" href="/Profile/MakeProfilePicture?photoId={{id}}">Make this your profile picture</a>
-                <a class="needConfirmation" href="/Profile/DeletePhoto?photoId={{id}}&albumId={{albumId}}">Delete this photo</a>
+                <a id="makeProfile{{id}}" class="needConfirmation btn btn-primary btn-sm" href="/Profile/MakeProfilePhoto?photoId={{id}}">Make this your profile picture</a>
+                <a id="removePhoto{{id}}" class="needConfirmation btn btn-danger btn-sm" href="/Profile/RemovePhoto?photoId={{id}}&albumId={{albumId}}">Delete this photo</a>
                 <input type="text" class="description" />
-                <button id="changeDescription{{id}}" data-photoid="{{id}}">Save</button>
+                <button class="btn btn-primary btn-sm" id="changeDescription{{id}}" data-photoid="{{id}}">Save</button>
             </div>
 
         </div>
@@ -35,9 +38,18 @@ else
     <script id="image-template" type="text/x-handlebars-template">
 
         <div class="imagine">
-            <img src="/Photos/Download/{{id}}" height="40" />
-            <p>{{description}}</p>
-
+            <div class="bodyImagine">
+                <img src="/Photos/Download/{{id}}" height="40" />
+                <p>{{description}}</p>
+            </div>
+            @if (currentUser.IsAdmin)
+            {
+                <div class="photoActions">
+                    <a id="removePhoto{{id}}" class="needConfirmation btn btn-danger btn-sm" href="/Profile/RemovePhoto?photoId={{id}}&albumId={{albumId}}">Delete this photo</a>
+                    <input type="text" class="description" />
+                    <button class="btn btn-primary btn-sm" id="changeDescription{{id}}" data-photoid="{{id}}">Save</button>
+                </div>
+            }
 
         </div>
 

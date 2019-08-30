@@ -73,6 +73,7 @@
                     let html = templateComment(obj);
                     $("#commentBody" + postId).prepend(html);
                     $("#commentBody" + postId).data("toskip", parseInt($("#commentBody" + postId).data("toskip")) + 1);
+                    $("#deleteComment" + response).click(prevent);
                     $("#deleteComment" + response).click(eventDeleteComment);
                     e.currentTarget.parentNode.querySelector("input").value = "";
 
@@ -134,8 +135,8 @@
                             let comment = result[i];
                             let html = templateComment(comment);
                             $("#commentBody" + idPost).append(html);
+                            $("#deleteComment" + comment.id).click(prevent);
                             $("#deleteComment" + comment.id).click(eventDeleteComment);
-
                         }
                         canGet = true;
 
@@ -176,7 +177,9 @@
                             $("#commentGetter" + post.id).click(eventComentariu);
                             $("#like" + post.id).click(eventLike);
                             $("#commentAdd" + post.id).click(eventAddComment);
+                            $("#postRemove" + post.id).click(prevent);
                             $("#postRemove" + post.id).click(eventDeletePost);
+                           
                         }
                         canGet = true;
                     }

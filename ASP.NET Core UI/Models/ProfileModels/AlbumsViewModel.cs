@@ -8,12 +8,11 @@ namespace ASP.NET_Core_UI.Models.ProfileModels
 {
     public class AlbumsViewModel
     {
-
+        public int Id { get; set; }
         public AddAlbumModel AddAlbumModel { get; set; }
 
         public List<AlbumDomainModel> Album { get; set; }
 
         public bool CanEdit { get; set; }
-
     }
 }
