@@ -45,6 +45,7 @@ namespace Services.Photo
                     .Where(e => e.Id == photo.AlbumId)
                     .Select(e => e.User)
                     .First(e => true);
+                if (user.PhotoId == photoId) return true;
             }
             else
             {

@@ -40,20 +40,28 @@
             {{/if}}
         </td>
         <td>
-            <a href="/Users/Edit?userId={{id}}">Edit</a>|
-            <a href="/Users/Details?userId={{id}}">Details</a>|
-            <a class="needConfirmation" href="/Users/Delete?userId={{id}}">Delete</a>|
+            <a href="/Users/Edit?userId={{id}}">Edit</a>
+            
+        </td>
+        <td>
+            <a href="/Users/Details?userId={{id}}">Details</a>
+        </td>
+        <td>
+            <a class="needConfirmation" href="/Users/Delete?userId={{id}}">Delete</a>
+        </td>
+        <td>
             {{#if isBanned}}
             <a class="needConfirmation" href="/Users/Unban?userId={{id}}">Unban</a>
             {{else}}
             <a class="needConfirmation" href="/Users/Ban?userId={{id}}">Ban</a>
-            {{/if}}|
+            {{/if}}
+        </td>
+        <td>
             {{#if isAdmin}}
             <a class="needConfirmation" href="/Users/MakeAdmin?userId={{id}}">Make admin</a>
             {{else}}
             <a class="needConfirmation" href="/Users/RevokeAdmin?userId={{id}}">Revoke admin</a>
             {{/if}}
-
         </td>
     </tr>
 

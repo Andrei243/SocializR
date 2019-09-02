@@ -132,12 +132,12 @@ namespace ASP.NET_Core_UI.Controllers
             if (ModelState.IsValid)
             {
                 
-                var newPost = mapper.Map<Domain.Post>(post);
+                var newPost = mapper.Map<Post>(post);
                 postService.AddPost(newPost);
 
                 if (post.Binar != null)
                 {
-                    Domain.Photo photo = new Domain.Photo()
+                    var photo = new Photo()
                     {
                         Position = 1,
                         PostId = newPost.Id,

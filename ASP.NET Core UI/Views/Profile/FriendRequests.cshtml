@@ -12,17 +12,22 @@
 
 <script id="friend-template" type="text/x-handlebars-template">
     <div class="friend">
-        <p>{{name}}</p>
         <a href="/Profile/Profile?userId={{id}}">
             {{#if profilePhoto}}
-            <img src="/Photos/Download/{{profilePhoto}}" height="100" />
+            <img src="/Photos/Download/{{profilePhoto}}" />
             {{else}}
-            <img src="/images/DefaultProfile.png" height="100" />
+            <img src="/images/DefaultProfile.png" />
             {{/if}}
+            <p>{{name}}</p>
         </a>
 
-        <a class="btn btn-primary" href="/Profile/Accept/{{id}}">Accept</a>
-        <a class="btn btn-danger" href="/Profile/Refuse/{{id}}">Refuse</a>
+        
+
+
+        <div class="friendshipButtons">
+            <a class="btn btn-primary" href="/Profile/Accept/{{id}}">Accept</a>
+            <a class="btn btn-danger" href="/Profile/Refuse/{{id}}">Refuse</a>
+        </div>
 
     </div>
 

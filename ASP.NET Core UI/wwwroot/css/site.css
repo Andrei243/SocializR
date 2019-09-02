@@ -70,7 +70,7 @@ header {
 }
 
 nav div a {
-    border-radius: 10px;
+    border-radius: 0.25rem;
     color: #F7F0F5;
     padding: 1em;
     text-decoration: none;
@@ -324,7 +324,7 @@ div.post {
     background-color: #ffffff;
     border-radius: 4px;
     padding: 10px;
-    margin-bottom: 5px;
+    margin-bottom: 25px;
     border: 1px solid #ced4da;
 }
 
@@ -347,15 +347,15 @@ div.post {
 
 #butonAdaugarePoza {
     cursor: pointer;
-    background: #48c6ff;
-    font-size: 15px;
+    background: #a6b6bd;
+    font-size: 14px;
     padding: 7px 12px;
     color: #ffffff;
     border-radius: 0.25rem;
 }
 
     #butonAdaugarePoza:hover, #butonAdaugarePoza:focus {
-        background: #22b5f7;
+        background: #aeaeaf;
     }
 
 .dropdownItem, .dropdownItem:hover, .dropdownItem:focus {
@@ -424,16 +424,25 @@ div.post {
 }
 
 .reactionCounter {
-    padding: 10px;
-    border-bottom: 1px solid #ced4da;
-    border-top: 1px solid #ced4da;
     font-size: 13px;
     font-weight: 600;
-    margin: 10px -10px;
+    display: inline;
+    margin-left: 20px;
 }
 
+.reaction {
+    background: #eaf1f9;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 0.25rem;
+}
 
-.friendDiv {
+.like {
+    clear: none;
+    margin-left: 15px;
+}
+
+.friendDiv, .friend {
     margin-left: 50px;
     margin-bottom: 10px;
     margin-top: 0px;
@@ -444,28 +453,11 @@ div.post {
     padding: 10px;
 }
 
-    .friendDiv a, .friendDiv a:hover, .friendDiv a:focus {
+    .friendDiv a, .friendDiv a:hover, .friendDiv a:focus, .friend a, .friend a:hover, .friend a:focus {
         text-decoration: none;
         color: black;
     }
 
-
-
-.friend {
-    margin-left: 50px;
-    margin-bottom: 10px;
-    margin-top: 0px;
-    border-top-color: #dee2e6;
-    border-top-width: 1px;
-    border-top-style: solid;
-    display: block;
-    padding: 10px;
-}
-
-    .friend a, .friend a:hover, .friend a:focus {
-        text-decoration: none;
-        color: black;
-    }
 
 .post .imgPostare {
     max-width: 500px;
@@ -498,7 +490,7 @@ div.post {
     border-radius: 50%;
 }
 
-div.albumEdit {
+/*div.albumEdit {
     padding: 10px;
     border-top: #dee2e6 solid 1px;
     margin-bottom: 10px;
@@ -519,7 +511,7 @@ div.albumEdit {
 
     div.albumEdit h6 {
         font-size: 20px;
-    }
+    }*/
 
 .imagine {
     border-top: solid 1px #dee2e6;
@@ -552,7 +544,9 @@ div.albumEdit {
 .albumProfilPreview {
     padding-left: 5px;
     padding-right: 5px;
-    height: 150px;
+    border: #dee2e6 solid 1px;
+    border-radius: 4px;
+    margin-bottom: 20px;
 }
 
 .albumPreview {
@@ -575,7 +569,7 @@ div.albumEdit {
 }
 
 .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
-    background-color: #f9fcfd;
+    background-color: white;
 }
 
 .commentBody {
@@ -596,6 +590,131 @@ div.albumEdit {
         font-weight: 600;
     }
 
-    .postAdd option {       
+    .postAdd option {
         font-weight: 600;
+    }
+
+.profileInfo {
+    background: white;
+}
+
+#albumsDiv {
+    background: white;
+}
+
+#interestsDiv {
+    background: white;
+}
+
+#contactDiv {
+    background: white;
+}
+
+.poze {
+    height: 120px;
+    position: relative;
+}
+
+    .poze a {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+        .poze a img {
+            object-fit: cover;
+            display: block;
+            max-width: none;
+            max-height: none;
+            width: 100%;
+            height: 120px;
+        }
+
+.albumName {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.albumCounter {
+    font-size: 12px;
+}
+
+.nav-link {
+    color: #48c6ff;
+}
+
+.dropdown-menu li a {
+    color: #48c6ff;
+}
+
+.dropdown-menu.show {
+    padding-left: 5px;
+    margin-top: 5px;
+    display: block;
+}
+
+    .dropdown-menu.show li {
+        width: 80px;
+    }
+
+.btn {
+    border-radius: 0.25rem;
+}
+
+.buttonRemovePost {
+    position: relative;
+    right: -618px;
+}
+/*.buttonComment{
+    position:relative;
+    right:-100px;
+}*/
+
+.divPreviewPhoto {
+    text-align: center;
+}
+
+.contactTable {
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.friendDiv > a > img, .friend > a > img {
+    display: inline;
+    height: 50px;
+    clear: none;
+}
+
+.friendDiv > a > p, .friend > a > p {
+    display: inline;
+}
+
+.friend > div.friendshipButtons {
+    display: inline-block;
+    position: relative;
+    right: -400px;
+    top: 0;
+}
+
+div.albumProfilPreview.albumEdit {
+    width: 400px;
+}
+
+    div.albumProfilPreview.albumEdit > a {
+        position: relative;
+        top: -50px;
+        right: -258px;
+    }
+
+a {
+    color: #48c6ff;
+}
+    a:hover, a:focus {
+        color:#22b5f7;
+        text-decoration:none;
     }

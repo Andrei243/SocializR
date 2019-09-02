@@ -209,6 +209,13 @@
 
     $("#imgPreview").attr("hidden", true);
 
+    let photoDelete = (e) => {
+        $("#Binar").val("");
+        $("#imgPreview").attr("hidden", true);
+        $("#divButtonDeletePhoto").empty();
+        e.preventDefault();
+    }
+
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -219,7 +226,8 @@
             }
 
             reader.readAsDataURL(input.files[0]);
-            $("#butonAdaugarePoza").text("Change the photo");
+            $("#divButtonDeletePhoto").append('<button class="btn btn-danger " id="buttonDeletePhoto">Delete the photo</button>');
+            $("#buttonDeletePhoto").click(photoDelete);
         }
         else {
             $("#imgPreview").attr("hidden", true);

@@ -72,18 +72,21 @@
 
         </div>
         <button id="commentGetter{{id}}" class="btn btn-primary btn-sm" data-post="{{id}}">Load more comments</button>
-        @if (currentUser.IsAuthenticated)
-        {
-            <a id="like{{id}}" data-post="{{id}}">
-                {{#if liked}}
-                <img src="/images/Liked.png" height="20" />
-                {{else}}
-                <img src="/images/notLiked.png" height="20" />
-                {{/if}}
-            </a>
-        }
+        <div class="reaction">
 
-        <p class="reactionCounter">{{noReactions}} Likes</p>
+            @if (currentUser.IsAuthenticated)
+            {
+                <a class="like" id="like{{id}}" data-post="{{id}}">
+                    {{#if liked}}
+                    <img src="/images/Liked.png" height="20" />
+                    {{else}}
+                    <img src="/images/notLiked.png" height="20" />
+                    {{/if}}
+                </a>
+            }
+            <p class="reactionCounter">{{noReactions}} Likes</p>
+
+        </div>
         @if (currentUser.IsAuthenticated)
         {
             <input type="text" class="addComment form-control" />

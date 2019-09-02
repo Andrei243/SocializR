@@ -7,7 +7,7 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -29,8 +29,13 @@
                 {{name}}
             </td>
             <td>
-                <a href="/Counties/Edit/{{id}}" >Edit</a> |
-                <a href="/Counties/Details/{{id}}">Details</a> |
+                <a href="/Counties/Edit/{{id}}" >Edit</a> 
+                
+            </td>
+            <td>
+                <a href="/Counties/Details/{{id}}">Details</a>
+            </td>
+            <td>
                 <a class="needConfirmation" data-id="{{id}}" href="#" onclick="return false">Delete</a>
             </td>
 

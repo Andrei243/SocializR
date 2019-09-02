@@ -1,6 +1,6 @@
 ﻿@model PhotoModel
 
-    <form enctype="multipart/form-data" asp-controller="Profile" asp-action="AddPhoto">
+    <form enctype="multipart/form-data" asp-controller="Profile" asp-action="AddPhoto" onsubmit="return checkForm(this);">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
             <label asp-for="Binar" class="control-label" id="butonAdaugarePoza">Add a photo</label>
@@ -10,6 +10,6 @@
         </div>
             <input type="number" asp-for="AlbumId" value="@Model.AlbumId" hidden />
         <div class="form-group">
-            <input type="submit" value="Create" class="btn btn-primary" />
+            <input name="submit" type="submit" value="Create" class="btn btn-primary" />
         </div>
     </form>

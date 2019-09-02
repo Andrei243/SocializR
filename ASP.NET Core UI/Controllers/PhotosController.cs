@@ -10,14 +10,17 @@ using Domain;
 using ASP.NET_Core_UI.Models;
 using System.IO;
 using ASP.NET_Core_UI.Models.ProfileModels;
+using ASP.NET_Core_UI.Code.Base;
+using AutoMapper;
 
 namespace ASP.NET_Core_UI.Controllers
 {
-    public class PhotosController : Controller
+    public class PhotosController : BaseController
     {
         private readonly Services.Photo.PhotoService photoService;
 
-        public PhotosController(Services.Photo.PhotoService photoService)
+        public PhotosController(Services.Photo.PhotoService photoService,IMapper imapper):
+            base(imapper)
         {
             this.photoService = photoService;
         }
@@ -27,7 +30,7 @@ namespace ASP.NET_Core_UI.Controllers
         public IActionResult Download(int? id)
         {
             if (id == null) return NotFound();
-            if (!photoService.CanSeePhoto(id.Value)) return Forbid();
+            if (!photoService.CanSeePhoto(id.Value)) return ForbidView();
             var photo = photoService.GetPhoto(id.Value);
 
             if (photo == null) return NotFound();

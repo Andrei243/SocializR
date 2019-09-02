@@ -12,7 +12,7 @@
 
             <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 text-left">
                 <div>
-                    <form asp-action="Register">
+                    <form asp-action="Register" onsubmit="return checkForm(this);">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
                             <label asp-for="Name" class="control-label">Nume</label>
@@ -54,7 +54,7 @@
                             <span asp-validation-for="SexualIdentity" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <input type="submit" value="Save" class="btn btn-default needConfirmation" />
+                            <input name="submit" type="submit" value="Save" class="btn btn-default needConfirmation" />
                         </div>
                     </form>
                 </div>
