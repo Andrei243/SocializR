@@ -17,7 +17,7 @@ namespace Services.InterestsUsers
 
         public List<Domain.Interest> GetAllInterests(int idUser)
         {
-            return unitOfWork.InterestsUserss.Query.AsNoTracking().Include(e => e.Interest).AsNoTracking().Where(e => e.UserId == idUser).Select(e=>e.Interest).ToList();
+            return unitOfWork.InterestsUserss.Query.AsNoTracking().Where(e => e.UserId == idUser).Select(e=>e.Interest).ToList();
 
         }
 

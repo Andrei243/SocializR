@@ -126,7 +126,6 @@
 
 
             <div id="interestsDiv" class="tab-pane fade">
-                <h2>Likes and interests</h2>
                 <div class="container-fluid">
                     <div class="row">
                         @{int row = 0;}
@@ -169,7 +168,6 @@
             </div>
 
             <div id="albumsDiv" class="tab-pane fade">
-                <h2>Albums</h2>
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-4">
@@ -183,7 +181,7 @@
                                 <div class="poze" data-id="@album.Id">
                                     @if (album.CoverPhoto == -1)
                                     {
-                                        <img src="~/images/genericAlbumCoverPhoto.jpg" class="albumPreview" />
+                                    <a><img src="~/images/genericAlbumCoverPhoto.jpg" class="albumPreview" /></a>
                                     }
                                     else
                                     {
@@ -218,7 +216,7 @@
                                 <div class="poze" data-id="@album.Id">
                                     @if (album.CoverPhoto == -1)
                                     {
-                                        <img src="~/images/genericAlbumCoverPhoto.jpg" class="albumPreview" />
+                                        <a><img src="~/images/genericAlbumCoverPhoto.jpg" class="albumPreview" /></a>
                                     }
                                     else
                                     {
@@ -253,7 +251,7 @@
                                 <div class="poze" data-id="@album.Id">
                                     @if (album.CoverPhoto == -1)
                                     {
-                                        <img src="~/images/genericAlbumCoverPhoto.jpg" class="albumPreview" />
+                                        <a><img src="~/images/genericAlbumCoverPhoto.jpg" class="albumPreview" /></a>
                                     }
                                     else
                                     {
