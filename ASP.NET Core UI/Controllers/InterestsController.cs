@@ -61,6 +61,10 @@ namespace ASP.NET_Core_UI.Controllers
             }
 
             var interest = interestService.GetInterest(id.Value);
+            if (interest == null)
+            {
+                return NotFound();
+            }
            
             var model = mapper.Map<InterestDomainModel>(interest);
             return View(model);

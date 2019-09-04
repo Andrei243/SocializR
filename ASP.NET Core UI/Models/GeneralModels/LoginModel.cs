@@ -11,5 +11,6 @@ namespace ASP.NET_Core_UI.Models.GeneralModels
         [Required]
         public string Password { get; set; }
         public bool AreCredentialsInvalid { get; set; }
+        public bool IsBanned { get; set; }
     }
 }

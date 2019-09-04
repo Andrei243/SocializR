@@ -42,11 +42,12 @@ namespace Services.Comment
         public bool CanDeleteComment(int commentId)
         {
             if (CurrentUser.IsAdmin) return true;
-            var bool1 = unitOfWork.Comments.Query
-                .First(e => e.Id == commentId).UserId == CurrentUser.Id;
+            var comment = unitOfWork.Comments.Query
+                .First(e => e.Id == commentId);
+            if (comment == null) return false;
+            var bool1 = comment.UserId == CurrentUser.Id;
             if (bool1) return true;
-            var postId = unitOfWork.Comments.Query
-                .First(e => e.Id == commentId).PostId;
+            var postId = comment.PostId;
             return unitOfWork.Posts.Query.First(e => e.Id == postId).UserId == CurrentUser.Id;
         }
 

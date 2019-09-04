@@ -45,6 +45,11 @@ namespace ASP.NET_Core_UI.Controllers
                 loginModel.AreCredentialsInvalid = true;
                 return View(loginModel);
             }
+            if (user.IsBanned)
+            {
+                loginModel.IsBanned = true;
+                return View(loginModel);
+            }
 
             await LogIn(user);
             return RedirectToAction("Index", "Feed");

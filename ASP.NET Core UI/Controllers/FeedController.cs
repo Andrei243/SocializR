@@ -41,6 +41,8 @@ namespace ASP.NET_Core_UI.Controllers
         [Authorize]
         public void RemoveComment(int commentId)
         {
+            
+
             if (commentService.CanDeleteComment(commentId))
             {
                 commentService.RemoveComment(commentId);

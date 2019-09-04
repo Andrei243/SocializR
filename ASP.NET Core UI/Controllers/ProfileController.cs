@@ -160,12 +160,18 @@ namespace ASP.NET_Core_UI.Controllers
                 return ForbidView();
             }
 
+            var album = albumService.GetAlbum(albumId.Value);
+            if (album == null)
+            {
+                return NotFound();
+            }
+
             AlbumViewerModel albumViewerModel = new AlbumViewerModel()
             {
                 PhotoModel = new PhotoModel() { AlbumId = albumId },
                 HasThisAlbum = albumService.HasThisAlbum(albumId.Value),
                 Id=albumId.Value,
-                Name = albumService.GetAlbum(albumId.Value).Name
+                Name = album.Name
             };
 
             return View(albumViewerModel);

@@ -28,7 +28,10 @@
                         {
                             <span class="text-danger">Email or password is incorrect</span>
                         }
-
+                        @if (Model.IsBanned)
+                        {
+                            <span class="text-danger">This account is banned</span>
+                        }
                         <div class="form-group">
                             <input name="submit" type="submit" value="Login" class="btn btn-default" />
                         </div>

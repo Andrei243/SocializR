@@ -181,7 +181,7 @@
                             $("#postRemove" + post.id).click(eventDeletePost);
                            
                         }
-                        canGet = true;
+                        if (result.length !== 0) { canGet = true; }
                     }
 
 

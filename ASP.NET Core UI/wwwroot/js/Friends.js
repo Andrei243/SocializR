@@ -3,24 +3,29 @@
         var source = document.getElementById("friend-template").innerHTML;
         var template = Handlebars.compile(source);
         let noFriends = 0;
+        let canGet = true;
         return () => {
-            $.ajax({
-                type: 'GET',
-                url: "/Profile/GetFriends",
-                data: {
-                    toSkip: noFriends
-                },
-                success: (result) => {
+            if (canGet) {
+                $.ajax({
+                    type: 'GET',
+                    url: "/Profile/GetFriends",
+                    data: {
+                        toSkip: noFriends
+                    },
+                    success: (result) => {
 
-                    for (let i = 0; i < result.length; i++) {
-                        let friend = result[i];
-                        var html = template(friend);
-                        $("#friendBody").append(html);
+                        for (let i = 0; i < result.length; i++) {
+                            let friend = result[i];
+                            var html = template(friend);
+                            $("#friendBody").append(html);
+                        }
+                        noFriends += result.length;
+                        if (result.length === 0) {
+                            canGet = false;
+                        }
                     }
-                    noFriends += result.length;
-                }
-            })
-
+                })
+            }
         }
     })();
     event();

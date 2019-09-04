@@ -3,24 +3,31 @@
         var source = document.getElementById("interest-template").innerHTML;
         var template = Handlebars.compile(source);
         let noInterests = 0;
+        let canGet = true;
         return () => {
-            $.ajax({
-                type: 'GET',
-                url: "/Interests/GetInterests",
-                data: {
-                    toSkip: noInterests
-                },
-                success: (result) => {
+            if (canGet) {
+                $.ajax({
+                    type: 'GET',
+                    url: "/Interests/GetInterests",
+                    data: {
+                        toSkip: noInterests
+                    },
+                    success: (result) => {
 
-                    for (let i = 0; i < result.length; i++) {
-                        let interest = result[i];
-                        var html = template(interest);
-                        $("#interestBody").append(html);
-                        $("#interestBody tr:last-child a.needConfirmation").click(prevent);
+                        for (let i = 0; i < result.length; i++) {
+                            let interest = result[i];
+                            var html = template(interest);
+                            $("#interestBody").append(html);
+                            $("#interestBody tr:last-child a.needConfirmation").click(prevent);
+                        }
+                        noInterests += result.length;
+                        if (result.length === 0) {
+                            canGet = false;
+                        }
                     }
-                    noInterests += result.length;
-                }
-            })
+                })
+            }
+
 
         }
     })();

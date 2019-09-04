@@ -16,7 +16,7 @@ using ASP.NET_Core_UI.Models.JsonModels;
 
 namespace ASP.NET_Core_UI.Controllers
 {
-    [Authorize(Policy ="Admin")]
+    [Authorize(Policy = "Admin")]
     public class UsersController : Code.Base.BaseController
     {
         private readonly Services.User.UserService userService;
@@ -27,7 +27,7 @@ namespace ASP.NET_Core_UI.Controllers
         private readonly Services.Interest.InterestService interestService;
         private readonly Services.Album.AlbumService albumService;
         private readonly Services.Photo.PhotoService photoService;
-       
+
 
         public UsersController(IMapper mapper,
             Services.User.UserService userService,
@@ -38,7 +38,7 @@ namespace ASP.NET_Core_UI.Controllers
             Services.Interest.InterestService interestService,
             Services.Album.AlbumService albumService,
             Services.Photo.PhotoService photoService)
-            :base(mapper)
+            : base(mapper)
         {
             this.userService = userService;
             this.currentUser = currentUser;
@@ -57,7 +57,7 @@ namespace ASP.NET_Core_UI.Controllers
                 .GetUsersByName(name)
                 .Select(e => new UserDropdownModel() { Id = e.Id, ProfilePhotoId = e.PhotoId, Name = e.Name + " " + e.Surname })
                 .OrderBy(e => e.Name)
-                .Take(PageSize)
+                .Take(25)
                 .ToList();
             return el;
         }
@@ -96,34 +96,40 @@ namespace ASP.NET_Core_UI.Controllers
             {
                 return NotFoundView();
             }
-            else
+
+            if (userId == currentUser.Id)
             {
-                if (userId == currentUser.Id)
-                {
-                    return RedirectToAction("Index", "Profile", null);
-                }
-
-                var domainUser = userService.GetUserById(userId);
-                ProfileViewerModel user = mapper.Map<ProfileViewerModel>(domainUser);
-                user.CanSee = friendshipService.CanSee(userId.Value);
-                user.CanSendRequest = friendshipService.CanSendRequest(userId.Value);
-                user.IsRequested = friendshipService.IsFriendRequested(userId.Value);
-                user.Interests = interestsUsersService.GetAllInterests(domainUser.Id)
-                    .Select(e => e.Name)
-                    .ToList();
-                user.Album = albumService.GetAll(userId.Value).Select(e => mapper.Map<Models.DomainModels.AlbumDomainModel>(e)).ToList();
-
-                return View(user);
+                return RedirectToAction("Index", "Profile", null);
             }
+
+            var domainUser = userService.GetUserById(userId);
+            ProfileViewerModel user = mapper.Map<ProfileViewerModel>(domainUser);
+            user.CanSee = friendshipService.CanSee(userId.Value);
+            user.CanSendRequest = friendshipService.CanSendRequest(userId.Value);
+            user.IsRequested = friendshipService.IsFriendRequested(userId.Value);
+            user.Interests = interestsUsersService.GetAllInterests(domainUser.Id)
+                .Select(e => e.Name)
+                .ToList();
+            user.Album = albumService.GetAll(userId.Value).Select(e => mapper.Map<Models.DomainModels.AlbumDomainModel>(e)).ToList();
+
+            return View(user);
+
         }
 
-       
+
 
         [HttpGet]
         public IActionResult Edit(int? userId)
         {
-
+            if (userId == null)
+            {
+                return NotFound();
+            }
             var user = userService.GetUserById(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
             var model = mapper.Map<EditUserModel>(user);
 
             var counties = countyService.GetAll();
@@ -151,13 +157,13 @@ namespace ASP.NET_Core_UI.Controllers
             }
             return View(user);
         }
-        public IActionResult DeleteAlbum(int? userId,int? albumId)
+        public IActionResult DeleteAlbum(int? userId, int? albumId)
         {
-            if (userId == null||albumId==null)
+            if (userId == null || albumId == null)
             {
                 return NotFound();
             }
-            albumService.RemoveAlbum(albumId.Value,userId.Value);
+            albumService.RemoveAlbum(albumId.Value, userId.Value);
 
 
             return RedirectToAction("Details", new { userId });
@@ -169,14 +175,21 @@ namespace ASP.NET_Core_UI.Controllers
             {
                 return NotFound();
             }
-            var model=mapper.Map<AlbumEditModel>(albumService.GetAlbum(albumId.Value));
+
+            var album = albumService.GetAlbum(albumId.Value);
+            if (album == null)
+            {
+                return NotFound();
+            }
+
+            var model = mapper.Map<AlbumEditModel>(album);
 
             return View(model);
         }
 
-        public IActionResult DeletePhoto(int? photoId,int? albumId)
+        public IActionResult DeletePhoto(int? photoId, int? albumId)
         {
-            if(photoId==null || albumId == null)
+            if (photoId == null || albumId == null)
             {
                 return NotFound();
             }
@@ -202,7 +215,7 @@ namespace ASP.NET_Core_UI.Controllers
             if (userId == null) { return NotFound(); }
 
             userService.BanUser(userId.Value);
-            
+
             return RedirectToAction("Index");
         }
 

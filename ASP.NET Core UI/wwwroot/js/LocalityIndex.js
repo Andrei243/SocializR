@@ -3,24 +3,30 @@
         var source = document.getElementById("locality-template").innerHTML;
         var template = Handlebars.compile(source);
         let noLocalities = 0;
+        let canGet = true;
         return () => {
-            $.ajax({
-                type: 'GET',
-                url: "/Localities/GetLocalities",
-                data: {
-                    toSkip: noLocalities
-                },
-                success: (result) => {
+            if (canGet) {
+                $.ajax({
+                    type: 'GET',
+                    url: "/Localities/GetLocalities",
+                    data: {
+                        toSkip: noLocalities
+                    },
+                    success: (result) => {
 
-                    for (let i = 0; i < result.length; i++) {
-                        let locality = result[i];
-                        var html = template(locality);
-                        $("#localityBody").append(html);
-                        $("#localityBody tr:last-child a.needConfirmation").click(prevent);
+                        for (let i = 0; i < result.length; i++) {
+                            let locality = result[i];
+                            var html = template(locality);
+                            $("#localityBody").append(html);
+                            $("#localityBody tr:last-child a.needConfirmation").click(prevent);
+                        }
+                        noLocalities += result.length;
+                        if (result.length === 0) {
+                            canGet = false;
+                        }
                     }
-                    noLocalities += result.length;
-                }
-            })
+                })
+            }
 
         }
     })();

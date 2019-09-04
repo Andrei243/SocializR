@@ -3,25 +3,30 @@
         var source = document.getElementById("friend-template").innerHTML;
         var template = Handlebars.compile(source);
         let noFriends = 0;
+        let canGet = true;
         return () => {
-            $.ajax({
-                type: 'GET',
-                url: "/Profile/GetRequesters",
-                data: {
-                    toSkip: noFriends
-                },
-                success: (result) => {
+            if (canGet) {
+                $.ajax({
+                    type: 'GET',
+                    url: "/Profile/GetRequesters",
+                    data: {
+                        toSkip: noFriends
+                    },
+                    success: (result) => {
 
-                    for (let i = 0; i < result.length; i++) {
-                        let friend = result[i];
-                        var html = template(friend);
-                        $("#friendRequestBody").append(html);
-                        $("#friendRequestBody div:last-child a.needConfirmation").click(prevent);
+                        for (let i = 0; i < result.length; i++) {
+                            let friend = result[i];
+                            var html = template(friend);
+                            $("#friendRequestBody").append(html);
+                            $("#friendRequestBody div:last-child a.needConfirmation").click(prevent);
+                        }
+                        noFriends += result.length;
+                        if (result.length === 0) {
+                            canGet = false;
+                        }
                     }
-                    noFriends += result.length;
-                }
-            })
-
+                })
+            }
         }
     })();
     event();

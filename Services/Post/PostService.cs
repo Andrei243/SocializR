@@ -55,7 +55,9 @@ namespace Services.Post
 
         public bool CanDetelePost(int postId)
         {
-            return unitOfWork.Posts.Query.First(e => e.Id == postId).UserId == CurrentUser.Id || CurrentUser.IsAdmin;
+            var post = unitOfWork.Posts.Query.FirstOrDefault(e => e.Id == postId);
+            if (post == null) return false;
+            return post.UserId == CurrentUser.Id || CurrentUser.IsAdmin;
         }
 
         private IEnumerable<Domain.Post> GetFeed()
@@ -125,7 +127,8 @@ namespace Services.Post
         public bool CanSeePost(int postId)
         {
             if (CurrentUser.IsAdmin) return true;
-            var post = unitOfWork.Posts.Query.First(e => e.Id == postId);
+            var post = unitOfWork.Posts.Query.Include(e=>e.User).FirstOrDefault(e => e.Id == postId);
+            if (post == null || post.User.IsBanned) return false;
             if (post.UserId == CurrentUser.Id || post.Vizibilitate == "public") return true;
             var suntPrieteni = unitOfWork.Friendships.Query
                 .Any(e => e.IdReceiver == post.UserId && e.IdSender == CurrentUser.Id && (e.Accepted ?? false));

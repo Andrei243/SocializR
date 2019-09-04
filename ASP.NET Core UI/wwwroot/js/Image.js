@@ -26,28 +26,35 @@
         var source = document.getElementById("image-template").innerHTML;
         var template = Handlebars.compile(source);
         let noImages = 0;
+        let canGet = true;
         return () => {
-            $.ajax({
-                type: 'GET',
-                url: "/Profile/GetPhotosJson",
-                data: {
-                    toSkip: noImages,
-                    albumId: albumId
-                },
-                success: (result) => {
-                    for (let i = 0; i < result.length; i++) {
-                        
-                        let image = result[i];
-                        var html = template(image);
-                        $("#imageBody").append(html);
-                        $("#changeDescription" + image.id).click(changeDescription);
-                        $("#changeDescription" + image.id).click(prevent);
-                        $("#makeProfile" + image.id).click(prevent);
-                        $("#removePhoto" + image.id).click(prevent);
+            if (canGet) {
+                $.ajax({
+                    type: 'GET',
+                    url: "/Profile/GetPhotosJson",
+                    data: {
+                        toSkip: noImages,
+                        albumId: albumId
+                    },
+                    success: (result) => {
+                        for (let i = 0; i < result.length; i++) {
+
+                            let image = result[i];
+                            var html = template(image);
+                            $("#imageBody").append(html);
+                            $("#changeDescription" + image.id).click(changeDescription);
+                            $("#changeDescription" + image.id).click(prevent);
+                            $("#makeProfile" + image.id).click(prevent);
+                            $("#removePhoto" + image.id).click(prevent);
+                        }
+                        noImages += result.length;
+                        if (result.length === 0) {
+                            canGet = false;
+                        }
                     }
-                    noImages += result.length;
-                }
-            })
+                })
+            }
+
 
         }
     })(albumIdc);
