@@ -26,38 +26,36 @@ namespace Services.Photo
             var photo = unitOfWork.Photos.Query
                 .Include(e=>e.Post)
                 .Include(e=>e.Album)
-                .First(e => e.Id == photoId);
-
-            Domain.Users user;
-            if (photo.Post != null)
-            {
-                if (photo.Post.UserId == currentUser.Id) return true;
-                if (photo.Post.Vizibilitate == "public") return true;
-                user = unitOfWork.Posts.Query
-                    .Where(e => e.Id == photo.PostId)
-                    .Select(e => e.User)
-                    .First(e => true);
-
-            }
-            else if (photo.Album != null)
-            {
-                user = unitOfWork.Albums.Query
-                    .Where(e => e.Id == photo.AlbumId)
-                    .Select(e => e.User)
-                    .First(e => true);
-                if (user.PhotoId == photoId) return true;
-            }
-            else
+                .ThenInclude(e=>e.User)
+                .FirstOrDefault(e => e.Id == photoId);
+            if (photo == null)
             {
                 return false;
             }
-            if (user.Vizibility == "public") return true;
-            else if (unitOfWork.Friendships.Query.Any(e => e.IdReceiver == currentUser.Id && e.IdSender == user.Id && (e.Accepted ?? false)))
+            if (photo.Post != null)
             {
-                return true;
+                if (photo.Post.UserId == currentUser.Id) return true;
+                if (photo.Post.Confidentiality == Confidentiality.Public) return true;
+                else if (photo.Post.Confidentiality == Confidentiality.Private) return false;
+                else if (unitOfWork.Friendships.Query.Any(e => e.IdReceiver == currentUser.Id && e.IdSender == photo.Post.UserId && (e.Accepted ?? false)))
+                {
+                    return true;
+                }
             }
-            return false;
-
+            else if (photo.Album != null)
+            {
+                var user = photo.Album.User;
+                if (user.PhotoId == photoId) return true;
+                if (currentUser.Id == user.Id) return true;
+                if (user.Confidentiality == Confidentiality.Public) return true;
+                else if (user.Confidentiality == Confidentiality.Private) return false;
+                else if (unitOfWork.Friendships.Query.Any(e => e.IdReceiver == currentUser.Id && e.IdSender == user.Id && (e.Accepted ?? false)))
+                {
+                    return true;
+                }
+            }
+                return false;
+            
         }
         public void ChangeDescription(int photoId,string description)
         {

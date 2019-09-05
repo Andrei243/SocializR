@@ -24,5 +24,7 @@ namespace ASP.NET_Core_UI.Models.ProfileModels
         public List<AlbumDomainModel> Album { get; set; }
         public int? PhotoId { get; set; }
         public AddAlbumModel AddAlbumModel { get; set; }
+        public bool IsBanned { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }

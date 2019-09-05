@@ -22,7 +22,7 @@ namespace ASP.NET_Core_UI.Controllers
             this.interestService = interestService;
         }
 
-        // GET: Interests
+        [HttpGet]
         public IActionResult Index()
         {
             var interese = interestService.GetAll().Select(e =>mapper.Map<InterestDomainModel>(e));
@@ -31,17 +31,14 @@ namespace ASP.NET_Core_UI.Controllers
         }
 
 
-        // GET: Interests/Create
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Interests/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Create( InterestDomainModel interest)
         {
             if (ModelState.IsValid)
@@ -52,7 +49,7 @@ namespace ASP.NET_Core_UI.Controllers
             return View(interest);
         }
 
-        // GET: Interests/Edit/5
+        [HttpGet]
         public IActionResult Edit(int? id)
         {
             if (id == null)
@@ -70,11 +67,8 @@ namespace ASP.NET_Core_UI.Controllers
             return View(model);
         }
 
-        // POST: Interests/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Edit( InterestDomainModel interest)
         {
             if (ModelState.IsValid)
@@ -86,7 +80,7 @@ namespace ASP.NET_Core_UI.Controllers
             return View(interest);
         }
 
-        // GET: Interests/Delete/5
+        [HttpGet]
         public IActionResult Delete(int? id)
         {
             if (id == null)
@@ -99,6 +93,7 @@ namespace ASP.NET_Core_UI.Controllers
             return RedirectToAction("Index", "Interests");
         }
 
+        [HttpGet]
        public JsonResult GetInterests(int toSkip)
         {
             var interests = interestService.GetInterests(toSkip, PageSize).Select(e => mapper.Map<InterestJsonModel>(e)).ToList();

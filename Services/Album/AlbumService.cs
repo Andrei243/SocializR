@@ -20,9 +20,10 @@ namespace Services.Album
         public bool CanSeeAlbum(int albumId)
         {
             if (CurrentUser.IsAdmin) return true;
-            var album = unitOfWork.Albums.Query
+            if (CurrentUser.IsBanned) return false;
+            var album = unitOfWork.Albums.Query.Include(e=>e.User)
                 .AsNoTracking().First(e => e.Id == albumId);
-
+            if (album.User.IsBanned) return false;
             if (album.UserId == CurrentUser.Id) return true;
             return unitOfWork.Friendships.Query
                 .Any(e => e.IdReceiver == CurrentUser.Id && e.IdSender == album.UserId);
@@ -30,6 +31,9 @@ namespace Services.Album
 
         public List<Domain.Album> GetAll(int idUser)
         {
+            var user = unitOfWork.Users.Query.First(e => e.Id == idUser);
+            if (user.IsBanned && !CurrentUser.IsAdmin) return new List<Domain.Album>();
+            
             return unitOfWork.Albums.Query
                 .Where(e => e.UserId == idUser).AsNoTracking()
                 .Include(e => e.Photo).AsNoTracking()
@@ -39,6 +43,8 @@ namespace Services.Album
 
         public List<Domain.Photo> GetPhotos(int albumId)
         {
+            var album = unitOfWork.Albums.Query.Include(e=>e.User).First(e => e.Id == albumId);
+            if (album.User.IsBanned && !CurrentUser.IsAdmin) return new List<Domain.Photo>();
             return unitOfWork.Photos.Query
                 .Where(e => e.AlbumId == albumId)
                 .ToList();
@@ -46,6 +52,8 @@ namespace Services.Album
 
         public int AddAlbum(string denumire)
         {
+            if (CurrentUser.IsBanned) return -1;
+
             Domain.Album album = new Domain.Album { Name = denumire, UserId = CurrentUser.Id };
             unitOfWork.Albums.Add(album);
             unitOfWork.SaveChanges();
@@ -54,12 +62,14 @@ namespace Services.Album
         public bool CanDeleteAlbum(int albumId)
         {
             if (CurrentUser.IsAdmin) return true;
+            if (CurrentUser.IsBanned) return false;
             return unitOfWork.Albums.Query
                 .Any(e => e.Id == albumId && e.UserId == CurrentUser.Id);
         }
 
         public bool RemoveAlbum(int albumId, int userId)
         {
+            if (CurrentUser.IsBanned) return false;
             var album = unitOfWork.Albums.Query.FirstOrDefault(e => e.Id == albumId);
             if (album == null) return false; ;
 

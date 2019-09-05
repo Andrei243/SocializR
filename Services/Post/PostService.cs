@@ -8,18 +8,7 @@ using Domain;
 
 namespace Services.Post
 {
-    internal class PostComparer : IEqualityComparer<Domain.Post>
-    {
-        bool IEqualityComparer<Domain.Post>.Equals(Domain.Post x, Domain.Post y)
-        {
-            return x.Id == y.Id;
-        }
-
-        int IEqualityComparer<Domain.Post>.GetHashCode(Domain.Post obj)
-        {
-            return obj.Id;
-        }
-    }
+   
     public class PostService : Base.BaseService
     {
         private readonly CurrentUser CurrentUser;
@@ -35,7 +24,7 @@ namespace Services.Post
         {
             post.AddingMoment = DateTime.Now;
             post.UserId = CurrentUser.Id;
-            post.Vizibilitate = post.Vizibilitate ?? "friends";
+            post.Confidentiality = post.Confidentiality ?? Confidentiality.FriendsOnly;
             unitOfWork.Posts.Add(post);
             return unitOfWork.SaveChanges()!=0;
 
@@ -72,13 +61,14 @@ namespace Services.Post
                             .AsNoTracking()
                             .Include(e => e.Reaction)
                             .AsNoTracking()
+                            .Where(e=>!e.User.IsBanned)
                             ;
         }
 
         public List<Domain.Post> GetPublicNewsfeed(int toSkip,int howMany)
         {
             return GetFeed()
-                .Where(e=>e.Vizibilitate == "public")
+                .Where(e=>e.Confidentiality == Confidentiality.Public)
                 .OrderByDescending(e => e.AddingMoment)
                 .Skip(toSkip)
                 .Take(howMany)
@@ -96,9 +86,9 @@ namespace Services.Post
             
             var posts = GetFeed()
                 .Where(e =>
-                (e.Vizibilitate == "public") ||
+                (e.Confidentiality == Confidentiality.Public) ||
                 (e.UserId == CurrentUser.Id) ||
-                (friends.Contains(e.UserId) && e.Vizibilitate == "friends")
+                (friends.Contains(e.UserId) && e.Confidentiality == Confidentiality.FriendsOnly)
                 )
                 .OrderByDescending(e => e.AddingMoment)
                 .Skip(toSkip)
@@ -129,10 +119,10 @@ namespace Services.Post
             if (CurrentUser.IsAdmin) return true;
             var post = unitOfWork.Posts.Query.Include(e=>e.User).FirstOrDefault(e => e.Id == postId);
             if (post == null || post.User.IsBanned) return false;
-            if (post.UserId == CurrentUser.Id || post.Vizibilitate == "public") return true;
+            if (post.UserId == CurrentUser.Id || post.Confidentiality == Confidentiality.Public) return true;
             var suntPrieteni = unitOfWork.Friendships.Query
                 .Any(e => e.IdReceiver == post.UserId && e.IdSender == CurrentUser.Id && (e.Accepted ?? false));
-            if (suntPrieteni) return post.Vizibilitate == "friends";
+            if (suntPrieteni) return post.Confidentiality == Confidentiality.FriendsOnly;
             else return false;
         }
     }

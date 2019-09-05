@@ -4,7 +4,7 @@
         let text = e.currentTarget.parentNode.querySelector(".description").value;
         let photoId = e.currentTarget.dataset.photoid;
         $.ajax({
-            type: "GET",
+            type: "PUT",
             url: "/Profile/ChangeDescription",
             data: {
                 photoId: parseInt(photoId),

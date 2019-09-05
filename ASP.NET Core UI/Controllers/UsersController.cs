@@ -51,17 +51,19 @@ namespace ASP.NET_Core_UI.Controllers
             PageSize = 500;
         }
         [AllowAnonymous]
+        [HttpGet]
         public List<UserDropdownModel> GetUsersByName(string name)
         {
             var el = userService
                 .GetUsersByName(name)
                 .Select(e => new UserDropdownModel() { Id = e.Id, ProfilePhotoId = e.PhotoId, Name = e.Name + " " + e.Surname })
                 .OrderBy(e => e.Name)
-                .Take(25)
+                .Take(125)
                 .ToList();
             return el;
         }
 
+        [HttpGet]
         public JsonResult GetInterests(int? userId)
         {
             if (userId == null)
@@ -81,14 +83,14 @@ namespace ASP.NET_Core_UI.Controllers
             return Json(interests);
         }
 
-        // GET: Users
-
+        
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
-        // GET: Users/Details/5
+        
         [HttpGet]
         public IActionResult Details(int? userId)
         {
@@ -157,6 +159,7 @@ namespace ASP.NET_Core_UI.Controllers
             }
             return View(user);
         }
+        [HttpGet]
         public IActionResult DeleteAlbum(int? userId, int? albumId)
         {
             if (userId == null || albumId == null)
@@ -168,7 +171,7 @@ namespace ASP.NET_Core_UI.Controllers
 
             return RedirectToAction("Details", new { userId });
         }
-
+        [HttpGet]
         public IActionResult Album(int? albumId)
         {
             if (albumId == null)
@@ -186,7 +189,7 @@ namespace ASP.NET_Core_UI.Controllers
 
             return View(model);
         }
-
+        [HttpGet]
         public IActionResult DeletePhoto(int? photoId, int? albumId)
         {
             if (photoId == null || albumId == null)
@@ -198,7 +201,7 @@ namespace ASP.NET_Core_UI.Controllers
 
         }
 
-        // GET: Users/Delete/5
+        [HttpGet]
         public IActionResult Delete(int? userId)
         {
             if (userId == null)
@@ -209,7 +212,7 @@ namespace ASP.NET_Core_UI.Controllers
             userService.RemoveUser(userId.Value);
             return RedirectToAction("Index");
         }
-
+        [HttpGet]
         public IActionResult Ban(int? userId)
         {
             if (userId == null) { return NotFound(); }
@@ -218,7 +221,7 @@ namespace ASP.NET_Core_UI.Controllers
 
             return RedirectToAction("Index");
         }
-
+        [HttpGet]
         public IActionResult Unban(int? userId)
         {
             if (userId == null) { return NotFound(); }
@@ -227,7 +230,7 @@ namespace ASP.NET_Core_UI.Controllers
 
             return RedirectToAction("Index");
         }
-
+        [HttpGet]
         public IActionResult MakeAdmin(int? userId)
         {
             if (userId == null)
@@ -238,6 +241,7 @@ namespace ASP.NET_Core_UI.Controllers
             return RedirectToAction("Index");
 
         }
+        [HttpGet]
         public IActionResult RevokeAdmin(int? userId)
         {
             if (userId == null)
@@ -248,7 +252,7 @@ namespace ASP.NET_Core_UI.Controllers
             return RedirectToAction("Index");
 
         }
-
+        [HttpGet]
         public JsonResult GetUsers(int toSkip)
         {
             var users = userService.GetUsers(toSkip, PageSize).Select(mapper.Map<UserJsonModel>).ToList();

@@ -44,7 +44,7 @@ namespace DataAccess.Configurations
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                builder.Property(e => e.Vizibility)
+                builder.Property(e => e.Confidentiality)
                     .IsRequired()
                     .HasMaxLength(20)
                     .IsUnicode(false);

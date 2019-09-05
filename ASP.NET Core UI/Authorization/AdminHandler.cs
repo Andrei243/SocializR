@@ -11,6 +11,7 @@ namespace ASP.NET_Core_UI.Authorization
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, RoleRequirement requirement)
         {
+            
             if (!context.User.HasClaim(c => c.Type == ClaimTypes.Role))
             {
                 return Task.CompletedTask;

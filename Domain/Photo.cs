@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Common;
 
 namespace Domain
@@ -7,7 +8,8 @@ namespace Domain
     public partial class Photo : IEntity
     {
         public int Id { get; set; }
-        public byte[] Binar { get; set; }
+        [Column("Binar")]
+        public byte[] Binary { get; set; }
         public string MIMEType { get; set; }
         public int? AlbumId { get; set; }
         public int? PostId { get; set; }

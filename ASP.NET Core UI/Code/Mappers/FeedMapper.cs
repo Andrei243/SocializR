@@ -29,7 +29,7 @@ namespace ASP.NET_Core_UI.Code.Mappers
                 .ForMember(dest => dest.Name, s => s.MapFrom(src => src.Name + " " + src.Surname));
             
             CreateMap<PostAddModel, Domain.Post>()
-                .ForMember(dest => dest.Vizibilitate, s => s.MapFrom(src => src.Visibility));
+                .ForMember(dest => dest.Confidentiality, s => s.MapFrom(src => src.Visibility));
 
             CreateMap<Domain.Interest, InterestDomainModel>();
 
@@ -51,10 +51,10 @@ namespace ASP.NET_Core_UI.Code.Mappers
                 .ForMember(dest => dest.MIMEType, s => s.MapFrom(src => src.Binar.ContentType));
 
             CreateMap<EditUserModel, Domain.Users>()
-                .ForMember(dest => dest.Vizibility, s => s.MapFrom(src => src.Visibility));
+                .ForMember(dest => dest.Confidentiality, s => s.MapFrom(src => src.Visibility));
 
             CreateMap<Domain.Users, EditUserModel>()
-                .ForMember(dest => dest.Visibility, s => s.MapFrom(src => src.Vizibility))
+                .ForMember(dest => dest.Visibility, s => s.MapFrom(src => src.Confidentiality))
                 .ForMember(dest => dest.Albume, s => s.MapFrom(src => src.Album.Select(e => new AlbumDomainModel
                 {
                     Count = e.Photo.Count,

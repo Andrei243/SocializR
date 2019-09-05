@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Common;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain
 {
@@ -34,7 +35,8 @@ namespace Domain
         [Required]
         public string SexualIdentity { get; set; }
         [Required]
-        public string Vizibility { get; set; }
+        [Column("Vizibility")]
+        public string Confidentiality { get; set; }
         public int? PhotoId { get; set; }
         public bool IsBanned { get; set; }
 

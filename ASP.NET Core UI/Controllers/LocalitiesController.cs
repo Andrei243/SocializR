@@ -33,14 +33,14 @@ namespace ASP.NET_Core_UI.Controllers
             this.countyService = countyService;
         }
 
-        // GET: Localities
+        [HttpGet]
         public IActionResult Index()
         {
             var localities = localityService.GetAll().Select(e =>mapper.Map<LocalityDomainModel>(e));
             return View(localities);
         }
 
-        // GET: Localities/Create
+        [HttpGet]
         public IActionResult Create()
         {
             var model = new AddLocalityModel()
@@ -50,9 +50,8 @@ namespace ASP.NET_Core_UI.Controllers
             return View(model);
         }
 
-        // POST: Localities/Create
+        
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Create(AddLocalityModel model)
         {
             if (localityService.CityAlreadyExistsInCounty(model.Name, model.CountyId))
@@ -70,7 +69,7 @@ namespace ASP.NET_Core_UI.Controllers
             return View(model);
         }
 
-        // GET: Localities/Edit/5
+        [HttpGet]
         public IActionResult Edit(int? id)
         {
             if (id == null)
@@ -94,7 +93,6 @@ namespace ASP.NET_Core_UI.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Edit(EditLocalityModel model)
         {
             
@@ -111,7 +109,7 @@ namespace ASP.NET_Core_UI.Controllers
             return View(model);
         }
 
-        // GET: Localities/Delete/5
+        [HttpGet]
         public IActionResult Delete(int? id)
         {
             if (id == null)
@@ -124,6 +122,7 @@ namespace ASP.NET_Core_UI.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
         public JsonResult GetLocalities(int toSkip)
         {
             var result= localityService

@@ -51,6 +51,7 @@ namespace ASP.NET_Core_UI.Controllers
             this.photoService = photoService;
         }
 
+        [HttpGet]
         public IActionResult Albums()
         {
             var albums = albumService.GetAll(currentUser.Id);
@@ -63,7 +64,7 @@ namespace ASP.NET_Core_UI.Controllers
             };
             return View(model);
         }
-
+        [HttpGet]
         public JsonResult GetInterests()
         {
             var indexes = interestsUsersService.GetAllInterests(currentUser.Id).Select(e=>e.Id).ToList();
@@ -77,6 +78,7 @@ namespace ASP.NET_Core_UI.Controllers
             return Json(interests);
         }
 
+        [HttpPut]
         public bool ChangeDescription(int? photoId,string description)
         {
             if (photoId == null || !photoService.HasThisPhoto(photoId.Value, currentUser.Id))
@@ -87,6 +89,7 @@ namespace ASP.NET_Core_UI.Controllers
             return true;
         }
 
+        [HttpGet]
         public JsonResult GetPhotosJson(int? toSkip,int? albumId)
         {
             if (toSkip == null || albumId == null)
@@ -102,6 +105,7 @@ namespace ASP.NET_Core_UI.Controllers
 
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             var domainUser = userService.GetUserById(currentUser.Id);
@@ -117,7 +121,7 @@ namespace ASP.NET_Core_UI.Controllers
                 ).ToList();
             return View(user);
         }
-
+        [HttpGet]
         public List<PhotoDomainModel> GetPhotos(int? albumId)
         {
             if (albumId == null)
@@ -133,7 +137,7 @@ namespace ASP.NET_Core_UI.Controllers
             }
             return new List<PhotoDomainModel>();
         }
-
+        [HttpGet]
         public IActionResult MakeProfilePhoto(int? photoId)
         {
             if (photoId == null)
@@ -149,6 +153,7 @@ namespace ASP.NET_Core_UI.Controllers
 
         }
 
+        [HttpGet]
         public IActionResult Album(int? albumId)
         {
             if (albumId == null)
@@ -177,6 +182,7 @@ namespace ASP.NET_Core_UI.Controllers
             return View(albumViewerModel);
         }
 
+        [HttpGet]
         public IActionResult RemovePhoto(int? photoId,int? albumId)
         {
             if (photoId == null||albumId==null )
@@ -208,7 +214,7 @@ namespace ASP.NET_Core_UI.Controllers
                 using (var memoryStream = new MemoryStream())
                 {
                     model.Binar.CopyTo(memoryStream);
-                    photo.Binar = memoryStream.ToArray();
+                    photo.Binary = memoryStream.ToArray();
                     
                 }
                 photoService.AddPhoto(photo);
@@ -292,7 +298,7 @@ namespace ASP.NET_Core_UI.Controllers
             };
             return View("Albums", modelEdit);
         }
-
+        [HttpGet]
         public IActionResult Profile(int? userId)
         {
             if(!userId.HasValue || userId == 0 || userService.GetUserById(userId) ==null)
@@ -321,6 +327,7 @@ namespace ASP.NET_Core_UI.Controllers
 
         } 
 
+        [HttpGet]
         public IActionResult RemoveAlbum(int? albumId)
         {
             if (albumId == null)
@@ -334,34 +341,37 @@ namespace ASP.NET_Core_UI.Controllers
             return RedirectToAction("Index", "Profile", null);
         }
 
+        [HttpGet]
         public IActionResult FriendRequests()
         {
             return View();
         }
 
+        [HttpGet]
         public IActionResult FriendList()
         {
             return View();
         }
-
+        [HttpGet]
         public IActionResult Accept(int id)
         {
             friendService.AcceptFriendRequest(id);
             return RedirectToAction("Profile", "Profile", new { userId = id });
         }
-
+        [HttpGet]
         public IActionResult Refuse(int id)
         {
             friendService.RefuseFriendRequest(id);
             return RedirectToAction("Index", "Profile", null);
         }
-
+        [HttpGet]
         public IActionResult Send(int id)
         {
             friendService.SendFriendRequest(id);
             return RedirectToAction("Profile", "Profile", new {userId=id });
         }
         [Authorize]
+        [HttpGet]
         public JsonResult GetFriends(int toSkip)
         {
             var friends = friendService.GetFriends(toSkip, PageSize).Select(e => mapper.Map<FriendJsonModel>(e)).ToList();
@@ -369,6 +379,7 @@ namespace ASP.NET_Core_UI.Controllers
 
         }
         [Authorize]
+        [HttpGet]
         public JsonResult GetRequesters(int toSkip)
         {
             var friends = friendService.GetRequesters(toSkip, PageSize).Select(e => mapper.Map<FriendJsonModel>(e)).ToList();

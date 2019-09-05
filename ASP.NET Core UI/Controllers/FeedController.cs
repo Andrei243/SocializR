@@ -39,6 +39,7 @@ namespace ASP.NET_Core_UI.Controllers
             this.PageSize = 5;
         }
         [Authorize]
+        [HttpDelete]
         public void RemoveComment(int commentId)
         {
             
@@ -49,6 +50,7 @@ namespace ASP.NET_Core_UI.Controllers
             }
         }
         [Authorize]
+        [HttpDelete]
         public bool RemovePost(int postId)
         {
             if (postService.CanDetelePost(postId))
@@ -69,6 +71,7 @@ namespace ASP.NET_Core_UI.Controllers
         
        
         [AllowAnonymous]
+        [HttpGet]
         public JsonResult GetComments(int postId,int toSkip)
         {
             if (postService.CanSeePost(postId))
@@ -85,6 +88,7 @@ namespace ASP.NET_Core_UI.Controllers
             return Json(new List<int>());
         }
 
+        [HttpGet]
         public JsonResult GetPosts(int toSkip)
         {
             
@@ -114,6 +118,7 @@ namespace ASP.NET_Core_UI.Controllers
                 return Json(posts);
             }
         }
+        [HttpGet]
         public JsonResult GetPersonPosts(int toSkip,int userId)
         {
 
@@ -149,7 +154,7 @@ namespace ASP.NET_Core_UI.Controllers
                     using (var memoryStream = new MemoryStream())
                     {
                         post.Binar.CopyTo(memoryStream);
-                        photo.Binar = memoryStream.ToArray();
+                        photo.Binary = memoryStream.ToArray();
                     }
                     photoService.AddPhoto(photo);
                 }
@@ -159,13 +164,14 @@ namespace ASP.NET_Core_UI.Controllers
             return View("Index", post);
         }
 
-      
+        [HttpPut]
         public bool Reaction(int postId)
         {
             if(postService.CanSeePost(postId)) return reactionService.ChangeReaction(postId);
             return false;
         }
 
+        [HttpPost]
         public int Comment(int postId,string comentariu)
         {
             if (postService.CanSeePost(postId)&& !string.IsNullOrEmpty(comentariu))
@@ -176,13 +182,13 @@ namespace ASP.NET_Core_UI.Controllers
             }
             return 0;
         }
-
+        [HttpGet]
         public IActionResult Privacy()
         {
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

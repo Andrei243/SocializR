@@ -4,7 +4,7 @@
     let eventLike = function (e) {
 
         $.ajax({
-            type: 'GET',
+            type: 'PUT',
             url: '/Feed/Reaction',
             data: {
                 postId: e.currentTarget.dataset.post
@@ -30,14 +30,14 @@
     let eventDeleteComment = function (e) {
         let com = $(this).parent().parent();
         $.ajax({
-            type: "GET",
+            type: "DELETE",
             url: '/Feed/RemoveComment',
             data: {
                 commentId: e.currentTarget.dataset.comment,
 
             },
             success: function (response) {
-                
+
                 com.parent().data("toskip", parseInt(com.parent().data("toskip")) - 1);
                 com.remove();
             },
@@ -53,21 +53,21 @@
     let eventAddComment = function (e) {
         let postId = e.currentTarget.dataset.post;
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: '/Feed/Comment',
             data: {
                 postId: postId,
                 comentariu: e.currentTarget.parentNode.querySelector("input").value
             },
             success: function (response) {
-                if (response) {
+                if (response!==-1) {
                     let obj = {
-                        text:e.currentTarget.parentNode.querySelector("input").value,
-                        id:response,
-                        isMine:true,
-                        userId:$("#currentUserInfo").data("userid"),
-                        profilePhoto:$("#currentUserInfo").data("profile"),
-                        userName:$("#currentUserInfo").data("name")
+                        text: e.currentTarget.parentNode.querySelector("input").value,
+                        id: response,
+                        isMine: true,
+                        userId: $("#currentUserInfo").data("userid"),
+                        profilePhoto: $("#currentUserInfo").data("profile"),
+                        userName: $("#currentUserInfo").data("name")
                     }
                     let html = templateComment(obj);
                     $("#commentBody" + postId).prepend(html);
@@ -89,12 +89,12 @@
 
     };
 
-   
+
 
     let eventDeletePost = function (e) {
         let post = $(this).parent();
         $.ajax({
-            type: "GET",
+            type: "DELETE",
             url: '/Feed/RemovePost',
             data: {
                 postId: e.currentTarget.dataset.post,
@@ -112,11 +112,11 @@
 
     }
 
-    
 
-    
+
+
     let eventComment = (idPost) => {
-        
+
         let canGet = true;
         return () => {
             if (canGet) {
@@ -129,7 +129,7 @@
                         postId: idPost
                     },
                     success: (result) => {
-                        $("#commentBody" + idPost).data("toskip", parseInt($("#commentBody" + idPost).data("toskip")) + result.length) ;
+                        $("#commentBody" + idPost).data("toskip", parseInt($("#commentBody" + idPost).data("toskip")) + result.length);
                         for (let i = 0; i < result.length; i++) {
                             let comment = result[i];
                             let html = templateComment(comment);
@@ -197,12 +197,12 @@
 
 
     $(window).scroll(() => {
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight-3000) {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 3000) {
             eventPost();
             eventPost = () => { }
             this.setTimeout(() => {
                 eventPost = functionCopy;
-            },1000)
+            }, 1000)
         }
 
     })
@@ -237,7 +237,7 @@
     document.getElementById("Binar").addEventListener("change", function () {
         readURL(this);
     })
-    
+
 
 });
 

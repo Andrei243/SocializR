@@ -4,55 +4,87 @@
     Layout = "~/Views/Shared/GeneralLayout.cshtml";
 }
 
-<div>
     <div>
+        <div>
 
 
-        @if (Model.PhotoId.HasValue)
+            @if (Model.PhotoId.HasValue)
+            {
+                <a href="@Url.Action("Download", "Photos", new { id = Model.PhotoId })" data-lightbox="pozaprofil">
+                    <img src="@Url.Action("Download", "Photos", new { id = Model.PhotoId })" height="100" />
+                </a>
+            }
+            else
+            {
+                <a href="/images/DefaultProfile.png" data-lightbox="pozaprofil">
+                    <img src="/images/DefaultProfile.png" height="100" />
+                </a>
+            }
+
+        </div>
+        @if (Model.IsRequested)
         {
-            <a href="@Url.Action("Download", "Photos", new { id = Model.PhotoId })" data-lightbox="pozaprofil">
-                <img src="@Url.Action("Download", "Photos", new { id = Model.PhotoId })" height="100" />
-            </a>
-        }
-        else
-        {
-            <a href="/images/DefaultProfile.png" data-lightbox="pozaprofil">
-                <img src="/images/DefaultProfile.png" height="100" />
-            </a>
-        }
+            @Html.ActionLink(
+          linkText: "Accept",
+          actionName: "Accept",
+          controllerName: "Profile",
+          routeValues:
+          new { id = Model.Id },
+          htmlAttributes: null);
 
+            @Html.ActionLink(
+          linkText: "Refuse",
+          actionName: "Refuse",
+          controllerName: "Profile",
+          routeValues:
+          new { id = Model.Id },
+          htmlAttributes: null);
+        }
+        @if (Model.CanSendRequest)
+        {
+            @Html.ActionLink(
+                linkText: "Send Friend Request",
+                actionName: "Send",
+                controllerName: "Profile",
+                routeValues:
+                new { id = Model.Id },
+                htmlAttributes: null);
+        }
+        @if (currentUser.IsAdmin)
+        {
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <a  href="/Users/Edit?userId=@Model.Id">Edit</a>
+                    </div>
+                    <div class="col-sm-3">
+                        <a class="needConfirmation " href="/Users/Delete?userId=@Model.Id">Delete</a>
+                    </div>
+                    <div class="col-sm-3">
+                        @if (Model.IsBanned)
+                        {
+                            <a class="needConfirmation" href="/Users/Ban?userId=@Model.Id">Ban</a>
+                        }
+                        else
+                        {
+                            <a class="needConfirmation" href="/Users/Unban?userId=@Model.Id">Unban</a>
+                        }
+                    </div>
+
+                    <div class="col-sm-3">
+                        @if (Model.IsAdmin)
+                        {
+                            <a class="needConfirmation" href="/Users/RevokeAdmin?userId=@Model.Id">Revoke admin</a>
+                        }
+                        else
+                        {
+                            <a class="needConfirmation" href="/Users/MakeAdmin?userId=@Model.Id">Make admin</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
     </div>
-    @if (Model.IsRequested)
-    {
-        @Html.ActionLink(
-      linkText: "Accept",
-      actionName: "Accept",
-      controllerName: "Profile",
-      routeValues:
-      new { id = Model.Id },
-      htmlAttributes: null);
-
-        @Html.ActionLink(
-      linkText: "Refuse",
-      actionName: "Refuse",
-      controllerName: "Profile",
-      routeValues:
-      new { id = Model.Id },
-      htmlAttributes: null);
-    }
-    @if (Model.CanSendRequest)
-    {
-        @Html.ActionLink(
-            linkText: "Send Friend Request",
-            actionName: "Send",
-            controllerName: "Profile",
-            routeValues:
-            new { id = Model.Id },
-            htmlAttributes: null);
-    }
-
-
-</div>
 
 <div class="container profileInfo">
     <ul class="nav nav-tabs nav-justified infoTabs" role="tablist">

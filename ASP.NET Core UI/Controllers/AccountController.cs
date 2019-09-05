@@ -113,6 +113,7 @@ namespace ASP.NET_Core_UI.Controllers
             return Ok(!emailExists);
         }
 
+        [HttpGet]
         public List<SelectListItem> GetCounties()
         {
             return countyService.GetAll().Select(c =>mapper.Map<SelectListItem>(c)).ToList();

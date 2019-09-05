@@ -11,7 +11,7 @@ namespace DataAccess.Configurations
     {
         void IEntityTypeConfiguration<Photo>.Configure(EntityTypeBuilder<Photo> builder)
         {
-                builder.Property(e => e.Binar)
+                builder.Property(e => e.Binary)
                     .IsRequired()
                     .HasColumnType("image");
 

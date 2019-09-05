@@ -17,6 +17,9 @@ namespace Services.Comment
         }
         public int AddComment(string text,int PostId)
         {
+            var user = unitOfWork.Users.Query.First(e => e.Id == CurrentUser.Id);
+            if (user.IsBanned) return -1;
+
             var comment = new Domain.Comment()
             {
                 Content = text,
@@ -54,7 +57,7 @@ namespace Services.Comment
         public List<Domain.Comment> GetComments(int toSkip,int howMany,int postId)
         {
             return unitOfWork.Comments.Query.OrderByDescending(e => e.AddingMoment)
-                .Where(e=>e.PostId==postId)
+                .Where(e=>e.PostId==postId&&!e.User.IsBanned)
                 .Skip(toSkip)
                 .Take(howMany)
                 .Include(e => e.User)

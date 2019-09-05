@@ -26,7 +26,7 @@ namespace ASP.NET_Core_UI.Controllers
         }
 
         
-
+        [HttpGet]
         public IActionResult Download(int? id)
         {
             if (id == null) return NotFound();
@@ -35,7 +35,7 @@ namespace ASP.NET_Core_UI.Controllers
 
             if (photo == null) return NotFound();
 
-            return File(photo.Binar,photo.MIMEType);
+            return File(photo.Binary,photo.MIMEType);
 
         }
 

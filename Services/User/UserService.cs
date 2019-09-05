@@ -70,7 +70,7 @@ namespace Services.User
         {
             Users oldUser = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == user.Id);
             oldUser.LocalityId = user.LocalityId ?? oldUser.LocalityId;
-            oldUser.Vizibility = user.Vizibility ?? oldUser.Vizibility;
+            oldUser.Confidentiality = user.Confidentiality ?? oldUser.Confidentiality;
             oldUser.BirthDay = user.BirthDay;
             oldUser.Name = user.Name;
             oldUser.Surname = user.Surname;

@@ -56,7 +56,7 @@ namespace ASP.NET_Core_UI.Code.Extensions
                         ProfilePhoto=user.PhotoId,
                         SexualIdentity=user.SexualIdentity,
                         Surname=user.Surname,
-                        Vizibility=user.Vizibility,
+                        Vizibility=user.Confidentiality,
                         Locality=user.Locality,
                         Password=user.Password
                         

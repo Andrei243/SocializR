@@ -30,9 +30,9 @@ namespace Services.User
                 .FirstOrDefault(e => e.Email == email && e.Password == password);
         }
 
-        public bool Register(Domain.Users user)
+        public bool Register(Users user)
         {
-            user.Vizibility = "friends";
+            user.Confidentiality = Confidentiality.FriendsOnly;
             user.RoleId = IDROLPUBLIC;
             unitOfWork.Users.Add(user);
             return unitOfWork.SaveChanges() != 0;

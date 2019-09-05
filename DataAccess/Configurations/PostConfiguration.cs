@@ -16,7 +16,7 @@ namespace DataAccess.Configurations
 
                 builder.Property(e => e.AddingMoment).HasColumnType("datetime");
 
-                builder.Property(e => e.Vizibilitate)
+                builder.Property(e => e.Confidentiality)
                     .HasMaxLength(20)
                     .IsUnicode(false);
 

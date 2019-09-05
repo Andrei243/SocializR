@@ -4,7 +4,7 @@
     let eventLike = function (e) {
 
         $.ajax({
-            type: 'GET',
+            type: 'PUT',
             url: '/Feed/Reaction',
             data: {
                 postId: e.currentTarget.dataset.post
@@ -31,7 +31,7 @@
     let eventDeleteComment = function (e) {
         let com = $(this).parent().parent();
         $.ajax({
-            type: "GET",
+            type: "DELETE",
             url: '/Feed/RemoveComment',
             data: {
                 commentId: e.currentTarget.dataset.comment,
@@ -54,14 +54,14 @@
     let eventAddComment = function (e) {
         let postId = e.currentTarget.dataset.post;
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: '/Feed/Comment',
             data: {
                 postId: postId,
                 comentariu: e.currentTarget.parentNode.querySelector("input").value
             },
             success: function (response) {
-                if (response) {
+                if (response!==-1) {
                     let obj = {
                         text: e.currentTarget.parentNode.querySelector("input").value,
                         id: response,
@@ -95,7 +95,7 @@
     let eventDeletePost = function (e) {
         let post = $(this).parent();
         $.ajax({
-            type: "GET",
+            type: "DELETE",
             url: '/Feed/RemovePost',
             data: {
                 postId: e.currentTarget.dataset.post,

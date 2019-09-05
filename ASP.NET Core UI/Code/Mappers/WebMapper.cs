@@ -52,6 +52,8 @@ namespace ASP.NET_Core_UI.Code.Mappers
                 .ForMember(dest=>dest.County,s=>s.MapFrom(src=>src.Locality.County.Name))
                 .ForMember(dest=>dest.Birthday,s=>s.MapFrom(src=>src.BirthDay.Year+"."+src.BirthDay.Month+"."+src.BirthDay.Day))
                 .ForMember(dest=>dest.PhotoId,s=>s.MapFrom(src=>src.PhotoId))
+                .ForMember(dest=>dest.IsAdmin,s=>s.MapFrom(src=>src.Role.Id==1))
+                .ForMember(dest=>dest.IsBanned,s=>s.MapFrom(src=>src.IsBanned))
                 ;
             
         }

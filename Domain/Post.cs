@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Common;
 
 namespace Domain
@@ -14,7 +15,8 @@ namespace Domain
 
         public int Id { get; set; }
         public int UserId { get; set; }
-        public string Vizibilitate { get; set; }
+        [Column("Vizibilitate")]
+        public string Confidentiality { get; set; }
         public DateTime AddingMoment { get; set; }
         public string Text { get; set; }
 

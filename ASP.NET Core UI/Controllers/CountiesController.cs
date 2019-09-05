@@ -31,14 +31,14 @@ namespace ASP.NET_Core_UI.Controllers
             this.localityService = localityService;
         }
 
-        // GET: Counties
+        [HttpGet]
         public IActionResult Index()
         {
             var counties = countyService.GetAll().Select(e => mapper.Map<CountyDomainModel>(e));
             return View(counties);
         }
 
-        // GET: Counties/Details/5
+        [HttpGet]
         public IActionResult Details(int? id)
         {
             if (id == null)
@@ -57,17 +57,14 @@ namespace ASP.NET_Core_UI.Controllers
             return View(model);
         }
 
-        // GET: Counties/Create
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Counties/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+       
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Create(CountyDomainModel model)
         {
             if (ModelState.IsValid)
@@ -78,7 +75,7 @@ namespace ASP.NET_Core_UI.Controllers
             return View(model);
         }
 
-        // GET: Counties/Edit/5
+        [HttpGet]
         public  IActionResult Edit(int? id)
         {
             
@@ -97,11 +94,7 @@ namespace ASP.NET_Core_UI.Controllers
             return View(model);
         }
 
-        // POST: Counties/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Edit(EditCountyModel model)
         {
             
@@ -114,6 +107,7 @@ namespace ASP.NET_Core_UI.Controllers
             return View(model);
         }
 
+        [HttpGet]
         public bool CanDelete(int? countyId)
         {
             if (countyId == null)
@@ -128,19 +122,8 @@ namespace ASP.NET_Core_UI.Controllers
             return canBeDeleted;
         }
 
-        // GET: Counties/Delete/5
-        public IActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            //countyService.Remove(id.Value);
-
-            return RedirectToAction("Index", "Counties");
-        }
-
+       
+        [HttpGet]
         public JsonResult GetCounties(int toSkip)
         {
             var counties = countyService.GetCounties(toSkip, PageSize).Select(e => mapper.Map<CountyJsonModel>(e)).ToList();
