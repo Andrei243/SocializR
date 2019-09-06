@@ -3,9 +3,30 @@
     Layout = "~/Views/Shared/GeneralLayout.cshtml";
     ViewData["Title"] = Model.Name + " Album";
 }
-<h1>@Model.Name</h1>
+
+@if (Model.HasThisAlbum)
+{
+    <form action="/Profile/AlbumChangeName" method="post" onsubmit="return checkForm(this);">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input name="submit" type="submit" value="Save" class="btn btn-primary needConfirmation" />
+        </div>
+        <script src="~/js/onlyOnce.js"></script>
+
+    </form>
+}
+else
+{
+    <h1>@Model.Name</h1>
+}
 <div id="imageBody">
-   
+
 </div>
 @if (Model.HasThisAlbum)
 {

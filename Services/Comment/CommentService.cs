@@ -15,6 +15,8 @@ namespace Services.Comment
         {
             CurrentUser = currentUser;
         }
+
+
         public int AddComment(string text,int PostId)
         {
             var user = unitOfWork.Users.Query.First(e => e.Id == CurrentUser.Id);

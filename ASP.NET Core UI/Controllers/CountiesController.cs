@@ -16,7 +16,7 @@ using ASP.NET_Core_UI.Models.JsonModels;
 namespace ASP.NET_Core_UI.Controllers
 {
     
-    [Authorize(Policy = "Admin")]
+    [Authorize(Roles =  "admin")]
 
     public class CountiesController : BaseController
     {

@@ -8,8 +8,10 @@
             <img src="#" id="imgPreview" />
             <span asp-validation-for="Binar" class="text-danger"></span>
         </div>
-            <input type="number" asp-for="AlbumId" value="@Model.AlbumId" hidden />
+        <input type="number" asp-for="AlbumId" value="@Model.AlbumId" hidden />
         <div class="form-group">
             <input name="submit" type="submit" value="Create" class="btn btn-primary" />
         </div>
+        <script src="~/js/onlyOnce.js"></script>
+
     </form>

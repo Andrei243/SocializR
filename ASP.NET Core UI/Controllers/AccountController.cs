@@ -86,13 +86,13 @@ namespace ASP.NET_Core_UI.Controllers
         {
             var model = new RegisterModel
             {
-                Counties=GetCounties()
+                Counties = GetCounties().OrderBy(e => e.Text).ToList()
             };
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult Register(RegisterModel model)
+        public async Task<IActionResult> Register(RegisterModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -103,7 +103,12 @@ namespace ASP.NET_Core_UI.Controllers
             var result = userAccountService.Register(entity);
             if (!result)
                 return InternalServerErrorView();
-            return RedirectToAction("Login", "Account");
+
+            var user = userAccountService.Login(model.Email, model.Password);
+
+            await LogIn(user);
+
+            return RedirectToAction("Index", "Feed");
         }
 
         [HttpGet]

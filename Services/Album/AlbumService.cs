@@ -25,6 +25,8 @@ namespace Services.Album
                 .AsNoTracking().First(e => e.Id == albumId);
             if (album.User.IsBanned) return false;
             if (album.UserId == CurrentUser.Id) return true;
+            if (album.User.Confidentiality == Confidentiality.Public) return true;
+            if (album.User.Confidentiality == Confidentiality.Private) return false;
             return unitOfWork.Friendships.Query
                 .Any(e => e.IdReceiver == CurrentUser.Id && e.IdSender == album.UserId);
         }
@@ -67,13 +69,13 @@ namespace Services.Album
                 .Any(e => e.Id == albumId && e.UserId == CurrentUser.Id);
         }
 
-        public bool RemoveAlbum(int albumId, int userId)
+        public int RemoveAlbum(int albumId)
         {
-            if (CurrentUser.IsBanned) return false;
+            if (CurrentUser.IsBanned) return -1;
             var album = unitOfWork.Albums.Query.FirstOrDefault(e => e.Id == albumId);
-            if (album == null) return false; ;
+            if (album == null) return -1;
 
-            var profilePhoto = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == userId).PhotoId;
+            var profilePhoto = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == album.UserId).PhotoId;
             if (profilePhoto != null)
             {
                 var photo = unitOfWork.Photos.Query.FirstOrDefault(e => e.Id == profilePhoto);
@@ -86,7 +88,8 @@ namespace Services.Album
             }
             unitOfWork.Photos.RemoveRange(unitOfWork.Photos.Query.Where(e => e.AlbumId == albumId));
             unitOfWork.Albums.Remove(album);
-            return unitOfWork.SaveChanges()!=0;
+            unitOfWork.SaveChanges();
+            return album.UserId;
 
         }
 
@@ -99,8 +102,17 @@ namespace Services.Album
         public Domain.Album GetAlbum(int albumId)
         {
             return unitOfWork.Albums.Query
-                .Include(e => e.Photo)
+                //.Include(e => e.Photo)
                 .FirstOrDefault(e => e.Id == albumId);
+        }
+
+        public bool ChangeName(int albumId,string name)
+        {
+            var album = unitOfWork.Albums.Query.FirstOrDefault(e => e.Id == albumId);
+            if (album == null) return false;
+            album.Name = name;
+            unitOfWork.Albums.Update(album);
+            return unitOfWork.SaveChanges()!=0;
         }
     }
 }

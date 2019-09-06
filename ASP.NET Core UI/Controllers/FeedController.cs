@@ -36,7 +36,7 @@ namespace ASP.NET_Core_UI.Controllers
             this.currentUser = currentUser;
             this.photoService = photoService;
             this.reactionService = reactionService;
-            this.PageSize = 5;
+            this.PageSize = 10;
         }
         [Authorize]
         [HttpDelete]
@@ -68,7 +68,6 @@ namespace ASP.NET_Core_UI.Controllers
             return View(postModelAdd);
         }
 
-        
        
         [AllowAnonymous]
         [HttpGet]

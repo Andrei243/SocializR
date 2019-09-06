@@ -34,6 +34,8 @@ namespace ASP.NET_Core_UI.Models.GeneralModels
         public int CountyId { get; set; }
         public List<SelectListItem> Counties { get; set; }
 
+        public DateTime BirthDay { get; set; }
+
         public IEnumerable<ValidationResult>Validate(ValidationContext validationContext)
         {
             var result = new List<ValidationResult>();

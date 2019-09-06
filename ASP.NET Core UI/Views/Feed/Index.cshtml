@@ -65,9 +65,9 @@
                 <img src="/Photos/Download/{{this}}" class="imgPostare" />
                 {{/each}}
             </div>
-            
+
         </div>
-        
+
         <div id="commentBody{{id}}" class="commentBody" data-toskip="0">
 
         </div>
@@ -87,19 +87,22 @@
             <p class="reactionCounter">{{noReactions}} Likes</p>
 
         </div>
-        @if (currentUser.IsAuthenticated)
-        {
-            <input type="text" class="addComment form-control" />
-            <button id="commentAdd{{id}}" class="btn buttonComment btn-primary btn-sm" data-post="{{id}}">Comment</button>
-        }
+        <div class="clearfix">
+            @if (currentUser.IsAuthenticated)
+            {
+                <input type="text" class="addComment form-control" />
+                <button id="commentAdd{{id}}" class="btn  btn-primary btn-sm float-left" data-post="{{id}}">Comment</button>
+            }
 
-        {{#if isMine}}
-        <button id="postRemove{{id}}" class="btn  buttonRemovePost btn-danger btn-sm" data-post="{{id}}">Remove Post</button>
-        {{else}}
-        {{#if isAdmin}}
-        <button id="postRemove{{id}}" class="btn  buttonRemovePost btn-danger btn-sm" data-post="{{id}}">Remove Post</button>
-        {{/if}}
-        {{/if}}
+
+            {{#if isMine}}
+            <button id="postRemove{{id}}" class="btn  btn-danger btn-sm float-right" data-post="{{id}}">Remove Post</button>
+            {{else}}
+            {{#if isAdmin}}
+            <button id="postRemove{{id}}" class="btn  btn-danger btn-sm float-right" data-post="{{id}}">Remove Post</button>
+            {{/if}}
+            {{/if}}
+        </div>
     </div>
 
 </script>

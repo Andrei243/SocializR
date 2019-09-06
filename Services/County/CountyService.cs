@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Services.County
 {
+
     public class CountyService : Base.BaseService
     {
         public CountyService(SocializRUnitOfWork unitOfWork) : base(unitOfWork) { }
@@ -70,6 +71,7 @@ namespace Services.County
             }
             return unitOfWork.SaveChanges()!=0;
         }
+
 
         public List<Domain.Locality> GetLocalities(int id)
         {

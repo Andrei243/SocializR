@@ -30,7 +30,7 @@ namespace Services.Post
 
         }
 
-        
+      
 
         public List<Domain.Post> GetPersonPost(int toSkip,int howMany,int userId)
         {
@@ -49,7 +49,7 @@ namespace Services.Post
             return post.UserId == CurrentUser.Id || CurrentUser.IsAdmin;
         }
 
-        private IEnumerable<Domain.Post> GetFeed()
+        private IQueryable<Domain.Post> GetFeed()
         {
             return unitOfWork
                             .Posts

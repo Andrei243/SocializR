@@ -167,6 +167,7 @@
                         userId:userId
                     },
                     success: (result) => {
+
                         noPosts += result.length;
                         for (let i = 0; i < result.length; i++) {
                             let post = result[i];

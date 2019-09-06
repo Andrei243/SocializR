@@ -160,13 +160,13 @@ namespace ASP.NET_Core_UI.Controllers
             return View(user);
         }
         [HttpGet]
-        public IActionResult DeleteAlbum(int? userId, int? albumId)
+        public IActionResult DeleteAlbum(int? albumId)
         {
-            if (userId == null || albumId == null)
+            if (albumId == null)
             {
                 return NotFound();
             }
-            albumService.RemoveAlbum(albumId.Value, userId.Value);
+            int userId= albumService.RemoveAlbum(albumId.Value);
 
 
             return RedirectToAction("Details", new { userId });
@@ -185,7 +185,12 @@ namespace ASP.NET_Core_UI.Controllers
                 return NotFound();
             }
 
-            var model = mapper.Map<AlbumEditModel>(album);
+            AlbumViewerModel model = new AlbumViewerModel()
+            {
+               
+                Id = albumId.Value,
+                Name = album.Name
+            };
 
             return View(model);
         }

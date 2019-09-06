@@ -11,7 +11,7 @@ namespace Services.User
     public class UserService : Base.BaseService
     {
         private readonly CurrentUser currentUser;
-        public UserService(CurrentUser currentUser, SocializRUnitOfWork unitOfWork):
+        public UserService(CurrentUser currentUser, SocializRUnitOfWork unitOfWork) :
             base(unitOfWork)
         {
             this.currentUser = currentUser;
@@ -36,6 +36,7 @@ namespace Services.User
             return unitOfWork.SaveChanges() != 0;
         }
 
+
         public Users GetCurrentUser()
         {
             return GetUserById(currentUser.Id);
@@ -46,17 +47,17 @@ namespace Services.User
                 .Users
                 .Query
                 .AsNoTracking()
-                .Include(e=>e.Locality).ThenInclude(e=>e.County)
+                .Include(e => e.Locality).ThenInclude(e => e.County)
                 .AsNoTracking()
-                .Include(e=>e.Role)
+                .Include(e => e.Role)
                 .AsNoTracking()
-                .Include(e=>e.InterestsUsers)
+                .Include(e => e.InterestsUsers)
                 .AsNoTracking()
                 .FirstOrDefault(e => e.Id == id);
         }
-        
 
-        public IEnumerable<Users> GetUsersByName(string name)
+
+        public IQueryable<Users> GetUsersByName(string name)
         {
             return unitOfWork
                 .Users
@@ -64,7 +65,7 @@ namespace Services.User
                 .AsNoTracking()
                 .Where(e => (e.Name + e.Surname).Contains(name));
         }
-       
+
 
         public void Update(Users user)
         {
@@ -80,7 +81,7 @@ namespace Services.User
             unitOfWork.SaveChanges();
         }
 
-        
+
         public void UpdateProfilePhoto(int photoId)
         {
             var user = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == currentUser.Id);
@@ -127,13 +128,13 @@ namespace Services.User
             unitOfWork.Posts.RemoveRange(posts);
             unitOfWork.Albums.RemoveRange(albums);
             unitOfWork.Users.Remove(user);
-            return unitOfWork.SaveChanges()!=0;
+            return unitOfWork.SaveChanges() != 0;
         }
 
-        public List<Users> GetUsers(int toSkip,int toTake)
+        public List<Users> GetUsers(int toSkip, int toTake)
         {
             return unitOfWork.Users.Query
-                .Where(e=>e.Id!=currentUser.Id)
+                .Where(e => e.Id != currentUser.Id)
                 .OrderBy(e => e.BirthDay)
                 .Skip(toSkip)
                 .Take(toTake)

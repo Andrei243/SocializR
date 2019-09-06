@@ -694,13 +694,6 @@ div.post {
     display: inline;
 }
 
-.friend > div.friendshipButtons {
-    display: inline-block;
-    position: relative;
-    right: -400px;
-    top: 0;
-}
-
 div.albumProfilPreview.albumEdit {
     width: 400px;
 }

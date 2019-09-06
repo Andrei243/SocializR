@@ -182,6 +182,18 @@ namespace ASP.NET_Core_UI.Controllers
             return View(albumViewerModel);
         }
 
+        [HttpPost]
+        public IActionResult AlbumChangeName(AlbumViewerModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.Name))
+            {
+                return View("Album",model);
+            }
+            albumService.ChangeName(model.Id, model.Name);
+            return RedirectToAction("Album", "Profile",new {albumId=model.Id });
+
+        }
+
         [HttpGet]
         public IActionResult RemovePhoto(int? photoId,int? albumId)
         {
@@ -336,7 +348,7 @@ namespace ASP.NET_Core_UI.Controllers
             }
             if (albumService.CanDeleteAlbum(albumId.Value))
             {
-                albumService.RemoveAlbum(albumId.Value, currentUser.Id);
+                albumService.RemoveAlbum(albumId.Value);
             }
             return RedirectToAction("Index", "Profile", null);
         }

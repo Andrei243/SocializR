@@ -11,7 +11,7 @@
 </div>
 
 <script id="friend-template" type="text/x-handlebars-template">
-    <div class="friend">
+    <div class="friend clearfix">
         <a href="/Profile/Profile?userId={{id}}">
             {{#if profilePhoto}}
             <img src="/Photos/Download/{{profilePhoto}}" />
@@ -24,7 +24,7 @@
         
 
 
-        <div class="friendshipButtons">
+        <div class="friendshipButtons float-right ">
             <a class="btn btn-primary" href="/Profile/Accept/{{id}}">Accept</a>
             <a class="btn btn-danger" href="/Profile/Refuse/{{id}}">Refuse</a>
         </div>

@@ -32,6 +32,8 @@ namespace DataAccess
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<Users> Users { get; set; }
 
+        
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)

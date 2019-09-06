@@ -250,6 +250,7 @@
 
 </div>
 
+
 <div id="postBody">
 
 </div>
@@ -328,13 +329,14 @@
             <p class="reactionCounter">{{noReactions}} Likes</p>
 
         </div>
-
         <input type="text" class="addComment form-control" />
-        <button id="commentAdd{{id}}" class="btn buttonComment btn-primary btn-sm" data-post="{{id}}">Comment</button>
 
+        <div class="clearfix">
 
+            <button id="commentAdd{{id}}" class="btn  btn-primary btn-sm float-left" data-post="{{id}}">Comment</button>
+            <button id="postRemove{{id}}" class="btn  btn-danger btn-sm float-right" data-post="{{id}}">Remove Post</button>
 
-        <button id="postRemove{{id}}" class="btn  buttonRemovePost btn-danger btn-sm" data-post="{{id}}">Remove Post</button>
+        </div>
 
     </div>
 

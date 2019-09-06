@@ -60,7 +60,7 @@ namespace Services.FriendShip
             {
                 friendRequest.Accepted = true;
                 var friendRequest2 = unitOfWork.Friendships.Query
-                .FirstOrDefault(e => currentUser.Id == from && e.IdReceiver == from);
+                .FirstOrDefault(e => e.IdSender == currentUser.Id && e.IdReceiver == from);
                 if (friendRequest2 == null)
                 {
                     friendRequest2 = new Friendship()
