@@ -45,6 +45,7 @@ namespace Services.Interest
             return unitOfWork.SaveChanges() != 0;
         }
 
+
         public List<Domain.Interest> GetAll()
         {
             return unitOfWork.Interests.Query.AsNoTracking().ToList();

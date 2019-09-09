@@ -47,6 +47,8 @@ namespace Services.Comment
         public bool CanDeleteComment(int commentId)
         {
             if (CurrentUser.IsAdmin) return true;
+            var isBanned = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == CurrentUser.Id)?.IsBanned ?? false;
+            if (isBanned) return false;
             var comment = unitOfWork.Comments.Query
                 .First(e => e.Id == commentId);
             if (comment == null) return false;

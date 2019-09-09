@@ -30,7 +30,7 @@ else
 </div>
 @if (Model.HasThisAlbum)
 {
-    @Html.Partial("PartialAddPhoto", Model.PhotoModel)
+    <partial name="PartialAddPhoto" model="Model.PhotoModel" />
 }
 
 @if (Model.HasThisAlbum)

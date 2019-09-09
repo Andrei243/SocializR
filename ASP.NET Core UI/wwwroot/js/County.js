@@ -6,6 +6,7 @@
         let canGet = true;
         return () => {
             if (canGet) {
+                canGet = false;
                 $.ajax({
                     type: 'GET',
                     url: "/Counties/GetCounties",
@@ -51,6 +52,7 @@
 
 
                         }
+                        canGet = true;
                         if (result.length === 0) canGet = false;
                     }
                 })

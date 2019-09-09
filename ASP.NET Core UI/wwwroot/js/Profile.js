@@ -93,7 +93,7 @@
 
     
     let eventDeletePost = function (e) {
-        let post = $(this).parent();
+        let post = $(this).parent().parent();
         $.ajax({
             type: "DELETE",
             url: '/Feed/RemovePost',
@@ -199,7 +199,7 @@
         eventPost = functionCopy;
     }, 1000);
     $(window).scroll(() => {
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight-1500) {
             eventPost();
             eventPost = () => { }
             this.setTimeout(() => {

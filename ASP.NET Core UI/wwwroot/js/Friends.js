@@ -6,6 +6,7 @@
         let canGet = true;
         return () => {
             if (canGet) {
+                canGet = false;
                 $.ajax({
                     type: 'GET',
                     url: "/Profile/GetFriends",
@@ -20,6 +21,7 @@
                             $("#friendBody").append(html);
                         }
                         noFriends += result.length;
+                        canGet = true;
                         if (result.length === 0) {
                             canGet = false;
                         }

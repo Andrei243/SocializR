@@ -179,7 +179,7 @@ namespace ASP.NET_Core_UI.Controllers
                 return id;
 
             }
-            return 0;
+            return -1;
         }
         [HttpGet]
         public IActionResult Privacy()

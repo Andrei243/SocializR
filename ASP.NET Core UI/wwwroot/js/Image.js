@@ -29,6 +29,7 @@
         let canGet = true;
         return () => {
             if (canGet) {
+                canGet = false;
                 $.ajax({
                     type: 'GET',
                     url: "/Profile/GetPhotosJson",
@@ -48,6 +49,7 @@
                             $("#removePhoto" + image.id).click(prevent);
                         }
                         noImages += result.length;
+                        canGet = true;
                         if (result.length === 0) {
                             canGet = false;
                         }

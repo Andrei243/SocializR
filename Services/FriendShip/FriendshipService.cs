@@ -25,7 +25,9 @@ namespace Services.FriendShip
         public bool SendFriendRequest(int to)
         {
             
-            if(unitOfWork.Friendships.Query.Any(e=>e.IdReceiver == currentUser.Id && e.IdSender == to))
+            if(unitOfWork.Friendships.Query.Any(e=>e.IdReceiver == currentUser.Id && e.IdSender == to)
+                ||(unitOfWork.Users.Query.FirstOrDefault(e=>e.Id==currentUser.Id)?.IsBanned??false)
+                )
             {
                 return false;
             }
@@ -53,6 +55,10 @@ namespace Services.FriendShip
         }
         public bool AcceptFriendRequest(int from)
         {
+            if (unitOfWork.Users.Query.FirstOrDefault(e => e.Id == currentUser.Id)?.IsBanned ?? false)
+            {
+                return false;
+            }
             var friendRequest = unitOfWork.Friendships.Query
                 .FirstOrDefault(e => e.IdSender == from && e.IdReceiver == currentUser.Id);
             if (friendRequest == null) return false;
@@ -102,7 +108,8 @@ namespace Services.FriendShip
 
         public bool CanSendRequest(int receiver)
         {
-            return !IsRefused(receiver) && !IsAlreadySent(receiver) && !IsFriendWith(receiver)&&currentUser.IsAuthenticated;
+            var isBanned = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == currentUser.Id)?.IsBanned ?? false;
+            return !IsRefused(receiver) && !IsAlreadySent(receiver) && !IsFriendWith(receiver) && currentUser.IsAuthenticated && isBanned;
         }
         public bool IsRefused(int by)
         {

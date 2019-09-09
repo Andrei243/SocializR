@@ -25,6 +25,8 @@ namespace Services.Reaction
 
         public bool ChangeReaction(int postId)
         {
+            var isBanned = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == CurrentUser.Id)?.IsBanned ?? false;
+            if (isBanned) return unitOfWork.Reactions.Query.Any(e=>e.PostId==postId&&e.UserId==CurrentUser.Id);
             var reaction = unitOfWork.Reactions.Query.FirstOrDefault(e => e.PostId == postId && e.UserId == CurrentUser.Id);
             if (reaction == null)
             {

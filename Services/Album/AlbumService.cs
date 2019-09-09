@@ -20,7 +20,8 @@ namespace Services.Album
         public bool CanSeeAlbum(int albumId)
         {
             if (CurrentUser.IsAdmin) return true;
-            if (CurrentUser.IsBanned) return false;
+            var isBanned = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == CurrentUser.Id)?.IsBanned ?? false;
+            if (isBanned) return false;
             var album = unitOfWork.Albums.Query.Include(e=>e.User)
                 .AsNoTracking().First(e => e.Id == albumId);
             if (album.User.IsBanned) return false;

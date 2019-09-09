@@ -374,7 +374,7 @@ namespace ASP.NET_Core_UI.Controllers
         public IActionResult Refuse(int id)
         {
             friendService.RefuseFriendRequest(id);
-            return RedirectToAction("Index", "Profile", null);
+            return RedirectToAction("FriendRequests");
         }
         [HttpGet]
         public IActionResult Send(int id)

@@ -4,7 +4,7 @@
     Layout = "GeneralLayout";
 }
 
-<div class="formularPostare">@Html.Partial("PartialPostAdd", Model)</div>
+<div class="formularPostare"><partial name="PartialPostAdd" model="Model" /></div>
 <div id="currentUserInfo" hidden data-profile="@currentUser.ProfilePhoto" data-name="@currentUser.Name @currentUser.Surname" data-userid="@currentUser.Id"></div>
 
 <div id="postBody" class="containerPostari">

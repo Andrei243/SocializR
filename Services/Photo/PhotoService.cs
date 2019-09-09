@@ -78,6 +78,9 @@ namespace Services.Photo
         }
         public void AddPhoto(Domain.Photo photo)
         {
+            var isBanned = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == currentUser.Id)?.IsBanned ?? false;
+            if (isBanned) return;
+
             unitOfWork.Photos.Add(photo);
             if (photo.PostId.HasValue)
             {

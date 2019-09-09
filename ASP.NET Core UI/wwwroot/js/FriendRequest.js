@@ -6,6 +6,7 @@
         let canGet = true;
         return () => {
             if (canGet) {
+                canGet = false;
                 $.ajax({
                     type: 'GET',
                     url: "/Profile/GetRequesters",
@@ -21,6 +22,7 @@
                             $("#friendRequestBody div:last-child a.needConfirmation").click(prevent);
                         }
                         noFriends += result.length;
+                        canGet = true;
                         if (result.length === 0) {
                             canGet = false;
                         }

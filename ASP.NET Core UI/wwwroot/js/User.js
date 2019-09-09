@@ -7,6 +7,7 @@
         let canGet = true;
         return () => {
             if (canGet) {
+                canGet = false;
                 $.ajax({
                     type: 'GET',
                     url: "/Users/GetUsers",
@@ -22,6 +23,7 @@
                             $("#userBody tr:last-child a.needConfirmation").click(prevent);
                         }
                         noUsers += result.length;
+                        canGet = true;
                         if (result.length == 0) canGet = false;
                     }
                 })
@@ -37,7 +39,7 @@
         event = functionCopy;
     }, 1000);
     $(window).scroll(() => {
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight-1000) {
             event();
             event = () => { }
             this.setTimeout(() => {

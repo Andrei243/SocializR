@@ -56,33 +56,40 @@
     {
         <div class="container-fluid">
             <div class="row">
-                <div class="col-sm-3">
-                    <a href="/Users/Edit?userId=@Model.Id">Edit</a>
+                <div class="col-sm-1"></div>
+                <div class="col-sm-2">
+                    <a  href="/Users/Edit?userId=@Model.Id">Edit</a>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
+                    <a  href="/Users/Details?userId=@Model.Id">Details</a>
+                </div>
+
+                <div class="col-sm-2">
                     <a class="needConfirmation " href="/Users/Delete?userId=@Model.Id">Delete</a>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     @if (Model.IsBanned)
                     {
-                        <a class="needConfirmation" href="/Users/Unban?userId=@Model.Id">Unban</a>
+                        <a class="needConfirmation " href="/Users/Unban?userId=@Model.Id">Unban</a>
                     }
                     else
                     {
-                        <a class="needConfirmation" href="/Users/Ban?userId=@Model.Id">Ban</a>
+                        <a class="needConfirmation " href="/Users/Ban?userId=@Model.Id">Ban</a>
                     }
                 </div>
 
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     @if (Model.IsAdmin)
                     {
-                        <a class="needConfirmation" href="/Users/RevokeAdmin?userId=@Model.Id">Revoke admin</a>
+                        <a class="needConfirmation " href="/Users/RevokeAdmin?userId=@Model.Id">Revoke admin</a>
                     }
                     else
                     {
-                        <a class="needConfirmation" href="/Users/MakeAdmin?userId=@Model.Id">Make admin</a>
+                        <a class="needConfirmation " href="/Users/MakeAdmin?userId=@Model.Id">Make admin</a>
                     }
                 </div>
+                <div class="col-sm-1"></div>
+
             </div>
         </div>
     }

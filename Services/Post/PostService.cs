@@ -22,6 +22,9 @@ namespace Services.Post
         
         public bool AddPost(Domain.Post post)
         {
+            var isBanned = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == CurrentUser.Id)?.IsBanned ?? false;
+            if (isBanned) return false;
+
             post.AddingMoment = DateTime.Now;
             post.UserId = CurrentUser.Id;
             post.Confidentiality = post.Confidentiality ?? Confidentiality.FriendsOnly;
@@ -44,6 +47,9 @@ namespace Services.Post
 
         public bool CanDetelePost(int postId)
         {
+            var isBanned = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == CurrentUser.Id)?.IsBanned ?? false;
+            if (isBanned) return false;
+
             var post = unitOfWork.Posts.Query.FirstOrDefault(e => e.Id == postId);
             if (post == null) return false;
             return post.UserId == CurrentUser.Id || CurrentUser.IsAdmin;
@@ -54,13 +60,9 @@ namespace Services.Post
             return unitOfWork
                             .Posts
                             .Query
-                            .AsNoTracking()
                             .Include(e => e.User)
-                            .AsNoTracking()
                             .Include(e => e.Photo)
-                            .AsNoTracking()
                             .Include(e => e.Reaction)
-                            .AsNoTracking()
                             .Where(e=>!e.User.IsBanned)
                             ;
         }
@@ -77,8 +79,10 @@ namespace Services.Post
 
         public List<Domain.Post> GetNewsfeed(int toSkip,int howMany)
         {
+
+            var isBanned = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == CurrentUser.Id)?.IsBanned ?? false;
+            if (isBanned) return GetPublicNewsfeed(toSkip,howMany);
             var friends = unitOfWork.Friendships.Query
-                .AsNoTracking()
                 .Where(e => e.IdReceiver == CurrentUser.Id && (e.Accepted??false))
                 .Select(e=>e.IdSender)
                 .ToList();
@@ -117,6 +121,9 @@ namespace Services.Post
         public bool CanSeePost(int postId)
         {
             if (CurrentUser.IsAdmin) return true;
+            var isBanned = unitOfWork.Users.Query.FirstOrDefault(e => e.Id == CurrentUser.Id)?.IsBanned ?? false;
+            if (isBanned) return false;
+
             var post = unitOfWork.Posts.Query.Include(e=>e.User).FirstOrDefault(e => e.Id == postId);
             if (post == null || post.User.IsBanned) return false;
             if (post.UserId == CurrentUser.Id || post.Confidentiality == Confidentiality.Public) return true;

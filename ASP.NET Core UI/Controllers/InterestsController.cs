@@ -25,6 +25,7 @@ namespace ASP.NET_Core_UI.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+
             var interese = interestService.GetAll().Select(e =>mapper.Map<InterestDomainModel>(e));
 
             return View(interese);

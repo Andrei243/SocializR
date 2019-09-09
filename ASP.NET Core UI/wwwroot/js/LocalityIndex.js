@@ -6,6 +6,7 @@
         let canGet = true;
         return () => {
             if (canGet) {
+                canGet = false;
                 $.ajax({
                     type: 'GET',
                     url: "/Localities/GetLocalities",
@@ -21,6 +22,7 @@
                             $("#localityBody tr:last-child a.needConfirmation").click(prevent);
                         }
                         noLocalities += result.length;
+                        canGet = true;
                         if (result.length === 0) {
                             canGet = false;
                         }
